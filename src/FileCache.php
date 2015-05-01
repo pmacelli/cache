@@ -53,83 +53,83 @@ class FileCache extends CacheObject implements CacheInterface {
         
         parent::__construct($fail_silently);
 
-	}
-	
-	public function set($name, $data, $ttl=null) {
+    }
+    
+    public function set($name, $data, $ttl=null) {
 
-		if ( empty($name) ) throw new CacheException("Object name cannot be empty");
+        if ( empty($name) ) throw new CacheException("Object name cannot be empty");
 
-		else $shadowName = $this->cache_folder . md5($name)."-".$this->getScope();
+        else $shadowName = $this->cache_folder . md5($name)."-".$this->getScope();
 
-		$shadowData = serialize($data);
+        $shadowData = serialize($data);
 
-		if ( is_int($ttl) AND $ttl > 1 ) $this->ttl = $ttl;
+        if ( is_int($ttl) AND $ttl > 1 ) $this->ttl = $ttl;
 
-		$shadowTtl = $this->getTime() + $this->ttl;
+        $shadowTtl = $this->getTime() + $this->ttl;
 
-		try {
-		
-			if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
+        try {
+        
+            if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
-				$toReturn = self::setXattr($shadowName, $shadowData, $shadowTtl);
+                $toReturn = self::setXattr($shadowName, $shadowData, $shadowTtl);
 
-			} else {
+            } else {
 
-				$toReturn = self::setGhost($shadowName, $shadowData, $shadowTtl);
+                $toReturn = self::setGhost($shadowName, $shadowData, $shadowTtl);
 
-			}
+            }
 
-		} catch (CacheException $ce) {
-			
-			throw $ce;
+        } catch (CacheException $ce) {
+            
+            throw $ce;
 
-		}
+        }
 
-		return $toReturn;
+        return $toReturn;
 
-	}
-	
-	public function get($name) {
+    }
+    
+    public function get($name) {
 
-		if ( empty($name) ) throw new CacheException("Object name cannot be empty");
+        if ( empty($name) ) throw new CacheException("Object name cannot be empty");
 
-		else $shadowName = $this->cache_folder . md5($name)."-".$this->getScope();
+        else $shadowName = $this->cache_folder . md5($name)."-".$this->getScope();
 
-		try {
-		
-			if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
+        try {
+        
+            if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
-				$toReturn = self::getXattr($shadowName, $this->getTime());
+                $toReturn = self::getXattr($shadowName, $this->getTime());
 
-			} else {
+            } else {
 
-				$toReturn = self::getGhost($shadowName, $this->getTime());
+                $toReturn = self::getGhost($shadowName, $this->getTime());
 
-			}
+            }
 
-		} catch (CacheException $ce) {
-			
-			throw $ce;
+        } catch (CacheException $ce) {
+            
+            throw $ce;
 
-		}
+        }
 
-		return $toReturn === false ? $toReturn : unserialize($toReturn);
+        return $toReturn === false ? $toReturn : unserialize($toReturn);
 
-	}
-	
-	public function flush($name=null) {}
+    }
+    
+    public function flush($name=null) {}
 
-	public function status() {}
+    public function status() {}
 
-	private static function setXattr($name, $data, $ttl) {
+    private static function setXattr($name, $data, $ttl) {
 
-		$cacheFile = $name . ".cache";
+        $cacheFile = $name . ".cache";
 
-		$cached = file_put_contents($cacheFile, $data);
+        $cached = file_put_contents($cacheFile, $data);
 
         if ( $cached === false ) {
 
-        	throw new CacheException("Error writing cache file");
+            throw new CacheException("Error writing cache file");
 
             // $this->logger->error('Error writing to cache', array(
             //     'CACHEFILE' => $cacheFile
@@ -148,25 +148,25 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( $tagged === false ) {
 
-        	throw new CacheException("Error writing cache ttl");
+            throw new CacheException("Error writing cache ttl");
 
         }
 
         return true;
 
-	}
+    }
 
-	private static function setGhost($name, $data, $ttl) {
+    private static function setGhost($name, $data, $ttl) {
 
-		$cacheFile = $name . ".cache";
+        $cacheFile = $name . ".cache";
 
-		$cacheGhost = $name . ".expire";
+        $cacheGhost = $name . ".expire";
 
-		$cached = file_put_contents($cacheFile, $data, LOCK_EX);
+        $cached = file_put_contents($cacheFile, $data, LOCK_EX);
 
         if ( $cached === false ) {
 
-        	throw new CacheException("Error writing cache file");
+            throw new CacheException("Error writing cache file");
 
             // $this->logger->error('Error writing to cache', array(
             //     'CACHEFILE' => $cacheFile
@@ -185,88 +185,88 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( $tagged === false ) {
 
-        	throw new CacheException("Error writing cache ttl");
+            throw new CacheException("Error writing cache ttl");
 
         }
 
         return true;
 
-	}
+    }
 
-	private static function getXattr($name, $time) {
+    private static function getXattr($name, $time) {
 
-		$cacheFile = $name . ".cache";
+        $cacheFile = $name . ".cache";
 
-		if ( file_exists($cacheFile) ) {
+        if ( file_exists($cacheFile) ) {
 
-			$expire = xattr_get($cacheFile, "EXPIRE", XATTR_DONTFOLLOW);
+            $expire = xattr_get($cacheFile, "EXPIRE", XATTR_DONTFOLLOW);
 
-			if ( $expire === false ) throw new CacheException("Error reading cache ttl");
+            if ( $expire === false ) throw new CacheException("Error reading cache ttl");
 
-			if ( $expire < $time ) $data = false;
+            if ( $expire < $time ) $data = false;
 
-			else {
+            else {
 
-				$data = file_get_contents($cacheFile);
+                $data = file_get_contents($cacheFile);
 
-				if ( $data === false ) throw new CacheException("Error reading cache");
-				
-			}
+                if ( $data === false ) throw new CacheException("Error reading cache");
+                
+            }
 
-			return $data;
+            return $data;
 
-		}
+        }
 
-		else return false;
+        else return false;
 
-	}
+    }
 
-	private static function getGhost($name, $time) {
+    private static function getGhost($name, $time) {
 
-		$cacheFile = $name . ".cache";
+        $cacheFile = $name . ".cache";
 
-		$cacheGhost = $name . ".expire";
+        $cacheGhost = $name . ".expire";
 
-		if ( file_exists($cacheFile) ) {
+        if ( file_exists($cacheFile) ) {
 
-			$expire = file_get_contents($cacheGhost);
+            $expire = file_get_contents($cacheGhost);
 
-			if ( $expire === false ) throw new CacheException("Error reading cache ttl");
+            if ( $expire === false ) throw new CacheException("Error reading cache ttl");
 
-			if ( $expire < $time ) $data = false;
+            if ( $expire < $time ) $data = false;
 
-			else {
+            else {
 
-				$data = file_get_contents($cacheFile);
+                $data = file_get_contents($cacheFile);
 
-				if ( $data === false ) throw new CacheException("Error reading cache");
-				
-			}
+                if ( $data === false ) throw new CacheException("Error reading cache");
+                
+            }
 
-			return $data;
+            return $data;
 
-		}
+        }
 
-		else return false;
+        else return false;
 
-	}
-	
-	private static function checkCacheFolder($folder) {
-	    
+    }
+    
+    private static function checkCacheFolder($folder) {
+        
         return is_writable( dirname( $folder . '.placeholder' ) );
-	    
-	}
-	
-	private static function checkXattrSupport() {
-	    
-	    return function_exists("xattr_supported");
-	    
-	}
-	
-	private static function checkXattrFilesystemSupport($folder) {
-	    
-	    return xattr_supported($folder);// . '.placeholder');
-	    
-	}
+        
+    }
+    
+    private static function checkXattrSupport() {
+        
+        return function_exists("xattr_supported");
+        
+    }
+    
+    private static function checkXattrFilesystemSupport($folder) {
+        
+        return xattr_supported($folder);// . '.placeholder');
+        
+    }
     
 }
