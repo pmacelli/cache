@@ -32,8 +32,6 @@ class CacheObject {
 	private $scope = "GLOBAL";
 
 	private $current_time = null;
-
-	private $scope = "GLOBAL";
 	
 	protected $logger = null;
 	
