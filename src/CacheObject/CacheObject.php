@@ -27,30 +27,92 @@ use \Comodojo\Exception\CacheException;
 
 class CacheObject {
 
-	private $fail_silently = DISPATCHER_CACHE_FAIL_SILENTLY;
+	private $fail_silently = null;
+	
+	private $scope = "GLOBAL";
 
 	private $current_time = null;
 
-	private $logger = null;
+	private $scope = "GLOBAL";
+	
+	protected $logger = null;
+	
+	protected $ttl = null;
 
-	private $scope = "global";
+	public function __construct( $fail_silently=false ) {
 
-	public function __construct() {
+        $this->setTime();
+        
+        $this->ttl = defined('COMODOJO_CACHE_DEFAULT_TTL') ? COMODOJO_CACHE_DEFAULT_TTL : 3600;
+
+        $this->fail_silently = defined('COMODOJO_CACHE_FAIL_SILENTLY') ? filter_var(COMODOJO_CACHE_FAIL_SILENTLY, FILTER_VALIDATE_BOOLEAN) : filter_var($fail_silently, FILTER_VALIDATE_BOOLEAN);
 
 	}
 
 	public function setScope($scope) {
 
-	} 
+        if ( preg_match('/^[0-9a-zA-Z]+$/', $scope) ) $this->scope = strtoupper($scope);
+        
+        else {
+            
+            if ( $logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid cache scope");
+            
+            if ( $this->should_fail_silently() === false ) throw new CacheException("Invalid cache scope");
+            
+        }
+        
+        return $this;
+
+	}
 
 	public function getScope() {
 
-	}
-
-	public function logger($logger) {
+        return $this->scope;
 
 	}
 
+	final public function setLogger(\Monolog\Logger $logger) {
+
+        $this->logger = $logger;
+        
+        return $this;
+
+	}
 	
+	final public function getLogger() {
+	    
+	    return $this->logger;
+	    
+	}
+	
+	final public function setTime($time=null) {
+	    
+	    if ( is_null($time) ) $this->current_time = microtime(true);
+	    
+	    else if ( preg_match('/^[0-9]{10}.[0-9]{4}$/', $time) ) $this->current_time = $time;
+	    
+	    else {
+	        
+	        if ( $logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid time");
+            
+            if ( $this->should_fail_silently() === false ) throw new CacheException("Invalid time");
+	        
+	    }
+
+	    return $this;
+	    
+	}
+	
+	final public function getTime() {
+	    
+	    return $this->current_time;
+	    
+	}
+	
+	final public function should_fail_silently() {
+	    
+	    return $this->fail_silently;
+	    
+	}
 
 }
