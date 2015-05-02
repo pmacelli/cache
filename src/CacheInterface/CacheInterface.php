@@ -46,13 +46,36 @@ interface CacheInterface {
     public function get($name);
 
     /**
-     * FLush cache
+     * Set scope
      *
-     * @param   string  $name    Name for cache element
+     * @param   string  $scope
      *
      * @return  Object  $this
      */
+    public function setScope($scope);
+
+    /**
+     * Get scope
+     *
+     * @return  string
+     */
+    public function getScope();
+
+    /**
+     * Flush cache (or entire scope)
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  bool
+     */
     public function flush($name);
+
+    /**
+     * Clean cache objects in any scope
+     *
+     * @return  bool
+     */
+    public function purge();
 
     /**
      * Cache status

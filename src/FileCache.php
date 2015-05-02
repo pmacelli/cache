@@ -117,9 +117,68 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
     
-    public function flush($name=null) {}
+    public function flush($name=null) {
 
-    public function status() {}
+        // flush entire scope
+        if ( is_null($name) ) $filesList = glob($this->cache_folder."*-".$this->getScope().".{cache,expire}", GLOB_BRACE);
+
+        else $filesList = glob($this->cache_folder.md5($name)."-".$this->getScope().".{cache,expire}", GLOB_BRACE);
+
+        foreach ($filesList as $file) {
+
+            if ( unlink($file) === false ) throw new CacheException("Failed to unlink cache file");
+
+        }
+
+        return true;
+
+    }
+
+    public function purge() {
+
+        $filesList = glob($this->cache_folder."*.{cache,expire}", GLOB_BRACE);
+
+        foreach ($filesList as $file) {
+
+            if ( unlink($file) === false ) throw new CacheException("Failed to unlink cache file");
+
+        }
+
+        return true;
+
+    }
+
+    public function status($currentScope=false) {
+
+        $currentScope = filter_var($currentScope, FILTER_VALIDATE_BOOLEAN);
+
+        if ( $currentScope ) $filesList = glob($this->cache_folder."*-".$this->getScope().".cache");
+
+        else $filesList = glob($this->cache_folder."*.cache");
+
+        if ( self::checkXattrSupport() ) {
+
+            $options = array(
+                "xattr_supported"   =>  true,
+                "xattr_enabled"     =>  $this->checkXattrFilesystemSupport($this->cache_folder)
+            );
+
+        } else {
+
+            $options = array(
+                "xattr_supported"   =>  false,
+                "xattr_enabled"     =>  false
+            );
+
+        }
+
+        return array(
+            "online"    => true,
+            "objects"   => count($filesList),
+            "options"   => $options
+        );
+
+    }
 
     private static function setXattr($name, $data, $ttl) {
 
