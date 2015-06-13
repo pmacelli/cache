@@ -5,85 +5,81 @@ use \Comodojo\Exception\CacheException;
 /**
  * Cache controller
  * 
- * @package     Comodojo dispatcher
- * @author      Marco Giovinazzi <info@comodojo.org>
- * @license     GPL-3.0+
+ * @package     Comodojo Spare Parts
+ * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
+ * @license     MIT
  *
  * LICENSE:
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 class CacheObject {
 
-    private $fail_silently = null;
-    
-    private $scope = "GLOBAL";
+    /**
+     * Determine the current cache scope (default: GLOBAL)
+     *
+     * @var string
+     */
+    protected $scope = "GLOBAL";
 
-    private $current_time = null;
+    /**
+     * current time (in msec)
+     *
+     * @var float
+     */
+    protected $current_time = null;
     
+    /**
+     * Current instance of \Monolog\Logger
+     *
+     * @var \Monolog\Logger
+     */
     protected $logger = null;
     
+    /**
+     * Cache ttl
+     *
+     * @var int
+     */
     protected $ttl = null;
 
-    public function __construct( $fail_silently=false ) {
+    /**
+     * Class constructor
+     *
+     * @throws \Comodojo\Exception\CacheException
+     */
+    public function __construct() {
 
-        $this->setTime();
-        
-        $this->ttl = defined('COMODOJO_CACHE_DEFAULT_TTL') ? COMODOJO_CACHE_DEFAULT_TTL : 3600;
-
-        $this->fail_silently = defined('COMODOJO_CACHE_FAIL_SILENTLY') ? filter_var(COMODOJO_CACHE_FAIL_SILENTLY, FILTER_VALIDATE_BOOLEAN) : filter_var($fail_silently, FILTER_VALIDATE_BOOLEAN);
-
-    }
-
-    public function setScope($scope) {
-
-        if ( preg_match('/^[0-9a-zA-Z]+$/', $scope) ) $this->scope = strtoupper($scope);
-        
-        else {
+        try {
             
-            if ( $logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid cache scope");
+            $this->setTime();
             
-            if ( $this->should_fail_silently() === false ) throw new CacheException("Invalid cache scope");
+            $this->setTtl();
+            
+        } catch (CacheException $ce) {
+            
+            throw $ce;
             
         }
         
-        return $this;
-
-    }
-
-    public function getScope() {
-
-        return $this->scope;
-
-    }
-
-    final public function setLogger(\Monolog\Logger $logger) {
-
-        $this->logger = $logger;
-        
-        return $this;
-
     }
     
-    final public function getLogger() {
-        
-        return $this->logger;
-        
-    }
-    
-    final public function setTime($time=null) {
+    /**
+     * Set current time
+     *
+     * @param    float    $time    Set current time (in msec - float)
+     * 
+     * @return \Comodojo\Cache\CacheObject\CacheObject
+     * @throws \Comodojo\Exception\CacheException
+     */
+    final public function setTime( $time=null ) {
         
         if ( is_null($time) ) $this->current_time = microtime(true);
         
@@ -93,7 +89,7 @@ class CacheObject {
             
             if ( $logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid time");
             
-            if ( $this->should_fail_silently() === false ) throw new CacheException("Invalid time");
+            throw new CacheException("Invalid time");
             
         }
 
@@ -101,15 +97,118 @@ class CacheObject {
         
     }
     
+    /**
+     * Get current time
+     *
+     * @return float
+     */
     final public function getTime() {
         
         return $this->current_time;
         
     }
     
-    final public function should_fail_silently() {
+    /**
+     * Set time to live for cache
+     *
+     * @param    int    $ttl    Time to live (in secs)
+     * 
+     * @return \Comodojo\Cache\CacheObject\CacheObject
+     * @throws \Comodojo\Exception\CacheException
+     */
+    final public function setTtl( $ttl=null ) {
         
-        return $this->fail_silently;
+        if ( is_null($ttl) ) {
+            
+            $this->ttl = defined('COMODOJO_CACHE_DEFAULT_TTL') ? COMODOJO_CACHE_DEFAULT_TTL : 3600;
+            
+        } else if ( is_int($ttl) ) {
+            
+            $this->ttl = $ttl;
+            
+        } else {
+            
+            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid time to live");
+            
+            throw new CacheException("Invalid time to live");
+            
+        }
+        
+        return $this;
+        
+    }
+    
+    /**
+     * Get current ttl
+     *
+     * @return int
+     */
+    final public function getTtl() {
+        
+        return $this->ttl;
+        
+    }
+    
+    /**
+     * Set scope for cache
+     *
+     * @param    string    $scope    Selected scope (54 chars limited)
+     * 
+     * @return \Comodojo\Cache\CacheObject\CacheObject
+     * @throws \Comodojo\Exception\CacheException
+     */
+    final public function setScope( $scope ) {
+
+        if ( preg_match('/^[0-9a-zA-Z]+$/', $scope) AND strlen($scope) <= 64 ) {
+            
+            $this->scope = strtoupper($scope);
+            
+        } else {
+            
+            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid cache scope");
+            
+            throw new CacheException("Invalid cache scope");
+            
+        }
+        
+        return $this;
+
+    }
+
+    /**
+     * Get current scope
+     *
+     * @return int
+     */
+    final public function getScope() {
+
+        return $this->scope;
+
+    }
+
+    /**
+     * Set the monolog instance
+     *
+     * @param    \Monolog\Logger    $logger
+     * 
+     * @return \Comodojo\Cache\CacheObject\CacheObject
+     */
+    final public function setLogger( \Monolog\Logger $logger ) {
+
+        $this->logger = $logger;
+        
+        return $this;
+
+    }
+    
+    /**
+     * Get current logger
+     *
+     * @return \Monolog\Logger
+     */
+    final public function getLogger() {
+        
+        return $this->logger;
         
     }
 
