@@ -45,7 +45,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
             
         } else {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Database table cannot be undefined");
+            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Database table cannot be undefined");
             
             throw new CacheException("Database table cannot be undefined");
             
@@ -61,59 +61,61 @@ class DatabaseCache extends CacheObject implements CacheInterface {
             
         }
     
-        if ( empty($table) ) {
-            
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Table cannot be undefined");
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
-    
         $this->dbh = $dbh;
         
         $this->dbh->autoClean();
         
-        parent::__construct();
+        try {
+            
+            parent::__construct();
+            
+        }
+        
+        catch ( CacheException $ce ) {
+            
+            throw $ce;
+            
+        }
        
     }
 
     public function set($name, $data, $ttl=null) {
         
-        $return = true;
-        
-        $scope = $this->getScope();
-        
         if ( empty($name) ) {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
+            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
             
             throw new CacheException("Name of object cannot be empty");
             
         }
         
-        if ( empty($data) ) {
+        if ( is_null($data) ) {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Object cannot be empty");
+            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Object cannot be empty");
             
-            throw new CacheException("Object cannot be empty");
+            throw new CacheException("Object content cannot be null");
             
         }
-        
+
+        if ( !$this->isEnabled() ) return false;
+
         try {
+
+            $namespace = $this->getNamespace();
             
             $this->setTtl($ttl);
             
             $expire = $this->getTime() + $this->ttl;
             
-            $is_in_cache = self::getCacheObject($this->dbh, $name, $scope);
+            $is_in_cache = self::getCacheObject($this->dbh, $name, $namespace);
             
             if ( $is_in_cache->getLength() != 0 ) {
                 
-                self::updateCacheObject($this->dbh, $name, serialize($data), $scope, $expire );
+                self::updateCacheObject($this->dbh, $name, serialize($data), $namespace, $expire );
                 
             } else {
                 
-                self::addCacheObject($this->dbh, $name, serialize($data), $scope, $expire );
+                self::addCacheObject($this->dbh, $name, serialize($data), $namespace, $expire );
                 
             }
 
@@ -123,36 +125,38 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error writing cache object, exiting gracefully", array(
+            $this->raiseError("Error writing cache object, exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
             
-            $return = false;
+            return false;
             
         }
         
-        return $return;
+        return true;
         
     }
     
     public function get($name) {
         
-        $scope = $this->getScope();
-        
         if ( empty($name) ) {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
+            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
             
             throw new CacheException("Name of object cannot be empty");
             
         }
+
+        if ( !$this->isEnabled() ) return null;
         
         try {
+
+            $namespace = $this->getNamespace();
             
-            $is_in_cache = self::getCacheObject($this->dbh, $name, $scope, $this->getTime());
+            $is_in_cache = self::getCacheObject($this->dbh, $name, $namespace, $this->getTime());
             
-            if ( $is_in_cache->getLength() == 0 ) {
+            if ( $is_in_cache->getLength() != 0 ) {
             
                 $value = $is_in_cache->getData();
                 
@@ -170,7 +174,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
            
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error reading cache object, exiting gracefully", array(
+            $this->raiseError("Error reading cache object, exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -183,15 +187,17 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
-    public function flush($name=null) {
+    public function delete($name=null) {
+
+        if ( !$this->isEnabled() ) return false;
         
         try {
             
             $this->dbh->tablePrefix($this->table_prefix)
                 ->table($this->table)
-                ->where("scope","=",$this->getScope());
+                ->where("namespace","=",$this->getNamespace());
                 
-            if ( !is_null($name) ) {
+            if ( !empty($name) ) {
                 
                 $this->dbh->andWhere("name","=",$name);
                 
@@ -201,23 +207,35 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
            
-            throw $de;
+            $this->raiseError("Failed to delete cache record", array(
+                "ERRORNO"   =>  $de->getCode(),
+                "ERROR"     =>  $de->getMessage()
+            ));
             
+            return false;
+
         }
         
         return true;
         
     }
     
-    public function purge() {
+    public function flush() {
         
+        if ( !$this->isEnabled() ) return false;
+
         try {
             
             $this->dbh->tablePrefix($this->table_prefix)->table($this->table)->truncate();
 
         } catch (DatabaseException $de) {
            
-            throw $de;
+            $this->raiseError("Failed to flush cache", array(
+                "ERRORNO"   =>  $de->getCode(),
+                "ERROR"     =>  $de->getMessage()
+            ));
+            
+            return false;
             
         }
         
@@ -225,7 +243,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
-    public function status($currentScope=false) {
+    public function status( /*$currentScope=false*/ ) {
         
         try {
             
@@ -233,11 +251,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 ->table($this->table)
                 ->keys('COUNT::id=>count');
             
-            if ( $currentScope ) {
+            // if ( $currentScope ) {
                 
-                $this->dbh->where("scope","=",$this->getScope());
+            //     $this->dbh->where("scope","=",$this->getScope());
                 
-            }
+            // }
             
             $count = $this->dbh->get();
 
@@ -248,13 +266,20 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         }
         
         return array(
-            "online"    => true,
+            "provider"  => "database",
+            "enabled"   => $this->isEnabled(),
             "objects"   => $count[0]['count'],
             "options"   => array(
                 "model" => $this->dbh->model
             )
         );
         
+    }
+
+    public final function getInstance() {
+
+        return $this->dbh;
+
     }
     
     static private function getCacheObject($dbh, $table, $table_prefix, $name, $scope, $expire=null) {
@@ -265,7 +290,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 ->table($table)
                 ->keys('data')
                 ->where("name","=",$name)
-                ->andWhere("scope","=",$scope); ;
+                ->andWhere("namespace","=",$scope); ;
                 
             if ( is_int($expire) ) {
                 
@@ -295,7 +320,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 ->keys(array('data','expire'))
                 ->values(array($data,$expire))
                 ->where("name","=",$name)
-                ->andWhere("scope","=",$scope)
+                ->andWhere("namespace","=",$scope)
                 ->update();
         
             //$rows = $update->getAffectedRows();
@@ -316,7 +341,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
             
             $update = $dbh->tablePrefix($table_prefix)
                 ->table($table)
-                ->keys(array('name', 'data', 'scope', 'expire'))
+                ->keys(array('name', 'data', 'namespace', 'expire'))
                 ->values(array($name, $data, $scope, $expire))
                 ->store();
         

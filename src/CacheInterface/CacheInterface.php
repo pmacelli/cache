@@ -21,59 +21,90 @@
 interface CacheInterface {
 
     /**
+     * administratively enable cache
+     *
+     */
+    public function enable();
+
+    /**
+     * administratively disable cache
+     *
+     */
+    public function disable();
+
+    /**
+     * check if cache is enabled
+     *
+     * @return bool
+     */
+    public function isEnabled();
+
+    /**
      * Set cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
      *
      * @param   string  $name    Name for cache element
      * @param   mixed   $data    Data to cache
      * @param   int     $ttl     Time to live
      *
-     * @return  Object  $this
+     * @return  bool
      */
     public function set($name, $data, $ttl);
 
     /**
      * Get cache element
      *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a null value.
+     * In case of cache not found, it will return a null value.
+     *
      * @param   string  $name    Name for cache element
      *
-     * @return  Object  $this
+     * @return  mixed
      */
     public function get($name);
 
     /**
-     * Set scope
+     * Delete cache object (or entire namespace if $name is null)
      *
-     * @param   string  $scope
-     *
-     * @return  Object  $this
-     */
-    public function setScope($scope);
-
-    /**
-     * Get scope
-     *
-     * @return  string
-     */
-    public function getScope();
-
-    /**
-     * Flush cache (or entire scope)
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
      *
      * @param   string  $name    Name for cache element
      *
      * @return  bool
      */
-    public function flush($name);
+    public function delete($name);
 
     /**
-     * Clean cache objects in any scope
+     * Set namespace
+     *
+     * @param   string  $namespace
+     *
+     * @return  Object  $this
+     */
+    public function setNamespace($namespace);
+
+    /**
+     * Get namespace
+     *
+     * @return  string
+     */
+    public function getNamespace();
+
+    /**
+     * Clean cache objects in all namespaces
+     *
+     * This method will throw only logical exceptions.
      *
      * @return  bool
      */
-    public function purge();
+    public function flush();
 
     /**
-     * Cache status
+     * Get cache status
      *
      * @return  array
      */

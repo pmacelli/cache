@@ -40,25 +40,31 @@ class FileCache extends CacheObject implements CacheInterface {
             
         } else {
         
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid or unspecified cache folder");
-            
             throw new CacheException("Invalid or unspecified cache folder");
             
         }
-        
-        try {
+
+        if ( self::checkCacheFolder($this->cache_folder) === false ) {
+
+            $this->raiseError("Cache folder not writeable, disabling cache administratively");
+
+            $this->disable();
+
+        } else {
+
+            try {
             
-            self::checkCacheFolder($this->cache_folder);
+                parent::__construct();
+                
+            }
             
+            catch ( CacheException $ce ) {
+                
+                throw $ce;
+                
+            }
+
         }
-        
-        catch ( CacheException $ce ) {
-            
-            throw $ce;
-            
-        }
-        
-        parent::__construct();
 
     }
     
@@ -66,25 +72,27 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( empty($name) ) {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
+            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
             
             throw new CacheException("Name of object cannot be empty");
             
         }
         
-        if ( empty($data) ) {
+        if ( is_null($data) ) {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Object cannot be empty");
+            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Object cannot be empty");
             
-            throw new CacheException("Object cannot be empty");
+            throw new CacheException("Object content cannot be null");
             
         }
+
+        if ( !$this->isEnabled() ) return false;
         
         try {
             
             $this->setTtl($ttl);
         
-            $shadowName = $this->cache_folder . md5($name)."-".$this->getScope();
+            $shadowName = $this->cache_folder . md5($name)."-".$this->getNamespace();
             
             $shadowData = serialize($data);
     
@@ -114,29 +122,23 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( empty($name) ) {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
+            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
             
             throw new CacheException("Name of object cannot be empty");
             
         }
 
-        try {
-            
-            $shadowName = $this->cache_folder . md5($name)."-".$this->getScope();
-        
-            if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
+        if ( !$this->isEnabled() ) return null;
 
-                $return = self::getXattr($shadowName, $this->getTime());
+        $shadowName = $this->cache_folder . md5($name)."-".$this->getNamespace();
+    
+        if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
-            } else {
+            $return = self::getXattr($shadowName, $this->getTime());
 
-                $return = self::getGhost($shadowName, $this->getTime());
+        } else {
 
-            }
-
-        } catch (CacheException $ce) {
-            
-            throw $ce;
+            $return = self::getGhost($shadowName, $this->getTime());
 
         }
 
@@ -144,44 +146,74 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
     
-    public function flush($name=null) {
+    public function delete($name=null) {
 
-        // flush entire scope
-        if ( is_null($name) ) $filesList = glob($this->cache_folder."*-".$this->getScope().".{cache,expire}", GLOB_BRACE);
+        if ( !$this->isEnabled() ) return false;
 
-        else $filesList = glob($this->cache_folder.md5($name)."-".$this->getScope().".{cache,expire}", GLOB_BRACE);
+        $return = true;
 
-        foreach ($filesList as $file) {
+        // flush entire namespace
+        if ( is_null($name) ) {
 
-            if ( unlink($file) === false ) throw new CacheException("Failed to unlink cache file");
+            $filesList = glob($this->cache_folder."*-".$this->getNamespace().".{cache,expire}", GLOB_BRACE);
+
+        } else {
+
+            $filesList = glob($this->cache_folder.md5($name)."-".$this->getNamespace().".{cache,expire}", GLOB_BRACE);
 
         }
 
-        return true;
+        foreach ($filesList as $file) {
+
+            if ( unlink($file) === false ) {
+
+                $this->raiseError("Failed to unlink cache file", pathinfo($file));
+                
+                // throw new CacheException("Failed to unlink cache file");
+
+                $return = false;
+
+            }
+
+        }
+
+        return $return;
 
     }
 
-    public function purge() {
+    public function flush() {
+
+        if ( !$this->isEnabled() ) return false;
+
+        $return = true;
 
         $filesList = glob($this->cache_folder."*.{cache,expire}", GLOB_BRACE);
 
         foreach ($filesList as $file) {
 
-            if ( unlink($file) === false ) throw new CacheException("Failed to unlink cache file");
+            if ( unlink($file) === false ) {
+
+                $this->raiseError("Failed to unlink cache file", pathinfo($file));
+
+                // throw new CacheException("Failed to unlink cache file");
+
+                $return = false;
+
+            }
 
         }
 
-        return true;
+        return $return;
 
     }
 
-    public function status($currentScope=false) {
+    public function status( /*$currentScope=false*/ ) {
 
-        $currentScope = filter_var($currentScope, FILTER_VALIDATE_BOOLEAN);
+        // $currentScope = filter_var($currentScope, FILTER_VALIDATE_BOOLEAN);
 
-        if ( $currentScope ) $filesList = glob($this->cache_folder."*-".$this->getScope().".cache");
+        // if ( $currentScope ) $filesList = glob($this->cache_folder."*-".$this->getScope().".cache");
 
-        else $filesList = glob($this->cache_folder."*.cache");
+        /* else */ $filesList = glob($this->cache_folder."*.cache");
 
         if ( self::checkXattrSupport() ) {
 
@@ -200,7 +232,8 @@ class FileCache extends CacheObject implements CacheInterface {
         }
 
         return array(
-            "online"    => true,
+            "provider"  => "file",
+            "enabled"   => $this->isEnabled(),
             "objects"   => count($filesList),
             "options"   => $options
         );
@@ -211,15 +244,13 @@ class FileCache extends CacheObject implements CacheInterface {
 
         $cacheFile = $name . ".cache";
 
-        $return = true;
-
         $cached = file_put_contents($cacheFile, $data, LOCK_EX);
 
         if ( $cached === false ) {
 
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error writing cache object, exiting gracefully");
+            $this->raiseError("Error writing cache object, exiting gracefully", pathinfo($cacheFile));
 
-            $return = false;
+            return false;
 
         }
 
@@ -227,13 +258,13 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( $tagged === false ) {
 
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error writing cache ttl, exiting gracefully");
+            $this->raiseError("Error writing cache ttl (XATTR), exiting gracefully", pathinfo($cacheFile));
 
-            $return = false;
+            return false;
 
         }
 
-        return $return;
+        return true;
 
     }
 
@@ -245,13 +276,11 @@ class FileCache extends CacheObject implements CacheInterface {
 
         $cached = file_put_contents($cacheFile, $data, LOCK_EX);
         
-        $return = true;
-
         if ( $cached === false ) {
 
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error writing cache object, exiting gracefully");
+            $this->raiseError("Error writing cache object, exiting gracefully", pathinfo($cacheFile));
 
-            $return = false;
+            return false;
 
         }
 
@@ -259,13 +288,13 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( $tagged === false ) {
 
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error writing cache ttl, exiting gracefully");
+            $this->raiseError("Error writing cache ttl (GHOST), exiting gracefully", pathinfo($cacheGhost));
 
-            $return = false;
+            return false;
 
         }
 
-        return $return;
+        return true;
 
     }
 
@@ -279,8 +308,8 @@ class FileCache extends CacheObject implements CacheInterface {
 
             if ( $expire === false ) {
                 
-                if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error reading cache ttl, exiting gracefully");
-                
+                $this->raiseError("Error reading cache ttl (XATTR), exiting gracefully", pathinfo($cacheFile));
+
                 $return = null;
 
             } else if ( $expire < $time ) {
@@ -293,7 +322,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
                 if ( $data === false ) {
                     
-                    if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error reading cache content, exiting gracefully");
+                    $this->raiseError("Error reading cache content, exiting gracefully", pathinfo($cacheFile));
                     
                     $return = null;
                     
@@ -326,8 +355,8 @@ class FileCache extends CacheObject implements CacheInterface {
             $expire = file_get_contents($cacheGhost);
             
             if ( $expire === false ) {
-                
-                if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error reading cache ttl, exiting gracefully");
+
+                $this->raiseError("Error reading cache ttl (GHOST), exiting gracefully", pathinfo($cacheGhost));
                 
                 $return = null;
 
@@ -341,7 +370,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
                 if ( $data === false ) {
                     
-                    if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Error reading cache content, exiting gracefully");
+                    $this->raiseError("Error reading cache content, exiting gracefully", pathinfo($cacheFile));
                     
                     $return = null;
                     
@@ -371,13 +400,13 @@ class FileCache extends CacheObject implements CacheInterface {
     
     private static function checkXattrSupport() {
         
-        return function_exists("xattr_supported");
+        return function_exists( "xattr_supported" );
         
     }
     
     private static function checkXattrFilesystemSupport($folder) {
         
-        return xattr_supported($folder);
+        return xattr_supported( $folder );
         
     }
     

@@ -27,7 +27,7 @@ class CacheObject {
      *
      * @var string
      */
-    protected $scope = "GLOBAL";
+    protected $namespace = "GLOBAL";
 
     /**
      * current time (in msec)
@@ -50,6 +50,8 @@ class CacheObject {
      */
     protected $ttl = null;
 
+    protected $enabled = true;
+
     /**
      * Class constructor
      *
@@ -70,7 +72,35 @@ class CacheObject {
         }
         
     }
+
+    public function raiseError($message, $parameters=array()) {
+
+        if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
+
+        var_export($message);
+        
+        var_export($parameters);
+
+    }
     
+    final public function enable() {
+
+        $this->enabled = true;
+
+    }
+
+    final public function disable() {
+
+        $this->enabled = false;
+
+    }
+
+    final public function isEnabled() {
+
+        return $this->enabled;
+
+    }
+
     /**
      * Set current time
      *
@@ -87,8 +117,8 @@ class CacheObject {
         
         else {
             
-            if ( $logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid time");
-            
+            // $this->raiseError("Invalid time");
+
             throw new CacheException("Invalid time");
             
         }
@@ -127,8 +157,8 @@ class CacheObject {
             $this->ttl = $ttl;
             
         } else {
-            
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid time to live");
+
+            // $this->raiseError("Invalid time to live");
             
             throw new CacheException("Invalid time to live");
             
@@ -150,24 +180,24 @@ class CacheObject {
     }
     
     /**
-     * Set scope for cache
+     * Set namespace for cache
      *
-     * @param    string    $scope    Selected scope (54 chars limited)
+     * @param    string    $namespace    Selected namespace (64 chars limited)
      * 
      * @return \Comodojo\Cache\CacheObject\CacheObject
      * @throws \Comodojo\Exception\CacheException
      */
-    final public function setScope( $scope ) {
+    final public function setNamespace( $namespace ) {
 
-        if ( preg_match('/^[0-9a-zA-Z]+$/', $scope) AND strlen($scope) <= 64 ) {
+        if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) AND strlen($namespace) <= 64 ) {
             
-            $this->scope = strtoupper($scope);
+            $this->namespace = strtoupper($namespace);
             
         } else {
             
-            if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid cache scope");
-            
-            throw new CacheException("Invalid cache scope");
+            // $this->raiseError("Invalid namespace");
+
+            throw new CacheException("Invalid namespace");
             
         }
         
@@ -176,13 +206,13 @@ class CacheObject {
     }
 
     /**
-     * Get current scope
+     * Get current namespace
      *
      * @return int
      */
-    final public function getScope() {
+    final public function getNamespace() {
 
-        return $this->scope;
+        return $this->namespace;
 
     }
 
