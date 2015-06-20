@@ -146,7 +146,6 @@ class FileCache extends CacheObject implements CacheInterface {
 
         $return = true;
 
-        // flush entire namespace
         if ( is_null($name) ) {
 
             $filesList = glob($this->cache_folder."*-".$this->getNamespace().".{cache,expire}", GLOB_BRACE);
@@ -161,7 +160,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
             if ( unlink($file) === false ) {
 
-                $this->raiseError("Failed to unlink cache file", pathinfo($file));
+                $this->raiseError("Failed to unlink cache file (File), exiting gracefully", pathinfo($file));
                 
                 $return = false;
 
@@ -185,7 +184,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
             if ( unlink($file) === false ) {
 
-                $this->raiseError("Failed to unlink cache file", pathinfo($file));
+                $this->raiseError("Failed to unlink whole cache (File), exiting gracefully", pathinfo($file));
 
                 $return = false;
 
@@ -234,7 +233,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( $cached === false ) {
 
-            $this->raiseError("Error writing cache object, exiting gracefully", pathinfo($cacheFile));
+            $this->raiseError("Error writing cache object (File), exiting gracefully", pathinfo($cacheFile));
 
             return false;
 
@@ -244,7 +243,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( $tagged === false ) {
 
-            $this->raiseError("Error writing cache ttl (XATTR), exiting gracefully", pathinfo($cacheFile));
+            $this->raiseError("Error writing cache ttl (File) (XATTR), exiting gracefully", pathinfo($cacheFile));
 
             return false;
 
@@ -264,7 +263,7 @@ class FileCache extends CacheObject implements CacheInterface {
         
         if ( $cached === false ) {
 
-            $this->raiseError("Error writing cache object, exiting gracefully", pathinfo($cacheFile));
+            $this->raiseError("Error writing cache object (File), exiting gracefully", pathinfo($cacheFile));
 
             return false;
 
@@ -274,7 +273,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( $tagged === false ) {
 
-            $this->raiseError("Error writing cache ttl (GHOST), exiting gracefully", pathinfo($cacheGhost));
+            $this->raiseError("Error writing cache ttl (File) (GHOST), exiting gracefully", pathinfo($cacheGhost));
 
             return false;
 
@@ -294,7 +293,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
             if ( $expire === false ) {
                 
-                $this->raiseError("Error reading cache ttl (XATTR), exiting gracefully", pathinfo($cacheFile));
+                $this->raiseError("Error reading cache ttl (File) (XATTR), exiting gracefully", pathinfo($cacheFile));
 
                 $return = null;
 
@@ -308,7 +307,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
                 if ( $data === false ) {
                     
-                    $this->raiseError("Error reading cache content, exiting gracefully", pathinfo($cacheFile));
+                    $this->raiseError("Error reading cache content (File), exiting gracefully", pathinfo($cacheFile));
                     
                     $return = null;
                     
@@ -340,11 +339,9 @@ class FileCache extends CacheObject implements CacheInterface {
 
             $expire = file_get_contents($cacheGhost);
 
-            var_export(array("ctime"=>$time, "gtime"=>$expire));
-            
             if ( $expire === false ) {
 
-                $this->raiseError("Error reading cache ttl (GHOST), exiting gracefully", pathinfo($cacheGhost));
+                $this->raiseError("Error reading cache ttl (File) (GHOST), exiting gracefully", pathinfo($cacheGhost));
                 
                 $return = null;
 
@@ -358,7 +355,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
                 if ( $data === false ) {
                     
-                    $this->raiseError("Error reading cache content, exiting gracefully", pathinfo($cacheFile));
+                    $this->raiseError("Error reading cache content (File), exiting gracefully", pathinfo($cacheFile));
                     
                     $return = null;
                     

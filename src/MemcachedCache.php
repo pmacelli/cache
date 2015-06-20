@@ -159,7 +159,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
             if ( $return === false AND $this->instance->getResultCode() != Memcached::RES_NOTFOUND ) {
 
-                $this->raiseError("Error reading cache, exiting gracefully", array(
+                $this->raiseError("Error reading cache (Memcached), exiting gracefully", array(
                     "RESULTCODE" => $this->instance->getResultCode(),
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
@@ -192,7 +192,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         if ( $delete === false ) {
 
-            $this->raiseError("Error writing cache, exiting gracefully", array(
+            $this->raiseError("Error writing cache (Memcached), exiting gracefully", array(
                 "RESULTCODE" => $this->instance->getResultCode(),
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
@@ -212,7 +212,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         if ( $result === false ) {
 
-            $this->raiseError("Error flushing cache", array(
+            $this->raiseError("Error flushing cache (Memcached), exiting gracefully", array(
                 "RESULTCODE" => $this->instance->getResultCode(),
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));

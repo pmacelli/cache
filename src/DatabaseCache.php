@@ -45,8 +45,6 @@ class DatabaseCache extends CacheObject implements CacheInterface {
             
         } else {
             
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Database table cannot be undefined");
-            
             throw new CacheException("Database table cannot be undefined");
             
         }
@@ -83,15 +81,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
         if ( empty($name) ) {
             
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
-            
             throw new CacheException("Name of object cannot be empty");
             
         }
         
         if ( is_null($data) ) {
-            
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Object cannot be empty");
             
             throw new CacheException("Object content cannot be null");
             
@@ -125,7 +119,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
             
-            $this->raiseError("Error writing cache object, exiting gracefully", array(
+            $this->raiseError("Error writing cache object (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -141,8 +135,6 @@ class DatabaseCache extends CacheObject implements CacheInterface {
     public function get($name) {
         
         if ( empty($name) ) {
-            
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
             
             throw new CacheException("Name of object cannot be empty");
             
@@ -174,7 +166,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
            
-            $this->raiseError("Error reading cache object, exiting gracefully", array(
+            $this->raiseError("Error reading cache object (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -207,7 +199,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
            
-            $this->raiseError("Failed to delete cache record", array(
+            $this->raiseError("Failed to delete cache (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -230,7 +222,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
            
-            $this->raiseError("Failed to flush cache", array(
+            $this->raiseError("Failed to flush cache (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -243,19 +235,13 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
-    public function status( /*$currentScope=false*/ ) {
+    public function status() {
         
         try {
             
             $this->dbh->tablePrefix($this->table_prefix)
                 ->table($this->table)
                 ->keys('COUNT::id=>count');
-            
-            // if ( $currentScope ) {
-                
-            //     $this->dbh->where("scope","=",$this->getScope());
-                
-            // }
             
             $count = $this->dbh->get();
 
@@ -323,15 +309,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 ->andWhere("namespace","=",$scope)
                 ->update();
         
-            //$rows = $update->getAffectedRows();
-            
         } catch (DatabaseException $de) {
             
             throw $de;
             
         }
-        
-        //return $rows == 1 ? true : false;
         
     }
     
@@ -345,15 +327,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 ->values(array($name, $data, $scope, $expire))
                 ->store();
         
-            //$rows = $update->getAffectedRows();
-            
         } catch (DatabaseException $de) {
             
             throw $de;
             
         }
-        
-        //return $rows == 1 ? true : false;
         
     }
     

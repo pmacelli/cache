@@ -6,7 +6,7 @@ use \Comodojo\Exception\CacheException;
 use \Exception;
 
 /**
- * Apc cache class
+ * XCache cache class
  * 
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -23,13 +23,13 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class ApcCache extends CacheObject implements CacheInterface {
+class XCacheCache extends CacheObject implements CacheInterface {
 
     public function __construct() {
 
-        if ( self::getApcStatus() === false ) {
+        if ( self::getXCacheStatus() === false ) {
 
-            $this->raiseError("Apc extension not available, disabling cache administratively");
+            $this->raiseError("XCache extension not available, disabling cache administratively");
 
             $this->disable();
 
@@ -71,29 +71,17 @@ class ApcCache extends CacheObject implements CacheInterface {
             
             $this->setTtl($ttl);
 
-            $namespace = $this->getNamespaceKey();
-
-            if ( $namespace === false ) $namespace = $this->setNamespaceKey();
-
-            if ( $namespace === false ) {
-
-                $this->raiseError("Error writing cache (APC), exiting gracefully");
-
-                $return = false;
-
-            } else {
-
-                $shadowName = $namespace."-".md5($name);
+            $shadowName = $this->getNamespace()."-".md5($name);
             
-                $shadowTtl = $this->ttl;
+            $shadowTtl = $this->ttl;
 
-                $return = apc_store($shadowName, $data, $shadowTtl);
+            $shadowData = serialize($data);
 
-                if ( $return === false ) {
+            $return = xcache_set($shadowName, $shadowData, $shadowTtl);
 
-                    $this->raiseError("Error writing cache (APC), exiting gracefully");
+            if ( $return === false ) {
 
-                }
+                $this->raiseError("Error writing cache (XCache), exiting gracefully");
 
             }
 
@@ -117,27 +105,17 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return null;
 
-        $namespace = $this->getNamespaceKey();
+        $shadowName = $this->getNamespace()."-".md5($name);
 
-        if ( $namespace === false ) {
+        $return = xcache_get($shadowName);
 
-            $return = null;
+        if ( $return === false ) {
 
-        } else {
-
-            $shadowName = $namespace."-".md5($name);
-
-            $return = apc_fetch($shadowName);
-
-            if ( $return === false ) {
-
-                $this->raiseError("Error reading cache (APC), exiting gracefully");
-
-            }
+            $this->raiseError("Error reading cache (XCache), exiting gracefully");
 
         }
 
-        return $return === false ? null : $return;
+        return $return === false ? null : unserialize($return);
 
     }
 
@@ -145,23 +123,19 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
-        $namespace = $this->getNamespaceKey();
-
-        if ( $namespace === false ) return true;
-
         if ( empty($name) ) {
 
-            $delete = apc_delete($this->getNamespace());
+            $delete = xcache_unset_by_prefix($this->getNamespace());
 
         } else {
 
-            $delete = apc_delete($namespace."-".md5($name));
+            $delete = xcache_unset($this->getNamespace()."-".md5($name));
 
         }
 
         if ( $delete === false ) {
 
-            $this->raiseError("Error deleting cache (APC), exiting gracefully");
+            $this->raiseError("Error writing cache (XCache), exiting gracefully");
 
         }
 
@@ -174,7 +148,7 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
-        $result = apc_clear_cache("user");
+        $result = xcache_clear_cache(XC_TYPE_VAR, 0);
 
         return $result;
 
@@ -182,44 +156,18 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     public function status() {
 
-        $stats = apc_cache_info("user",true);
-
-        $objects = $stats["num_entries"];
-
         return array(
-            "provider"  => "apc",
+            "provider"  => "xcache",
             "enabled"   => $this->isEnabled(),
-            "objects"   => $objects,
-            "options"   => $stats
+            "objects"   => xcache_count(XC_TYPE_VAR),
+            "options"   => array()
         );
 
     }
 
-    private function setNamespaceKey() {
+    static private function getXCacheStatus() {
 
-        $uId = self::getUniqueId();
-
-        $return = apc_store($this->getNamespace(), $uId, 0);
-
-        return $return === false ? false : $uId;
-
-    }
-
-    private function getNamespaceKey() {
-
-        return apc_fetch($this->getNamespace());
-
-    }
-
-    static private function getUniqueId() {
-
-        return substr(md5(uniqid(rand(), true)), 0, 64);
-
-    }
-
-    static private function getApcStatus() {
-
-        return ( extension_loaded('apc') AND ini_get('apc.enabled') );
+        return ( extension_loaded('xcache') AND function_exists("xcache_get") );
 
     }
 
