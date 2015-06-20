@@ -127,17 +127,19 @@ class ApcCache extends CacheObject implements CacheInterface {
 
             $shadowName = $namespace."-".md5($name);
 
-            $return = apc_fetch($shadowName);
+            $return = apc_fetch($shadowName, $success);
 
-            if ( $return === false ) {
+            if ( $success === false ) {
 
                 $this->raiseError("Error reading cache (APC), exiting gracefully");
+
+                $return = null;
 
             }
 
         }
 
-        return $return === false ? null : $return;
+        return $return;
 
     }
 
@@ -219,7 +221,7 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     static private function getApcStatus() {
 
-        return ( extension_loaded('apc') AND ini_get('apc.enabled') );
+        return ( ( extension_loaded('apc') OR extension_loaded('apc') ) AND ini_get('apc.enabled') );
 
     }
 

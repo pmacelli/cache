@@ -28,15 +28,21 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     private $instance = null;
 
-    public function __construct( $server, $port, $weight=0 ) {
-
-        $this->instance = new Memcached();
+    public function __construct( $server, $port=11211, $weight=0, $persistent_id=null ) {
 
         if ( empty($server) ) {
 
             throw new CacheException("Invalid or unspecified memcached server");
 
         }
+
+        if ( !is_null($persistent_id) AND !is_string($persistent_id) ) {
+
+            throw new CacheException("Invalid persistent id");
+
+        }
+
+        $this->instance = new Memcached($persistent_id);
 
         $port = filter_var($port, FILTER_VALIDATE_INT, array(
             "options" => array(
@@ -111,8 +117,10 @@ class MemcachedCache extends CacheObject implements CacheInterface {
                 $shadowName = $namespace."-".md5($name);
             
                 $shadowTtl = $this->getTime() + $this->ttl;
+
+                $shadowData = serialize($data);
                 
-                $return = $this->instance->set($shadowName, $data, $shadowTtl);
+                $return = $this->instance->set($shadowName, $shadowData, $shadowTtl);
 
                 if ( $return === false ) {
 
@@ -168,7 +176,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         }
 
-        return $return === false ? null : $return;
+        return $return === false ? null : unserialize($return);
 
     }
 
@@ -270,10 +278,16 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     private function addServer($server, $port, $weight) {
 
-        $this->raiseError("Error communicating with server", array(
-            "RESULTCODE" => $this->instance->getResultCode(),
-            "RESULTMESSAGE" => $this->instance->getResultMessage()
-        ));
+        $status = $this->instance->addServer($server, $port, $weight);
+
+        if ( $status === false ) {
+
+            $this->raiseError("Error communicating with server", array(
+                "RESULTCODE" => $this->instance->getResultCode(),
+                "RESULTMESSAGE" => $this->instance->getResultMessage()
+            ));
+
+        }
 
         if ( sizeof($this->instance->getServerList()) == 0 ) {
 

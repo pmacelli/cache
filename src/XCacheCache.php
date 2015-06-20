@@ -115,7 +115,7 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
         }
 
-        return $return === false ? null : unserialize($return);
+        return is_null($return) ? null : unserialize($return);
 
     }
 
@@ -148,9 +148,9 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
-        $result = xcache_clear_cache(XC_TYPE_VAR, 0);
+        xcache_clear_cache(XC_TYPE_VAR, -1);
 
-        return $result;
+        return true;
 
     }
 

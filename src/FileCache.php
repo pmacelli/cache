@@ -26,9 +26,9 @@ class FileCache extends CacheObject implements CacheInterface {
  
     private $cache_folder = null;
  
-    public function __construct( $cache_folder=false ) {
+    public function __construct( $cache_folder=null ) {
 
-        if ( $cache_folder !== false ) {
+        if ( !empty($cache_folder) AND is_string($cache_folder) ) {
             
             $this->cache_folder = $cache_folder[strlen($cache_folder)-1] == "/" ? $cache_folder : ( $cache_folder . "/" );
             
