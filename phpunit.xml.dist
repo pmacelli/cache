@@ -2,8 +2,14 @@
 
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Comodojo Test Suite - cache">
+        <testsuite name="comodojo-cache-standard">
             <directory>tests/Cache/</directory>
+            <exclude>test/Cache/XCacheCacheTest.php</exclude>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="comodojo-cache-xcache">
+            <file>tests/Cache/XCacheCacheTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

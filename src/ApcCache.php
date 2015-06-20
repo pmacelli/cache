@@ -191,7 +191,7 @@ class ApcCache extends CacheObject implements CacheInterface {
         return array(
             "provider"  => "apc",
             "enabled"   => $this->isEnabled(),
-            "objects"   => $objects,
+            "objects"   => intval($objects),
             "options"   => $stats
         );
 

@@ -101,15 +101,15 @@ class DatabaseCache extends CacheObject implements CacheInterface {
             
             $expire = $this->getTime() + $this->ttl;
             
-            $is_in_cache = self::getCacheObject($this->dbh, $name, $namespace);
+            $is_in_cache = self::getCacheObject($this->dbh, $this->table, $this->table_prefix, $name, $namespace);
             
             if ( $is_in_cache->getLength() != 0 ) {
                 
-                self::updateCacheObject($this->dbh, $name, serialize($data), $namespace, $expire );
+                self::updateCacheObject($this->dbh, $this->table, $this->table_prefix, $name, serialize($data), $namespace, $expire );
                 
             } else {
                 
-                self::addCacheObject($this->dbh, $name, serialize($data), $namespace, $expire );
+                self::addCacheObject($this->dbh, $this->table, $this->table_prefix, $name, serialize($data), $namespace, $expire );
                 
             }
 
@@ -145,14 +145,14 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         try {
 
             $namespace = $this->getNamespace();
-            
-            $is_in_cache = self::getCacheObject($this->dbh, $name, $namespace, $this->getTime());
+
+            $is_in_cache = self::getCacheObject($this->dbh, $this->table, $this->table_prefix, $name, $namespace, $this->getTime());
             
             if ( $is_in_cache->getLength() != 0 ) {
             
                 $value = $is_in_cache->getData();
-                
-                $return = unserialize($value[0][$name]);
+
+                $return = unserialize($value[0]['data']);
                
             } else {
                 
@@ -241,9 +241,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
             
             $this->dbh->tablePrefix($this->table_prefix)
                 ->table($this->table)
-                ->keys('COUNT::id=>count');
+                ->keys('COUNT::name=>count');
             
             $count = $this->dbh->get();
+
+            $objects = $count->getData();
 
         } catch (DatabaseException $de) {
            
@@ -254,9 +256,13 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         return array(
             "provider"  => "database",
             "enabled"   => $this->isEnabled(),
-            "objects"   => $count[0]['count'],
+            "objects"   => intval($objects[0]['count']),
             "options"   => array(
-                "model" => $this->dbh->model
+                'host'  =>  $this->dbh->getHost(),
+                'port'  =>  $this->dbh->getPort(),
+                'name'  =>  $this->dbh->getName(),
+                'user'  =>  $this->dbh->getUser(),
+                'model' =>  $this->dbh->getModel()
             )
         );
         
@@ -268,7 +274,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
     }
     
-    static private function getCacheObject($dbh, $table, $table_prefix, $name, $scope, $expire=null) {
+    static private function getCacheObject($dbh, $table, $table_prefix, $name, $namespace, $expire=null) {
         
         try {
             
@@ -276,7 +282,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 ->table($table)
                 ->keys('data')
                 ->where("name","=",$name)
-                ->andWhere("namespace","=",$scope); ;
+                ->andWhere("namespace","=",$namespace); ;
                 
             if ( is_int($expire) ) {
                 

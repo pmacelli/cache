@@ -37,22 +37,6 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
-    public function testStatus() {
-
-        $result = $this->cache->status();
-
-        $this->assertInternalType('array', $result);
-
-        $this->assertArrayHasKey("provider", $result);
-
-        $this->assertArrayHasKey("enabled", $result);
-
-        $this->assertArrayHasKey("objects", $result);
-
-        $this->assertArrayHasKey("options", $result);
-
-    }
-
     public function testSetArray() {
 
         $result = $this->cache->set("test-cache-2", $this->array_content);
@@ -110,6 +94,22 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         
     }
 
+    public function testStatus() {
+
+        $result = $this->cache->status();
+
+        $this->assertInternalType('array', $result);
+
+        $this->assertArrayHasKey("provider", $result);
+
+        $this->assertArrayHasKey("enabled", $result);
+
+        $this->assertArrayHasKey("objects", $result);
+
+        $this->assertArrayHasKey("options", $result);
+
+    }
+
     /**
      * @after
      */
@@ -118,6 +118,12 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $result = $this->cache->flush();
 
         $this->assertTrue($result);
+
+        $this->assertNull($this->cache->get("test-cache-1"));
+
+        $this->assertNull($this->cache->get("test-cache-2"));
+        
+        $this->assertNull($this->cache->get("test-cache-3"));
 
     }
 
