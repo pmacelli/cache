@@ -3,8 +3,16 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="comodojo-cache-standard">
-            <directory>tests/Cache/</directory>
-            <exclude>test/Cache/XCacheCacheTest.php</exclude>
+            <file>tests/Cache/ApcCacheTest.php</file>
+            <file>tests/Cache/DatabaseCacheTest.php</file>
+            <file>tests/Cache/FileCacheTest.php</file>
+            <file>tests/Cache/MemcachedCacheTest.php</file>
+            <file>tests/Cache/PhpRedisCacheTest.php</file>
+            <file>tests/Cache/CacheManagerPickFirstTest.php</file>
+            <file>tests/Cache/CacheManagerPickLastTest.php</file>
+            <file>tests/Cache/CacheManagerPickRandomTest.php</file>
+            <file>tests/Cache/CacheManagerPickAllTest.php</file>
+            <file>tests/Cache/CacheManagerPickByWeightTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>

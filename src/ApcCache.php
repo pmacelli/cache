@@ -25,27 +25,25 @@ use \Exception;
 
 class ApcCache extends CacheObject implements CacheInterface {
 
-    public function __construct() {
+    public function __construct( \Monolog\Logger $logger=null ) {
+
+        try {
+            
+            parent::__construct( $logger );
+            
+        }
+        
+        catch ( CacheException $ce ) {
+            
+            throw $ce;
+            
+        }
 
         if ( self::getApcStatus() === false ) {
 
             $this->raiseError("Apc extension not available, disabling cache administratively");
 
             $this->disable();
-
-        } else {
-
-            try {
-            
-                parent::__construct();
-                
-            }
-            
-            catch ( CacheException $ce ) {
-                
-                throw $ce;
-                
-            }
 
         }
 
@@ -67,6 +65,8 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         try {
             
             $this->setTtl($ttl);
@@ -78,6 +78,8 @@ class ApcCache extends CacheObject implements CacheInterface {
             if ( $namespace === false ) {
 
                 $this->raiseError("Error writing cache (APC), exiting gracefully");
+
+                $this->setErrorState();
 
                 $return = false;
 
@@ -92,6 +94,8 @@ class ApcCache extends CacheObject implements CacheInterface {
                 if ( $return === false ) {
 
                     $this->raiseError("Error writing cache (APC), exiting gracefully");
+
+                    $this->setErrorState();
 
                 }
 
@@ -117,6 +121,8 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return null;
 
+        $this->resetErrorState();
+
         $namespace = $this->getNamespaceKey();
 
         if ( $namespace === false ) {
@@ -133,6 +139,8 @@ class ApcCache extends CacheObject implements CacheInterface {
 
                 $this->raiseError("Error reading cache (APC), exiting gracefully");
 
+                $this->setErrorState();
+
                 $return = null;
 
             }
@@ -146,6 +154,8 @@ class ApcCache extends CacheObject implements CacheInterface {
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
+
+        $this->resetErrorState();
 
         $namespace = $this->getNamespaceKey();
 
@@ -164,6 +174,8 @@ class ApcCache extends CacheObject implements CacheInterface {
         if ( $delete === false ) {
 
             $this->raiseError("Error deleting cache (APC), exiting gracefully");
+
+            $this->setErrorState();
 
         }
 
@@ -210,12 +222,6 @@ class ApcCache extends CacheObject implements CacheInterface {
     private function getNamespaceKey() {
 
         return apc_fetch($this->getNamespace());
-
-    }
-
-    static private function getUniqueId() {
-
-        return substr(md5(uniqid(rand(), true)), 0, 64);
 
     }
 

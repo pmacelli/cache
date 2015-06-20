@@ -13,11 +13,21 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
     protected $cache = null;
 
+    public function testGetCacheId() {
+
+        $result = $this->cache->getCacheId();
+
+        $this->assertNotEmpty($result);
+
+    }
+
     public function testSet() {
 
         $result = $this->cache->set("test-cache-1", $this->string_content);
 
         $this->assertTrue($result);
+
+        $this->assertFalse($this->cache->getErrorState());
 
     }
 
@@ -27,6 +37,8 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals($this->string_content, $result);
 
+        $this->assertFalse($this->cache->getErrorState());
+
     }
 
     public function testDelete() {
@@ -34,6 +46,8 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $result = $this->cache->delete("test-cache-1");
 
         $this->assertTrue($result);
+
+        $this->assertFalse($this->cache->getErrorState());
 
     }
 
@@ -43,9 +57,13 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertTrue($result);
 
+        $this->assertFalse($this->cache->getErrorState());
+
         $result = $this->cache->get("test-cache-2");
 
         $this->assertSame($this->array_content, $result);
+
+        $this->assertFalse($this->cache->getErrorState());
 
     }
 
@@ -54,6 +72,8 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $result = $this->cache->set("test-cache-3", $this->string_content, 1);
 
         $this->assertTrue($result);
+
+        $this->assertFalse($this->cache->getErrorState());
 
     }
 
@@ -68,6 +88,8 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         
         $this->assertNull($result);
 
+        $this->assertFalse($this->cache->getErrorState());
+
     }
 
     public function testChangeNamespace() {
@@ -76,21 +98,31 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
 
+        $this->assertFalse($this->cache->getErrorState());
+
         $result = $this->cache->set("test-cache-4", $this->string_content);
 
         $this->assertTrue($result);
+
+        $this->assertFalse($this->cache->getErrorState());
 
         $result = $this->cache->get("test-cache-4");
 
         $this->assertEquals($this->string_content, $result);
 
+        $this->assertFalse($this->cache->getErrorState());
+
         $result = $this->cache->setNamespace('foonamespace');
 
         $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
 
+        $this->assertFalse($this->cache->getErrorState());
+
         $result = $this->cache->get("test-cache-4");
 
         $this->assertNull($result);
+
+        $this->assertFalse($this->cache->getErrorState());
         
     }
 
@@ -108,6 +140,8 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertArrayHasKey("options", $result);
 
+        $this->assertFalse($this->cache->getErrorState());
+
     }
 
     /**
@@ -124,6 +158,8 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $this->assertNull($this->cache->get("test-cache-2"));
         
         $this->assertNull($this->cache->get("test-cache-3"));
+
+        $this->assertFalse($this->cache->getErrorState());
 
     }
 

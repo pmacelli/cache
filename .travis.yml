@@ -14,14 +14,18 @@ matrix:
     - php: 7
     - php: hhvm
 
+env:
+  - SUITE=comodojo-cache-standard
+
 services:
   - memcached
   - redis-server
 
 before_install:
-  - mysql -e "create database IF NOT EXISTS comodojo;" -uroot
+  - sudo apt-get update -qq
+  - if [ $SUITE == 'comodojo-cache-standard' ]; then mysql -u root < $TRAVIS_BUILD_DIR/tests/DatabaseCacheCreateSchema.sql; fi
 
 before_script:
   - composer install --prefer-source
 
-script: ./vendor/bin/phpunit
+script: ./vendor/bin/phpunit --testsuite $SUITE

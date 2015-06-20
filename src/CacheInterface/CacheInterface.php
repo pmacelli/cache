@@ -40,6 +40,13 @@ interface CacheInterface {
     public function isEnabled();
 
     /**
+     * return the current cache provider's id
+     *
+     * @return string
+     */
+    public function getCacheId();
+
+    /**
      * Set cache element
      *
      * This method will throw only logical exceptions.
@@ -109,5 +116,15 @@ interface CacheInterface {
      * @return  array
      */
     public function status();
+
+    public function setLogger( \Monolog\Logger $logger );
+
+    public function getLogger();
+
+    public function setErrorState();
+
+    public function resetErrorState();
+
+    public function getErrorState();
 
 }

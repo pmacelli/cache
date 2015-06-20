@@ -94,6 +94,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         try {
             
             $this->setTtl($ttl);
@@ -105,6 +107,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
             if ( $namespace === false ) {
 
                 $this->raiseError( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
+
+                $this->setErrorState();
 
                 $return = false;
 
@@ -122,6 +126,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
                     $this->raiseError( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
 
+                    $this->setErrorState();
+
                 }
 
             }
@@ -136,6 +142,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
+
+            $this->setErrorState();
 
             return false;
 
@@ -155,6 +163,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return null;
 
+        $this->resetErrorState();
+
         try {
             
             $namespace = $this->getNamespaceKey();
@@ -173,6 +183,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
                     $this->raiseError( "Error reading cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
 
+                    $this->setErrorState();
+
                 }
 
             }
@@ -188,6 +200,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
                 "RESULTMESSAGE" => $re->getMessage()
             ));
 
+            $this->setErrorState();
+
             return null;
 
         }
@@ -199,6 +213,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
+
+        $this->resetErrorState();
 
         try {
 
@@ -227,6 +243,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
                 "RESULTMESSAGE" => $re->getMessage()
             ));
 
+            $this->setErrorState();
+
             return false;
 
         }
@@ -239,6 +257,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         try {
 
             $this->instance->flushDB();
@@ -249,6 +269,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
+
+            $this->setErrorState();
 
             return false;
 
@@ -266,6 +288,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
         $options = array();
 
+        $this->resetErrorState();
+
         try {
 
             $objects = $this->instance->dbSize();
@@ -278,6 +302,8 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
+
+            $this->setErrorState();
 
             $enabled = false;
 
@@ -329,12 +355,6 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
         }
 
         return $return;
-
-    }
-
-    static private function getUniqueId() {
-
-        return substr(md5(uniqid(rand(), true)), 0, 64);
 
     }
 

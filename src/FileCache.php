@@ -83,6 +83,8 @@ class FileCache extends CacheObject implements CacheInterface {
         }
 
         if ( !$this->isEnabled() ) return false;
+
+        $this->resetErrorState();
         
         try {
             
@@ -96,11 +98,11 @@ class FileCache extends CacheObject implements CacheInterface {
         
             if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
-                $return = self::setXattr($shadowName, $shadowData, $shadowTtl);
+                $return = $this->setXattr($shadowName, $shadowData, $shadowTtl);
 
             } else {
 
-                $return = self::setGhost($shadowName, $shadowData, $shadowTtl);
+                $return = $this->setGhost($shadowName, $shadowData, $shadowTtl);
 
             }
 
@@ -124,15 +126,17 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return null;
 
+        $this->resetErrorState();
+
         $shadowName = $this->cache_folder . md5($name)."-".$this->getNamespace();
     
         if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
-            $return = self::getXattr($shadowName, $this->getTime());
+            $return = $this->getXattr($shadowName, $this->getTime());
 
         } else {
 
-            $return = self::getGhost($shadowName, $this->getTime());
+            $return = $this->getGhost($shadowName, $this->getTime());
 
         }
 
@@ -143,6 +147,8 @@ class FileCache extends CacheObject implements CacheInterface {
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
+
+        $this->resetErrorState();
 
         $return = true;
 
@@ -161,6 +167,8 @@ class FileCache extends CacheObject implements CacheInterface {
             if ( unlink($file) === false ) {
 
                 $this->raiseError("Failed to unlink cache file (File), exiting gracefully", pathinfo($file));
+
+                $this->setErrorState();
                 
                 $return = false;
 
@@ -176,6 +184,8 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         $return = true;
 
         $filesList = glob($this->cache_folder."*.{cache,expire}", GLOB_BRACE);
@@ -185,6 +195,8 @@ class FileCache extends CacheObject implements CacheInterface {
             if ( unlink($file) === false ) {
 
                 $this->raiseError("Failed to unlink whole cache (File), exiting gracefully", pathinfo($file));
+
+                $this->setErrorState();
 
                 $return = false;
 
@@ -225,7 +237,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
 
-    private static function setXattr($name, $data, $ttl) {
+    private function setXattr($name, $data, $ttl) {
 
         $cacheFile = $name . ".cache";
 
@@ -234,6 +246,8 @@ class FileCache extends CacheObject implements CacheInterface {
         if ( $cached === false ) {
 
             $this->raiseError("Error writing cache object (File), exiting gracefully", pathinfo($cacheFile));
+
+            $this->setErrorState();
 
             return false;
 
@@ -245,6 +259,8 @@ class FileCache extends CacheObject implements CacheInterface {
 
             $this->raiseError("Error writing cache ttl (File) (XATTR), exiting gracefully", pathinfo($cacheFile));
 
+            $this->setErrorState();
+
             return false;
 
         }
@@ -253,7 +269,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
 
-    private static function setGhost($name, $data, $ttl) {
+    private function setGhost($name, $data, $ttl) {
 
         $cacheFile = $name . ".cache";
 
@@ -265,6 +281,8 @@ class FileCache extends CacheObject implements CacheInterface {
 
             $this->raiseError("Error writing cache object (File), exiting gracefully", pathinfo($cacheFile));
 
+            $this->setErrorState();
+
             return false;
 
         }
@@ -275,6 +293,8 @@ class FileCache extends CacheObject implements CacheInterface {
 
             $this->raiseError("Error writing cache ttl (File) (GHOST), exiting gracefully", pathinfo($cacheGhost));
 
+            $this->setErrorState();
+
             return false;
 
         }
@@ -283,7 +303,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
 
-    private static function getXattr($name, $time) {
+    private function getXattr($name, $time) {
 
         $cacheFile = $name . ".cache";
 
@@ -294,6 +314,8 @@ class FileCache extends CacheObject implements CacheInterface {
             if ( $expire === false ) {
                 
                 $this->raiseError("Error reading cache ttl (File) (XATTR), exiting gracefully", pathinfo($cacheFile));
+
+                $this->setErrorState();
 
                 $return = null;
 
@@ -308,6 +330,8 @@ class FileCache extends CacheObject implements CacheInterface {
                 if ( $data === false ) {
                     
                     $this->raiseError("Error reading cache content (File), exiting gracefully", pathinfo($cacheFile));
+
+                    $this->setErrorState();
                     
                     $return = null;
                     
@@ -329,7 +353,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
 
-    private static function getGhost($name, $time) {
+    private function getGhost($name, $time) {
 
         $cacheFile = $name . ".cache";
 
@@ -377,19 +401,19 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
     
-    private static function checkCacheFolder($folder) {
+    static private function checkCacheFolder($folder) {
         
         return is_writable( $folder );
         
     }
     
-    private static function checkXattrSupport() {
+    static private function checkXattrSupport() {
         
         return function_exists( "xattr_supported" );
         
     }
     
-    private static function checkXattrFilesystemSupport($folder) {
+    static private function checkXattrFilesystemSupport($folder) {
         
         return xattr_supported( $folder );
         

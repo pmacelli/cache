@@ -1,5 +1,6 @@
 <?php namespace Comodojo\Cache\CacheObject;
 
+use \Comodojo\Cache\CacheTrait\CacheTrait;
 use \Comodojo\Exception\CacheException;
 
 /**
@@ -22,33 +23,7 @@ use \Comodojo\Exception\CacheException;
 
 class CacheObject {
 
-    /**
-     * Determine the current cache scope (default: GLOBAL)
-     *
-     * @var string
-     */
-    protected $namespace = "GLOBAL";
-
-    /**
-     * current time (in msec)
-     *
-     * @var float
-     */
-    protected $current_time = null;
-    
-    /**
-     * Current instance of \Monolog\Logger
-     *
-     * @var \Monolog\Logger
-     */
-    protected $logger = null;
-    
-    /**
-     * Cache ttl
-     *
-     * @var int
-     */
-    protected $ttl = null;
+    use CacheTrait;
 
     /**
      * Is cache enabled?
@@ -57,49 +32,33 @@ class CacheObject {
      */
     protected $enabled = true;
 
+    private $cache_id = null;
+
+    private $error_state = false;
+
     /**
      * Class constructor
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct() {
+    public function __construct( $logger=null ) {
 
         try {
             
             $this->setTime();
             
             $this->setTtl();
+
+            $this->cache_id = self::getUniqueId();
             
         } catch (CacheException $ce) {
             
             throw $ce;
             
         }
+
+        if ( $logger instanceof \Monolog\Logger ) $this->setLogger($logger);
         
-    }
-
-    public function raiseError($message, $parameters=array()) {
-
-        if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
-
-    }
-    
-    final public function enable() {
-
-        $this->enabled = true;
-
-    }
-
-    final public function disable() {
-
-        $this->enabled = false;
-
-    }
-
-    final public function isEnabled() {
-
-        return $this->enabled;
-
     }
 
     /**
@@ -125,18 +84,7 @@ class CacheObject {
         return $this;
         
     }
-    
-    /**
-     * Get current time
-     *
-     * @return float
-     */
-    final public function getTime() {
-        
-        return $this->current_time;
-        
-    }
-    
+
     /**
      * Set time to live for cache
      *
@@ -160,22 +108,11 @@ class CacheObject {
             throw new CacheException("Invalid time to live");
             
         }
-        
+
         return $this;
         
     }
-    
-    /**
-     * Get current ttl
-     *
-     * @return int
-     */
-    final public function getTtl() {
-        
-        return $this->ttl;
-        
-    }
-    
+
     /**
      * Set namespace for cache
      *
@@ -195,19 +132,8 @@ class CacheObject {
             throw new CacheException("Invalid namespace");
             
         }
-        
+
         return $this;
-
-    }
-
-    /**
-     * Get current namespace
-     *
-     * @return int
-     */
-    final public function getNamespace() {
-
-        return $this->namespace;
 
     }
 
@@ -221,20 +147,66 @@ class CacheObject {
     final public function setLogger( \Monolog\Logger $logger ) {
 
         $this->logger = $logger;
-        
+
         return $this;
 
     }
-    
+
+    final public function enable() {
+
+        $this->enabled = true;
+
+    }
+
+    final public function disable() {
+
+        $this->enabled = false;
+
+    }
+
+    final public function isEnabled() {
+
+        return $this->enabled;
+
+    }
+
+    final public function getCacheId() {
+
+        return $this->cache_id;
+
+    }
+
+    final public function setErrorState() {
+
+        $this->error_state = true;
+
+        return $this;
+
+    }
+
+    final public function resetErrorState() {
+
+        $this->error_state = false;
+
+        return $this;
+
+    }
+
+    final public function getErrorState() {
+
+        return $this->error_state;
+
+    }
+
     /**
-     * Get current logger
+     * Generate a unique id (64 chars)
      *
-     * @return \Monolog\Logger
+     * @return string
      */
-    final public function getLogger() {
-        
-        return $this->logger;
-        
+    static protected function getUniqueId() {
+
+        return substr(md5(uniqid(rand(), true)), 0, 64);
+
     }
 
 }

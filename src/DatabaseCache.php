@@ -93,6 +93,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         try {
 
             $namespace = $this->getNamespace();
@@ -123,6 +125,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
+
+            $this->setErrorState();
             
             return false;
             
@@ -141,6 +145,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         }
 
         if ( !$this->isEnabled() ) return null;
+
+        $this->resetErrorState();
         
         try {
 
@@ -170,6 +176,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
+
+            $this->setErrorState();
             
             $return = null;
             
@@ -182,6 +190,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
+
+        $this->resetErrorState();
         
         try {
             
@@ -203,6 +213,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
+
+            $this->setErrorState();
             
             return false;
 
@@ -216,6 +228,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         try {
             
             $this->dbh->tablePrefix($this->table_prefix)->table($this->table)->truncate();
@@ -226,6 +240,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
+
+            $this->setErrorState();
             
             return false;
             
@@ -236,6 +252,8 @@ class DatabaseCache extends CacheObject implements CacheInterface {
     }
     
     public function status() {
+
+        $this->resetErrorState();
         
         try {
             
@@ -249,7 +267,19 @@ class DatabaseCache extends CacheObject implements CacheInterface {
 
         } catch (DatabaseException $de) {
            
-            throw $de;
+            $this->raiseError("Failed to get cache status (Database), exiting gracefully", array(
+                "ERRORNO"   =>  $de->getCode(),
+                "ERROR"     =>  $de->getMessage()
+            ));
+
+            $this->setErrorState();
+
+            return array(
+                "provider"  => "database",
+                "enabled"   => false,
+                "objects"   => 0,
+                "options"   => array()
+            );
             
         }
         
@@ -361,13 +391,9 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 $password
             );
             
-        } catch (DatabaseException $de) {
-            
-            throw $de;
-            
         } catch (Exception $e) {
             
-            throw $e;
+            throw new CacheException("Cannot init database: (" . $e->getCode() . ") " . $e->getMessage());
             
         }
         

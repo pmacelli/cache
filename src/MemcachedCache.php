@@ -95,6 +95,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         try {
             
             $this->setTtl($ttl);
@@ -109,6 +111,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
                     "RESULTCODE" => $this->instance->getResultCode(),
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
+
+                $this->setErrorState();
 
                 $return = false;
 
@@ -128,6 +132,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
                         "RESULTCODE" => $this->instance->getResultCode(),
                         "RESULTMESSAGE" => $this->instance->getResultMessage()
                     ));
+
+                    $this->setErrorState();
 
                 }
 
@@ -153,6 +159,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return null;
 
+        $this->resetErrorState();
+
         $namespace = $this->getNamespaceKey();
 
         if ( $namespace === false ) {
@@ -172,6 +180,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
 
+                $this->setErrorState();
+
             }
 
         }
@@ -183,6 +193,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
+
+        $this->resetErrorState();
 
         $namespace = $this->getNamespaceKey();
 
@@ -205,6 +217,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
 
+            $this->setErrorState();
+
         }
 
 
@@ -216,6 +230,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         $result = $this->instance->flush();
 
         if ( $result === false ) {
@@ -224,6 +240,8 @@ class MemcachedCache extends CacheObject implements CacheInterface {
                 "RESULTCODE" => $this->instance->getResultCode(),
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
+
+            $this->setErrorState();
 
             return false;
 
@@ -300,12 +318,6 @@ class MemcachedCache extends CacheObject implements CacheInterface {
             $this->enable();
 
         }
-
-    }
-
-    static private function getUniqueId() {
-
-        return substr(md5(uniqid(rand(), true)), 0, 64);
 
     }
 

@@ -67,6 +67,8 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return false;
 
+        $this->resetErrorState();
+
         try {
             
             $this->setTtl($ttl);
@@ -82,6 +84,8 @@ class XCacheCache extends CacheObject implements CacheInterface {
             if ( $return === false ) {
 
                 $this->raiseError("Error writing cache (XCache), exiting gracefully");
+
+                $this->setErrorState();
 
             }
 
@@ -105,6 +109,8 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
         if ( !$this->isEnabled() ) return null;
 
+        $this->resetErrorState();
+
         $shadowName = $this->getNamespace()."-".md5($name);
 
         $return = xcache_get($shadowName);
@@ -112,6 +118,8 @@ class XCacheCache extends CacheObject implements CacheInterface {
         if ( $return === false ) {
 
             $this->raiseError("Error reading cache (XCache), exiting gracefully");
+
+            $this->setErrorState();
 
         }
 
@@ -122,6 +130,8 @@ class XCacheCache extends CacheObject implements CacheInterface {
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
+
+        $this->resetErrorState();
 
         if ( empty($name) ) {
 
@@ -136,6 +146,8 @@ class XCacheCache extends CacheObject implements CacheInterface {
         if ( $delete === false ) {
 
             $this->raiseError("Error writing cache (XCache), exiting gracefully");
+
+            $this->setErrorState();
 
         }
 
