@@ -105,7 +105,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
             if ( $namespace === false ) {
 
-                $this->raiseError("Error writing cache, exiting gracefully", array(
+                $this->raiseError("Error writing cache (Memcached), exiting gracefully", array(
                     "RESULTCODE" => $this->instance->getResultCode(),
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
@@ -124,7 +124,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
                 if ( $return === false ) {
 
-                    $this->raiseError("Error writing cache, exiting gracefully", array(
+                    $this->raiseError("Error writing cache (Memcached), exiting gracefully", array(
                         "RESULTCODE" => $this->instance->getResultCode(),
                         "RESULTMESSAGE" => $this->instance->getResultMessage()
                     ));
@@ -157,7 +157,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         if ( $namespace === false ) {
 
-            $return = null;
+            $return = false;
 
         } else {
 
