@@ -50,6 +50,11 @@ class CacheObject {
      */
     protected $ttl = null;
 
+    /**
+     * Is cache enabled?
+     *
+     * @var int
+     */
     protected $enabled = true;
 
     /**
@@ -76,10 +81,6 @@ class CacheObject {
     public function raiseError($message, $parameters=array()) {
 
         if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
-
-        var_export($message);
-        
-        var_export($parameters);
 
     }
     
@@ -111,14 +112,12 @@ class CacheObject {
      */
     final public function setTime( $time=null ) {
         
-        if ( is_null($time) ) $this->current_time = microtime(true);
-        
-        else if ( preg_match('/^[0-9]{10}.[0-9]{4}$/', $time) ) $this->current_time = $time;
+        if ( is_null($time) ) $this->current_time = time();
+
+        else if ( preg_match('/^[0-9]{10}$/', $time) ) $this->current_time = $time;
         
         else {
             
-            // $this->raiseError("Invalid time");
-
             throw new CacheException("Invalid time");
             
         }
@@ -158,8 +157,6 @@ class CacheObject {
             
         } else {
 
-            // $this->raiseError("Invalid time to live");
-            
             throw new CacheException("Invalid time to live");
             
         }
@@ -195,8 +192,6 @@ class CacheObject {
             
         } else {
             
-            // $this->raiseError("Invalid namespace");
-
             throw new CacheException("Invalid namespace");
             
         }

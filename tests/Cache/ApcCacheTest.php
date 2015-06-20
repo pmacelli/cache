@@ -2,13 +2,11 @@
 
 use \Comodojo\Cache\Tests\CommonCases;
 
-class FileCacheTest extends CommonCases {
+class ApcCacheTest extends CommonCases {
 
     protected function setUp() {
         
-        $cache_folder = __DIR__ . "/../localcache/";    
-
-        $this->cache = new \Comodojo\Cache\FileCache($cache_folder);
+        $this->cache = new \Comodojo\Cache\ApcCache();
     
     }
 

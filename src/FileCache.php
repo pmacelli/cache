@@ -72,15 +72,11 @@ class FileCache extends CacheObject implements CacheInterface {
 
         if ( empty($name) ) {
             
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
-            
             throw new CacheException("Name of object cannot be empty");
             
         }
         
         if ( is_null($data) ) {
-            
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Object cannot be empty");
             
             throw new CacheException("Object content cannot be null");
             
@@ -121,8 +117,6 @@ class FileCache extends CacheObject implements CacheInterface {
     public function get($name) {
 
         if ( empty($name) ) {
-            
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
             
             throw new CacheException("Name of object cannot be empty");
             
@@ -169,8 +163,6 @@ class FileCache extends CacheObject implements CacheInterface {
 
                 $this->raiseError("Failed to unlink cache file", pathinfo($file));
                 
-                // throw new CacheException("Failed to unlink cache file");
-
                 $return = false;
 
             }
@@ -195,8 +187,6 @@ class FileCache extends CacheObject implements CacheInterface {
 
                 $this->raiseError("Failed to unlink cache file", pathinfo($file));
 
-                // throw new CacheException("Failed to unlink cache file");
-
                 $return = false;
 
             }
@@ -207,13 +197,9 @@ class FileCache extends CacheObject implements CacheInterface {
 
     }
 
-    public function status( /*$currentScope=false*/ ) {
+    public function status() {
 
-        // $currentScope = filter_var($currentScope, FILTER_VALIDATE_BOOLEAN);
-
-        // if ( $currentScope ) $filesList = glob($this->cache_folder."*-".$this->getScope().".cache");
-
-        /* else */ $filesList = glob($this->cache_folder."*.cache");
+        $filesList = glob($this->cache_folder."*.cache");
 
         if ( self::checkXattrSupport() ) {
 
@@ -353,6 +339,8 @@ class FileCache extends CacheObject implements CacheInterface {
         if ( file_exists($cacheFile) ) {
 
             $expire = file_get_contents($cacheGhost);
+
+            var_export(array("ctime"=>$time, "gtime"=>$expire));
             
             if ( $expire === false ) {
 
@@ -360,7 +348,7 @@ class FileCache extends CacheObject implements CacheInterface {
                 
                 $return = null;
 
-            } else if ( $expire < $time ) {
+            } else if ( intval($expire) < $time ) {
                 
                 $return = null;
                 

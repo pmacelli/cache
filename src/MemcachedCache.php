@@ -34,8 +34,6 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         if ( empty($server) ) {
 
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Invalid or unspecified memcached server");
-            
             throw new CacheException("Invalid or unspecified memcached server");
 
         }
@@ -57,21 +55,33 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         $this->addServer($server, $port, $weight);
 
+        if ( $this->isEnabled() ) {
+
+            try {
+            
+                parent::__construct();
+                
+            }
+            
+            catch ( CacheException $ce ) {
+                
+                throw $ce;
+                
+            }
+
+        }
+
     }
 
     public function set($name, $data, $ttl=null) {
 
         if ( empty($name) ) {
             
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Name of object cannot be empty");
-            
             throw new CacheException("Name of object cannot be empty");
             
         }
         
         if ( is_null($data) ) {
-            
-            // if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError("Object cannot be empty");
             
             throw new CacheException("Object content cannot be null");
             
@@ -176,7 +186,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         } else {
 
-            $delete = $this->instance->delete($namespace."-".$name);
+            $delete = $this->instance->delete($namespace."-".md5($name));
 
         }
 
@@ -215,7 +225,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
-    public function status( /*$currentScope=false*/ ) {
+    public function status() {
 
         $stats = $this->instance->getStats();
 
@@ -242,19 +252,19 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
-    private function setNamespaceKey($namespace) {
+    private function setNamespaceKey() {
 
         $uId = self::getUniqueId();
 
-        $return = $this->instance->set($namespace, $uId, 0);
+        $return = $this->instance->set($this->getNamespace(), $uId, 0);
 
         return $return === false ? false : $uId;
 
     }
 
-    private function getNamespaceKey($namespace) {
+    private function getNamespaceKey() {
 
-        $return = $this->instance->get($namespace);
+        return $this->instance->get($this->getNamespace());
 
     }
 

@@ -37,14 +37,6 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
-    public function testFlush() {
-
-        $result = $this->cache->flush();
-
-        $this->assertTrue($result);
-
-    }
-
     public function testStatus() {
 
         $result = $this->cache->status();
@@ -75,18 +67,21 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
     public function testSetExpire() {
 
-        $result = $this->cache->set("test-cache-3", $this->string_content, 2);
+        $result = $this->cache->set("test-cache-3", $this->string_content, 1);
 
         $this->assertTrue($result);
 
-        sleep(2);
-
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testGetExpired() {
 
-        $result = $this->cache->get("test-cache-3");
+        sleep(3);
 
+        $result = $this->cache->setTime()->get("test-cache-3");
+        
         $this->assertNull($result);
 
     }
@@ -113,6 +108,17 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertNull($result);
         
+    }
+
+    /**
+     * @after
+     */
+    public function testFlush() {
+
+        $result = $this->cache->flush();
+
+        $this->assertTrue($result);
+
     }
 
 }
