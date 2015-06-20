@@ -2,8 +2,7 @@
 
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="comodojo-cache-standard">
-            <file>tests/Cache/ApcCacheTest.php</file>
+        <testsuite name="comodojo-cache-travis">
             <file>tests/Cache/DatabaseCacheTest.php</file>
             <file>tests/Cache/FileCacheTest.php</file>
             <file>tests/Cache/MemcachedCacheTest.php</file>
@@ -18,6 +17,16 @@
     <testsuites>
         <testsuite name="comodojo-cache-xcache">
             <file>tests/Cache/XCacheCacheTest.php</file>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="comodojo-cache-apc">
+            <file>tests/Cache/ApcCacheTest.php</file>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="comodojo-cache-all">
+            <directory>tests/Cache/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

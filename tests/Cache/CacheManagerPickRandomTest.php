@@ -18,7 +18,7 @@ class CacheManagerPickRandomTest extends ManagerCommonCases {
 
         $this->manager = new CacheManager( CacheManager::PICK_RANDOM);
 
-        $this->manager->add( new ApcCache() );
+        //$this->manager->add( new ApcCache() );
         $this->manager->add( new DatabaseCache($edb, 'cache', 'comodojo_') );
         $this->manager->add( new FileCache($cache_folder) );
         $this->manager->add( new MemcachedCache('127.0.0.1') );

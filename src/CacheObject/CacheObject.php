@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache\CacheObject;
 
-use \Comodojo\Cache\CacheTrait\CacheTrait;
 use \Comodojo\Exception\CacheException;
 
 /**
@@ -23,8 +22,6 @@ use \Comodojo\Exception\CacheException;
 
 class CacheObject {
 
-    use CacheTrait;
-
     /**
      * Is cache enabled?
      *
@@ -35,6 +32,34 @@ class CacheObject {
     private $cache_id = null;
 
     private $error_state = false;
+
+    /**
+     * Determine the current cache scope (default: GLOBAL)
+     *
+     * @var string
+     */
+    protected $namespace = "GLOBAL";
+
+    /**
+     * current time (in msec)
+     *
+     * @var float
+     */
+    protected $current_time = null;
+    
+    /**
+     * Current instance of \Monolog\Logger
+     *
+     * @var \Monolog\Logger
+     */
+    protected $logger = null;
+    
+    /**
+     * Cache ttl
+     *
+     * @var int
+     */
+    protected $ttl = null;
 
     /**
      * Class constructor
@@ -59,6 +84,56 @@ class CacheObject {
 
         if ( $logger instanceof \Monolog\Logger ) $this->setLogger($logger);
         
+    }
+
+    /**
+     * Get current time
+     *
+     * @return float
+     */
+    final public function getTime() {
+        
+        return $this->current_time;
+        
+    }
+
+    /**
+     * Get current ttl
+     *
+     * @return int
+     */
+    final public function getTtl() {
+        
+        return $this->ttl;
+        
+    }
+
+    /**
+     * Get current namespace
+     *
+     * @return int
+     */
+    final public function getNamespace() {
+
+        return $this->namespace;
+
+    }
+
+    /**
+     * Get current logger
+     *
+     * @return \Monolog\Logger
+     */
+    final public function getLogger() {
+        
+        return $this->logger;
+        
+    }
+
+    public function raiseError($message, $parameters=array()) {
+
+        if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
+
     }
 
     /**

@@ -19,7 +19,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
         foreach ($result as $cache_result) $this->assertTrue($cache_result);
 
@@ -43,7 +43,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
         foreach ($result as $cache_result) $this->assertTrue($cache_result);
         
@@ -55,7 +55,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
         foreach ($result as $cache_result) $this->assertTrue($cache_result);
         
@@ -75,7 +75,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
         foreach ($result as $cache_result) $this->assertTrue($cache_result);
         
@@ -108,7 +108,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
         foreach ($result as $cache_result) $this->assertTrue($cache_result);
         
@@ -132,7 +132,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
     }
 
@@ -145,7 +145,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
         foreach ($result as $cache_result) $this->assertTrue($cache_result);
         

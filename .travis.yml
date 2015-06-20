@@ -15,7 +15,7 @@ matrix:
     - php: hhvm
 
 env:
-  - SUITE=comodojo-cache-standard
+  - SUITE=comodojo-cache-travis
 
 services:
   - memcached
@@ -23,7 +23,7 @@ services:
 
 before_install:
   - sudo apt-get update -qq
-  - if [ $SUITE == 'comodojo-cache-standard' ]; then mysql -u root < $TRAVIS_BUILD_DIR/tests/DatabaseCacheCreateSchema.sql; fi
+  - mysql -u root < $TRAVIS_BUILD_DIR/tests/DatabaseCacheCreateSchema.sql
 
 before_script:
   - composer install --prefer-source

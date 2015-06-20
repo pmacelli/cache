@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\CacheTrait\CacheTrait;
 use \Comodojo\Cache\CacheInterface\CacheInterface;
 use \Comodojo\Cache\CacheObject\CacheObject;
 use \Comodojo\Exception\CacheException;
@@ -25,8 +24,6 @@ use \Comodojo\Exception\CacheException;
 
 class CacheManager {
 
-    use CacheTrait;
-
     const PICK_FIRST   = 1;
     const PICK_LAST    = 2;
     const PICK_RANDOM  = 3;
@@ -40,6 +37,34 @@ class CacheManager {
     private $selector = null;
 
     private $selected_cache = null;
+
+    /**
+     * Determine the current cache scope (default: GLOBAL)
+     *
+     * @var string
+     */
+    protected $namespace = "GLOBAL";
+
+    /**
+     * current time (in msec)
+     *
+     * @var float
+     */
+    protected $current_time = null;
+    
+    /**
+     * Current instance of \Monolog\Logger
+     *
+     * @var \Monolog\Logger
+     */
+    protected $logger = null;
+    
+    /**
+     * Cache ttl
+     *
+     * @var int
+     */
+    protected $ttl = null;
 
     public function __construct( $select_mode=null, \Monolog\Logger $logger=null ) {
 
@@ -64,6 +89,56 @@ class CacheManager {
             throw $ce;
             
         }
+
+    }
+
+    /**
+     * Get current time
+     *
+     * @return float
+     */
+    final public function getTime() {
+        
+        return $this->current_time;
+        
+    }
+
+    /**
+     * Get current ttl
+     *
+     * @return int
+     */
+    final public function getTtl() {
+        
+        return $this->ttl;
+        
+    }
+
+    /**
+     * Get current namespace
+     *
+     * @return int
+     */
+    final public function getNamespace() {
+
+        return $this->namespace;
+
+    }
+
+    /**
+     * Get current logger
+     *
+     * @return \Monolog\Logger
+     */
+    final public function getLogger() {
+        
+        return $this->logger;
+        
+    }
+
+    public function raiseError($message, $parameters=array()) {
+
+        if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
 
     }
 
