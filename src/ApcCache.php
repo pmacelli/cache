@@ -198,7 +198,17 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         $stats = apc_cache_info("user",true);
 
-        $objects = $stats["num_entries"];
+        if ( isset($stats["num_entries"]) ) {
+
+            $objects = $stats["num_entries"];
+
+        } else {
+
+            $stats_2 = apc_cache_info("user");
+
+            $objects = sizeof($stats_2["cache_list"]);
+
+        }
 
         return array(
             "provider"  => "apc",
