@@ -23,9 +23,10 @@ services:
 
 before_install:
   - sudo apt-get update -qq
-  - mysql -u root < $TRAVIS_BUILD_DIR/tests/DatabaseCacheCreateSchema.sql
+  - mysql -u root < $TRAVIS_BUILD_DIR/tests/resources/DatabaseCacheCreateSchema.sql
 
 before_script:
   - composer install --prefer-source
+  - phpenv config-add $TRAVIS_BUILD_DIR/tests/resources/ext.ini
 
 script: ./vendor/bin/phpunit --testsuite $SUITE

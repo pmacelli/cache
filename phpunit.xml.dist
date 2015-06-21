@@ -3,6 +3,7 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="comodojo-cache-travis">
+            <file>tests/Cache/ApcCacheTest.php</file>
             <file>tests/Cache/DatabaseCacheTest.php</file>
             <file>tests/Cache/FileCacheTest.php</file>
             <file>tests/Cache/MemcachedCacheTest.php</file>
