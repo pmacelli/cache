@@ -133,6 +133,8 @@ class ApcCache extends CacheObject implements CacheInterface {
 
             $shadowName = $namespace."-".md5($name);
 
+            $success=null;
+
             $return = apc_fetch($shadowName, $success);
 
             if ( $success === false ) {

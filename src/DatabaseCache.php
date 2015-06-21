@@ -337,7 +337,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
         try {
             
-            $update = $dbh->tablePrefix($table_prefix)
+            $dbh->tablePrefix($table_prefix)
                 ->table($table)
                 ->keys(array('data','expire'))
                 ->values(array($data,$expire))
@@ -357,7 +357,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
         try {
             
-            $update = $dbh->tablePrefix($table_prefix)
+            $dbh->tablePrefix($table_prefix)
                 ->table($table)
                 ->keys(array('name', 'data', 'namespace', 'expire'))
                 ->values(array($name, $data, $scope, $expire))

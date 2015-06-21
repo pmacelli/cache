@@ -311,6 +311,8 @@ class CacheManager {
 
         reset($this->caches);
 
+        $result = null;
+
         try {
         
             switch ( $this->selector ) {
@@ -365,7 +367,7 @@ class CacheManager {
                 
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             
             throw $ce;
 

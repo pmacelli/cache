@@ -54,7 +54,7 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
             )
         );
 
-        if ( $this->instance->connect($server, $port=6379, $timeout=0) === false ) {
+        if ( $this->instance->connect($server, $port, $timeout) === false ) {
 
             $this->raiseError( "Error communicating with server", array( $this->instance->getLastError() ) );
 
