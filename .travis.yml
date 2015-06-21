@@ -23,6 +23,8 @@ services:
 
 before_install:
   - sudo apt-get update -qq
+  - sh -c "if [[ $TRAVIS_PHP_VERSION != 'hhvm' && `php-config --vernum` -ge 50500 ]] ; then pecl config-set preferred_state beta; printf "yes\n" | pecl install apcu ; else echo 'extension="apc.so"' >> ./tests/travis/php.ini ;fi"
+  - composer self-update
   - mysql -u root < $TRAVIS_BUILD_DIR/tests/resources/DatabaseCacheCreateSchema.sql
 
 before_script:
