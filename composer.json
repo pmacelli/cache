@@ -14,7 +14,8 @@
     "authors": [
         {
             "name": "Marco Giovinazzi",
-            "email": "marco.giovinazzi@comodojo.org"
+            "email": "marco.giovinazzi@comodojo.org",
+            "homepage": "http://jme.altervista.org"
         }
     ],
     "autoload": {
@@ -28,7 +29,8 @@
         "comodojo/database": "1.0.x-dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~4.0",
+        "scrutinizer/ocular": "~1.1"
     },
     "suggest": {
         "ext-xattr": "Fastest cache files handling via extended attributes"
