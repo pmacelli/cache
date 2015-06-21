@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Exception;
 
 /**
- * CacheException handler; nothing special, just an implementation of
+ * CacheException; nothing special, just an extension of
  * standard Exception class.
  *
  * @package     Comodojo Spare Parts
