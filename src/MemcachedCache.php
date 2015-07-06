@@ -263,6 +263,13 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     public function status() {
 
+        if ( !$this->isEnabled() ) return array(
+            "provider"  => "memcached",
+            "enabled"   => false,
+            "objects"   => null,
+            "options"   => array()
+        );
+
         $stats = $this->instance->getStats();
 
         $objects = 0;

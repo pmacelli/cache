@@ -171,7 +171,7 @@ class XCacheCache extends CacheObject implements CacheInterface {
         return array(
             "provider"  => "xcache",
             "enabled"   => $this->isEnabled(),
-            "objects"   => xcache_count(XC_TYPE_VAR),
+            "objects"   => @xcache_count(XC_TYPE_VAR),
             "options"   => array()
         );
 

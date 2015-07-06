@@ -281,7 +281,7 @@ class CacheManager {
 
         }
 
-        return $this;
+        return true;
 
     }
 
@@ -300,6 +300,8 @@ class CacheManager {
                 $provider_class = get_class($cache);
                 
                 if ( $provider_class == $type ) $providers[$id] = get_class($cache); 
+
+            }
             
         }
         

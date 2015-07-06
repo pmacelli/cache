@@ -198,6 +198,13 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     public function status() {
 
+        if ( !$this->isEnabled() ) return array(
+            "provider"  => "apc",
+            "enabled"   => false,
+            "objects"   => null,
+            "options"   => array()
+        );
+
         $stats = apc_cache_info("user",true);
 
         if ( isset($stats["num_entries"]) ) {

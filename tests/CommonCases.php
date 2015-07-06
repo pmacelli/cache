@@ -144,9 +144,6 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
-    /**
-     * @after
-     */
     public function testFlush() {
 
         $result = $this->cache->flush();

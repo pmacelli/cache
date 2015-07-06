@@ -133,7 +133,7 @@ class CacheObject {
     public function raiseError($message, $parameters=array()) {
 
         if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
-
+    
     }
 
     /**

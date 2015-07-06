@@ -136,9 +136,6 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
-    /**
-     * @after
-     */
     public function testFlush() {
 
         $result = $this->manager->flush();

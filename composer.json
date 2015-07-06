@@ -26,14 +26,14 @@
     },
     "require": {
         "php": ">=5.3.0",
-        "comodojo/database": "1.0.x-dev",
-        "monolog/monolog": "~1.0"
+        "comodojo/database": "1.0.x-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
         "scrutinizer/ocular": "~1.1"
     },
     "suggest": {
+        "monolog/monolog": "Enable error logging",
         "ext-xattr": "Fastest cache files handling via extended attributes",
         "ext-redis": "Enable redis provider",
         "ext-memcached": "Enable Memcached provider",

@@ -284,6 +284,13 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
         $enabled = $this->isEnabled();
 
+        if ( !$enabled ) return array(
+            "provider"  => "phpredis",
+            "enabled"   => $enabled,
+            "objects"   => null,
+            "options"   => array()
+        );
+
         $objects = 0;
 
         $options = array();
