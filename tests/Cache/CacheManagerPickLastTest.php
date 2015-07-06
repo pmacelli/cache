@@ -19,10 +19,10 @@ class CacheManagerPickLastTest extends ManagerCommonCases {
         $this->manager = new CacheManager( CacheManager::PICK_LAST);
 
         //$this->manager->add( new ApcCache() );
-        $this->manager->add( new DatabaseCache($edb, 'cache', 'comodojo_') );
-        $this->manager->add( new FileCache($cache_folder) );
-        $this->manager->add( new MemcachedCache('127.0.0.1') );
-        $this->manager->add( new PhpRedisCache('127.0.0.1') );
+        $this->manager->addProvider( new DatabaseCache($edb, 'cache', 'comodojo_') );
+        $this->manager->addProvider( new FileCache($cache_folder) );
+        $this->manager->addProvider( new MemcachedCache('127.0.0.1') );
+        $this->manager->addProvider( new PhpRedisCache('127.0.0.1') );
     
     }
 

@@ -19,10 +19,10 @@ class CacheManagerPickByWeightTest extends ManagerCommonCases {
         $this->manager = new CacheManager( CacheManager::PICK_BYWEIGHT);
 
         //$this->manager->add( new ApcCache(), 10 );
-        $this->manager->add( new DatabaseCache($edb, 'cache', 'comodojo_'), 20 );
-        $this->manager->add( new FileCache($cache_folder), 30 );
-        $this->manager->add( new MemcachedCache('127.0.0.1'), 50 );
-        $this->manager->add( new PhpRedisCache('127.0.0.1'), 50 );
+        $this->manager->addProvider( new DatabaseCache($edb, 'cache', 'comodojo_'), 20 );
+        $this->manager->addProvider( new FileCache($cache_folder), 30 );
+        $this->manager->addProvider( new MemcachedCache('127.0.0.1'), 50 );
+        $this->manager->addProvider( new PhpRedisCache('127.0.0.1'), 50 );
     
     }
 

@@ -33,7 +33,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
     
     private $table_prefix = null;
 
-    public function __construct( EnhancedDatabase $dbh, $table=null, $table_prefix=null ) {
+    public function __construct( EnhancedDatabase $dbh, $table=null, $table_prefix=null, \Monolog\Logger $logger=null ) {
     
         if ( !empty($table) ) {
             
@@ -65,7 +65,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
         try {
             
-            parent::__construct();
+            parent::__construct( $logger );
             
         }
         

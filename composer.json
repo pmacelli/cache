@@ -1,6 +1,6 @@
 {
     "name": "comodojo/cache",
-    "description": "Extensible, multi layer object cache interface",
+    "description": "Very fast PHP data caching across multiple storage engines",
     "license": "MIT",
     "type": "library",
     "keywords": [
@@ -34,6 +34,11 @@
         "scrutinizer/ocular": "~1.1"
     },
     "suggest": {
-        "ext-xattr": "Fastest cache files handling via extended attributes"
+        "ext-xattr": "Fastest cache files handling via extended attributes",
+        "ext-redis": "Enable redis provider",
+        "ext-memcached": "Enable Memcached provider",
+        "ext-xcache": "Enable XCache provider",
+        "ext-apc": "Enable Apc provider",
+        "ext-apcu": "Enable Apcu provider"
     }
 }

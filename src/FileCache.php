@@ -26,7 +26,7 @@ class FileCache extends CacheObject implements CacheInterface {
  
     private $cache_folder = null;
  
-    public function __construct( $cache_folder=null ) {
+    public function __construct( $cache_folder=null, \Monolog\Logger $logger=null ) {
 
         if ( !empty($cache_folder) AND is_string($cache_folder) ) {
             
@@ -54,7 +54,7 @@ class FileCache extends CacheObject implements CacheInterface {
 
             try {
             
-                parent::__construct();
+                parent::__construct( $logger );
                 
             }
             

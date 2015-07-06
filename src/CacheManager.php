@@ -241,7 +241,7 @@ class CacheManager {
 
     }
 
-    public function add( CacheInterface $cache_provider, $weight=0 ) {
+    public function addProvider( CacheInterface $cache_provider, $weight=0 ) {
 
         $corrected_weight = filter_var($weight, FILTER_VALIDATE_INT, array(
             'options' => array(
@@ -263,11 +263,11 @@ class CacheManager {
 
         $this->cache_weights[$cache_id] = $weight;
 
-        return $this;
+        return $cache_id;
 
     }
 
-    public function remove($cache_id) {
+    public function removeProvider($cache_id) {
 
         if ( array_key_exists($cache_id, $this->caches) AND array_key_exists($cache_id, $this->cache_weights) ) {
 
@@ -283,6 +283,28 @@ class CacheManager {
 
         return $this;
 
+    }
+
+    public function getProviders($type=null) {
+
+        $providers = array();
+        
+        if ( is_null($type) ) {
+        
+            foreach ( $this->caches as $id => $cache ) $providers[$id] = get_class($cache); 
+            
+        } else {
+            
+            foreach ( $this->caches as $id => $cache ) {
+                
+                $provider_class = get_class($cache);
+                
+                if ( $provider_class == $type ) $providers[$id] = get_class($cache); 
+            
+        }
+        
+        return $providers;
+        
     }
 
     public function set($name, $data, $ttl=null) {
@@ -310,6 +332,8 @@ class CacheManager {
     public function get($name) {
 
         reset($this->caches);
+        
+        $this->selected_cache = null;
 
         $result = null;
 
@@ -354,7 +378,7 @@ class CacheManager {
                     if ( count(array_unique($values)) === 1 ) {
 
                         $result = $values[0];
-
+                        
                     } else {
 
                         $this->raiseError("Inconsistent values in cache providers, exiting gracefully");

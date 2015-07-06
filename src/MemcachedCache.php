@@ -28,7 +28,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     private $instance = null;
 
-    public function __construct( $server, $port=11211, $weight=0, $persistent_id=null ) {
+    public function __construct( $server, $port=11211, $weight=0, $persistent_id=null, \Monolog\Logger $logger=null ) {
 
         if ( empty($server) ) {
 
@@ -42,6 +42,16 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         }
 
+        if ( self::getMemcachedStatus() === false ) {
+
+            $this->raiseError("Memcached extension not available, disabling cache administratively");
+
+            $this->disable();
+            
+            return;
+
+        }
+        
         $this->instance = new Memcached($persistent_id);
 
         $port = filter_var($port, FILTER_VALIDATE_INT, array(
@@ -65,7 +75,7 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
             try {
             
-                parent::__construct();
+                parent::__construct( $logger );
                 
             }
             
@@ -319,6 +329,12 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
         }
 
+    }
+    
+    static private function getMemcachedStatus() {
+        
+        return class_exists('Memcached');
+        
     }
 
 }

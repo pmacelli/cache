@@ -25,7 +25,7 @@ use \Exception;
 
 class XCacheCache extends CacheObject implements CacheInterface {
 
-    public function __construct() {
+    public function __construct( \Monolog\Logger $logger=null ) {
 
         if ( self::getXCacheStatus() === false ) {
 
@@ -37,7 +37,7 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
             try {
             
-                parent::__construct();
+                parent::__construct( $logger );
                 
             }
             

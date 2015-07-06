@@ -29,14 +29,14 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
     private $instance = null;
 
-    public function __construct( $server, $port=6379, $timeout=0 ) {
+    public function __construct( $server, $port=6379, $timeout=0, \Monolog\Logger $logger=null ) {
 
         if ( empty($server) ) {
 
             throw new CacheException("Invalid or unspecified memcached server");
 
         }
-
+        
         $this->instance = new Redis();
 
         $port = filter_var($port, FILTER_VALIDATE_INT, array(
@@ -64,7 +64,7 @@ class PhpRedisCache extends CacheObject implements CacheInterface {
 
             try {
             
-                parent::__construct();
+                parent::__construct( $logger );
                 
             }
             
