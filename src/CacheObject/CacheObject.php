@@ -1,5 +1,6 @@
 <?php namespace Comodojo\Cache\CacheObject;
 
+use \Comodojo\Cache\CacheInterface\CacheInterface;
 use \Comodojo\Exception\CacheException;
 
 /**
@@ -19,8 +20,8 @@ use \Comodojo\Exception\CacheException;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-class CacheObject {
+ 
+abstract class CacheObject implements CacheInterface {
 
     /**
      * Is cache enabled?
@@ -29,8 +30,18 @@ class CacheObject {
      */
     protected $enabled = true;
 
+    /**
+     * Current cache id
+     *
+     * @var string
+     */
     private $cache_id = null;
 
+    /**
+     * Current error state
+     *
+     * @var bool
+     */
     private $error_state = false;
 
     /**
@@ -87,6 +98,73 @@ class CacheObject {
     }
 
     /**
+     * Raise an error using logger (monolog)
+     *
+     * @param    string    $message       The message to log
+     * @param    array     $parameters    (optional) Additional parameters
+     */
+    public function raiseError($message, $parameters=array()) {
+
+        if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
+    
+    }
+    
+    /**
+     * Set cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     * @param   mixed   $data    Data to cache
+     * @param   int     $ttl     Time to live
+     *
+     * @return  bool
+     */
+    abstract public function set($name, $data, $ttl=null);
+    
+    /**
+     * Get cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a null value.
+     * In case of cache not found, it will return a null value.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  mixed
+     */
+    abstract public function get($name);
+    
+    /**
+     * Delete cache object (or entire namespace if $name is null)
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  bool
+     */
+    abstract public function delete($name=null);
+    
+    /**
+     * Clean cache objects in all namespaces
+     *
+     * This method will throw only logical exceptions.
+     *
+     * @return  bool
+     */
+    abstract public function flush();
+    
+    /**
+     * Get cache status
+     *
+     * @return  array
+     */
+    abstract public function status();
+
+    /**
      * Get current time
      *
      * @return float
@@ -128,12 +206,6 @@ class CacheObject {
         
         return $this->logger;
         
-    }
-
-    public function raiseError($message, $parameters=array()) {
-
-        if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
-    
     }
 
     /**
@@ -227,30 +299,52 @@ class CacheObject {
 
     }
 
+    /**
+     * administratively enable cache
+     *
+     */
     final public function enable() {
 
         $this->enabled = true;
 
     }
 
+    /**
+     * administratively disable cache
+     *
+     */
     final public function disable() {
 
         $this->enabled = false;
 
     }
 
+    /**
+     * check if cache is enabled
+     *
+     * @return bool
+     */
     final public function isEnabled() {
 
         return $this->enabled;
 
     }
 
+    /**
+     * return the id of the current cache provider
+     *
+     * @return string
+     */
     final public function getCacheId() {
 
         return $this->cache_id;
 
     }
 
+    /**
+     * Put provider in error state
+     *
+     */
     final public function setErrorState() {
 
         $this->error_state = true;
@@ -259,6 +353,10 @@ class CacheObject {
 
     }
 
+    /**
+     * Reset error state
+     *
+     */
     final public function resetErrorState() {
 
         $this->error_state = false;
@@ -267,6 +365,10 @@ class CacheObject {
 
     }
 
+    /**
+     * Check if provider is in error state
+     *
+     */
     final public function getErrorState() {
 
         return $this->error_state;

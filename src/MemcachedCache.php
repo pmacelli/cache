@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\CacheInterface\CacheInterface;
 use \Comodojo\Cache\CacheObject\CacheObject;
 use \Memcached;
 use \Comodojo\Exception\CacheException;
@@ -24,23 +23,31 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class MemcachedCache extends CacheObject implements CacheInterface {
+class MemcachedCache extends CacheObject {
 
+    /**
+     * Internal memcached handler
+     *
+     * @var \Memcached
+     */
     private $instance = null;
 
+    /**
+     * Class constructor
+     *
+     * @param   string          $server         Server address (or IP)
+     * @param   string          $port           (optional) Server port
+     * @param   string          $weight         (optional) Server weight
+     * @param   string          $persistent_id  (optional) Persistent id
+     * @param   \Monolog\Logger $logger         Logger instance
+     * 
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function __construct( $server, $port=11211, $weight=0, $persistent_id=null, \Monolog\Logger $logger=null ) {
 
-        if ( empty($server) ) {
+        if ( empty($server) ) throw new CacheException("Invalid or unspecified memcached server");
 
-            throw new CacheException("Invalid or unspecified memcached server");
-
-        }
-
-        if ( !is_null($persistent_id) AND !is_string($persistent_id) ) {
-
-            throw new CacheException("Invalid persistent id");
-
-        }
+        if ( !is_null($persistent_id) AND !is_string($persistent_id) ) throw new CacheException("Invalid persistent id");
 
         if ( self::getMemcachedStatus() === false ) {
 
@@ -89,20 +96,25 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Set cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     * @param   mixed   $data    Data to cache
+     * @param   int     $ttl     Time to live
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function set($name, $data, $ttl=null) {
 
-        if ( empty($name) ) {
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
         
-        if ( is_null($data) ) {
-            
-            throw new CacheException("Object content cannot be null");
-            
-        }
-
+        if ( is_null($data) ) throw new CacheException("Object content cannot be null");
+        
         if ( !$this->isEnabled() ) return false;
 
         $this->resetErrorState();
@@ -159,13 +171,21 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a null value.
+     * In case of cache not found, it will return a null value.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  mixed
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function get($name) {
 
-        if ( empty($name) ) {
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
 
         if ( !$this->isEnabled() ) return null;
 
@@ -200,6 +220,17 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Delete cache object (or entire namespace if $name is null)
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
@@ -236,6 +267,14 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Clean cache objects in all namespaces
+     *
+     * This method will throw only logical exceptions.
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function flush() {
 
         if ( !$this->isEnabled() ) return false;
@@ -261,6 +300,11 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get cache status
+     *
+     * @return  array
+     */
     public function status() {
 
         if ( !$this->isEnabled() ) return array(
@@ -289,12 +333,22 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get the current memcached instance
+     *
+     * @return  \Memcached
+     */
     public final function getInstance() {
 
         return $this->instance;
 
     }
 
+    /**
+     * Set key for namespace
+     *
+     * @return  mixed
+     */
     private function setNamespaceKey() {
 
         $uId = self::getUniqueId();
@@ -305,12 +359,24 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get key for namespace
+     *
+     * @return  string
+     */
     private function getNamespaceKey() {
 
         return $this->instance->get($this->getNamespace());
 
     }
 
+    /**
+     * Add a Memcached server to stack
+     *
+     * @param   string          $server         Server address (or IP)
+     * @param   string          $port           Server port
+     * @param   string          $weight         Server weight
+     */
     private function addServer($server, $port, $weight) {
 
         $status = $this->instance->addServer($server, $port, $weight);
@@ -338,6 +404,11 @@ class MemcachedCache extends CacheObject implements CacheInterface {
 
     }
     
+    /**
+     * Check Memcached availability
+     *
+     * @return  bool
+     */
     static private function getMemcachedStatus() {
         
         return class_exists('Memcached');

@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\CacheInterface\CacheInterface;
 use \Comodojo\Cache\CacheObject\CacheObject;
 use \Comodojo\Database\EnhancedDatabase;
 use \Comodojo\Exception\DatabaseException;
@@ -25,14 +24,39 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class DatabaseCache extends CacheObject implements CacheInterface {
+class DatabaseCache extends CacheObject {
 
+    /**
+     * Internal database handler
+     *
+     * @var \Comodojo\Database\EnhancedDatabase
+     */
     private $dbh = null;
     
+    /**
+     * Database table
+     *
+     * @var string
+     */
     private $table = null;
     
+    /**
+     * Prefix for table
+     *
+     * @var string
+     */
     private $table_prefix = null;
 
+    /**
+     * Class constructor
+     * 
+     * @param   \Comodojo\Database\EnhancedDatabase $dbh    
+     * @param   string                              $table          Name of table
+     * @param   string                              $table_prefix   Prefix for table
+     * @param   \Monolog\Logger                     $logger         Logger instance
+     *
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function __construct( EnhancedDatabase $dbh, $table=null, $table_prefix=null, \Monolog\Logger $logger=null ) {
     
         if ( !empty($table) ) {
@@ -77,20 +101,25 @@ class DatabaseCache extends CacheObject implements CacheInterface {
        
     }
 
+    /**
+     * Set cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     * @param   mixed   $data    Data to cache
+     * @param   int     $ttl     Time to live
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function set($name, $data, $ttl=null) {
         
-        if ( empty($name) ) {
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
             
-            throw new CacheException("Name of object cannot be empty");
+        if ( is_null($data) ) throw new CacheException("Object content cannot be null");
             
-        }
-        
-        if ( is_null($data) ) {
-            
-            throw new CacheException("Object content cannot be null");
-            
-        }
-
         if ( !$this->isEnabled() ) return false;
 
         $this->resetErrorState();
@@ -136,13 +165,21 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
+    /**
+     * Get cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a null value.
+     * In case of cache not found, it will return a null value.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  mixed
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function get($name) {
         
-        if ( empty($name) ) {
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
 
         if ( !$this->isEnabled() ) return null;
 
@@ -187,6 +224,17 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
+    /**
+     * Delete cache object (or entire namespace if $name is null)
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
@@ -199,11 +247,7 @@ class DatabaseCache extends CacheObject implements CacheInterface {
                 ->table($this->table)
                 ->where("namespace","=",$this->getNamespace());
                 
-            if ( !empty($name) ) {
-                
-                $this->dbh->andWhere("name","=",$name);
-                
-            }
+            if ( !empty($name) ) $this->dbh->andWhere("name","=",$name);
             
             $this->dbh->delete();
 
@@ -224,6 +268,14 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
+    /**
+     * Clean cache objects in all namespaces
+     *
+     * This method will throw only logical exceptions.
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function flush() {
         
         if ( !$this->isEnabled() ) return false;
@@ -251,6 +303,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
+    /**
+     * Get cache status
+     *
+     * @return  array
+     */
     public function status() {
 
         $this->resetErrorState();
@@ -298,12 +355,23 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
 
+    /**
+     * Get the current database instance
+     *
+     * @return  \Comodojo\Database\EnhancedDatabase
+     */
     public final function getInstance() {
 
         return $this->dbh;
 
     }
     
+    /**
+     * Get object from database
+     *
+     * @return  \Comodojo\Database\QueryResult
+     * @throws  \Comodojo\Exception\DatabaseException
+     */
     static private function getCacheObject($dbh, $table, $table_prefix, $name, $namespace, $expire=null) {
         
         try {
@@ -333,6 +401,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
+    /**
+     * Update a cache element
+     *
+     * @throws  \Comodojo\Exception\DatabaseException
+     */
     static private function updateCacheObject($dbh, $table, $table_prefix, $name, $data, $scope, $expire) {
         
         try {
@@ -353,6 +426,11 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
+    /**
+     * Add a cache element
+     *
+     * @throws  \Comodojo\Exception\DatabaseException
+     */
     static private function addCacheObject($dbh, $table, $table_prefix, $name, $data, $scope, $expire) {
         
         try {
@@ -371,6 +449,12 @@ class DatabaseCache extends CacheObject implements CacheInterface {
         
     }
     
+    /**
+     * Generate an EnhancedDatabase object
+     *
+     * @return \Comodojo\Database\EnhancedDatabase
+     * @throws  \Comodojo\Exception\CacheException
+     */
     static public function getDatabase($model=null, $host=null, $port=null, $database=null, $user=null, $password=null) {
         
         $model = is_null($model) ? ( defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $model;

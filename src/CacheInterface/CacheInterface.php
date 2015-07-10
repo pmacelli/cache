@@ -40,7 +40,7 @@ interface CacheInterface {
     public function isEnabled();
 
     /**
-     * return the current cache provider's id
+     * return the id of the current cache provider
      *
      * @return string
      */
@@ -117,14 +117,34 @@ interface CacheInterface {
      */
     public function status();
 
+    /**
+     * Set the logger instance
+     *
+     */
     public function setLogger( \Monolog\Logger $logger );
 
+    /**
+     * Get the current logger instance
+     *
+     */
     public function getLogger();
 
+    /**
+     * Put provider in error state
+     *
+     */
     public function setErrorState();
 
+    /**
+     * Reset error state
+     *
+     */
     public function resetErrorState();
 
+    /**
+     * Check if provider is in error state
+     *
+     */
     public function getErrorState();
 
 }

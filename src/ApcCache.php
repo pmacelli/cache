@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\CacheInterface\CacheInterface;
 use \Comodojo\Cache\CacheObject\CacheObject;
 use \Comodojo\Exception\CacheException;
 use \Exception;
@@ -23,8 +22,13 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class ApcCache extends CacheObject implements CacheInterface {
+class ApcCache extends CacheObject {
 
+    /**
+     * Class constructor
+     *
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function __construct( \Monolog\Logger $logger=null ) {
 
         try {
@@ -49,22 +53,29 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Set cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     * @param   mixed   $data    Data to cache
+     * @param   int     $ttl     Time to live
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function set($name, $data, $ttl=null) {
 
-        if ( empty($name) ) {
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
-        
-        if ( is_null($data) ) {
-            
-            throw new CacheException("Object content cannot be null");
-            
-        }
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
 
+        if ( is_null($data) ) throw new CacheException("Object content cannot be null");
+
+        // simply return false if cache is disabled
         if ( !$this->isEnabled() ) return false;
 
+        // reset error state, just in case
         $this->resetErrorState();
 
         try {
@@ -75,6 +86,7 @@ class ApcCache extends CacheObject implements CacheInterface {
 
             if ( $namespace === false ) $namespace = $this->setNamespaceKey();
 
+            // if namespace is still false, raise an error and exit gracefully
             if ( $namespace === false ) {
 
                 $this->raiseError("Error writing cache (APC), exiting gracefully");
@@ -111,13 +123,21 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a null value.
+     * In case of cache not found, it will return a null value.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  mixed
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function get($name) {
 
-        if ( empty($name) ) {
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
 
         if ( !$this->isEnabled() ) return null;
 
@@ -153,6 +173,17 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Delete cache object (or entire namespace if $name is null)
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
@@ -181,11 +212,17 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         }
 
-
         return $delete;
 
     }
 
+    /**
+     * Clean cache objects in all namespaces
+     *
+     * This method will throw only logical exceptions.
+     *
+     * @return  bool
+     */
     public function flush() {
 
         if ( !$this->isEnabled() ) return false;
@@ -196,6 +233,11 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get cache status
+     *
+     * @return  array
+     */
     public function status() {
 
         if ( !$this->isEnabled() ) return array(
@@ -213,6 +255,7 @@ class ApcCache extends CacheObject implements CacheInterface {
 
         } else {
 
+            // some APC extensions do not return the "num_entries", so let's try to calculate it
             $stats_2 = apc_cache_info("user");
 
             $objects = sizeof($stats_2["cache_list"]);
@@ -228,6 +271,11 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Set namespace key
+     *
+     * @return  mixed
+     */
     private function setNamespaceKey() {
 
         $uId = self::getUniqueId();
@@ -238,12 +286,22 @@ class ApcCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get namespace key
+     *
+     * @return  string
+     */
     private function getNamespaceKey() {
 
         return apc_fetch($this->getNamespace());
 
     }
 
+    /**
+     * Check APC availability
+     *
+     * @return  bool
+     */
     static private function getApcStatus() {
 
         return ( ( extension_loaded('apc') OR extension_loaded('apc') ) AND ini_get('apc.enabled') );

@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\CacheInterface\CacheInterface;
 use \Comodojo\Cache\CacheObject\CacheObject;
 use \Comodojo\Exception\CacheException;
 use \Exception;
@@ -23,8 +22,15 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class XCacheCache extends CacheObject implements CacheInterface {
+class XCacheCache extends CacheObject {
 
+    /**
+     * Class constructor
+     *
+     * @param   \Monolog\Logger $logger         Logger instance
+     * 
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function __construct( \Monolog\Logger $logger=null ) {
 
         if ( self::getXCacheStatus() === false ) {
@@ -51,19 +57,24 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Set cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     * @param   mixed   $data    Data to cache
+     * @param   int     $ttl     Time to live
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function set($name, $data, $ttl=null) {
 
-        if ( empty($name) ) {
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
         
-        if ( is_null($data) ) {
-            
-            throw new CacheException("Object content cannot be null");
-            
-        }
+        if ( is_null($data) ) throw new CacheException("Object content cannot be null");
 
         if ( !$this->isEnabled() ) return false;
 
@@ -99,13 +110,21 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get cache element
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a null value.
+     * In case of cache not found, it will return a null value.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  mixed
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function get($name) {
 
-        if ( empty($name) ) {
-            
-            throw new CacheException("Name of object cannot be empty");
-            
-        }
+        if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
 
         if ( !$this->isEnabled() ) return null;
 
@@ -127,6 +146,17 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Delete cache object (or entire namespace if $name is null)
+     *
+     * This method will throw only logical exceptions.
+     * In case of failures, it will return a boolean false.
+     *
+     * @param   string  $name    Name for cache element
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function delete($name=null) {
 
         if ( !$this->isEnabled() ) return false;
@@ -156,6 +186,14 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Clean cache objects in all namespaces
+     *
+     * This method will throw only logical exceptions.
+     *
+     * @return  bool
+     * @throws \Comodojo\Exception\CacheException
+     */
     public function flush() {
 
         if ( !$this->isEnabled() ) return false;
@@ -166,6 +204,11 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Get cache status
+     *
+     * @return  array
+     */
     public function status() {
 
         return array(
@@ -177,6 +220,11 @@ class XCacheCache extends CacheObject implements CacheInterface {
 
     }
 
+    /**
+     * Check XCache availability
+     *
+     * @return  bool
+     */
     static private function getXCacheStatus() {
 
         return ( extension_loaded('xcache') AND function_exists("xcache_get") );
