@@ -219,10 +219,10 @@ abstract class CacheObject implements CacheInterface {
     /**
      * Set current time
      *
-     * @param    float    $time    Set current time (in msec - float)
+     * @param   int    $time    Set current time (in msec - float)
      * 
-     * @return \Comodojo\Cache\CacheObject\CacheObject
-     * @throws \Comodojo\Exception\CacheException
+     * @return  \Comodojo\Cache\CacheObject\CacheObject
+     * @throws  \Comodojo\Exception\CacheException
      */
     final public function setTime( $time=null ) {
         
