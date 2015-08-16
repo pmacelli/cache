@@ -245,4 +245,13 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
+    /**
+     * @expectedException        Comodojo\Exception\CacheException
+     */
+    public function testSetTimeException() {
+
+        $this->cache->setTime('time');
+
+    }
+
 }
