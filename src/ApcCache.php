@@ -29,15 +29,15 @@ class ApcCache extends CacheObject {
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct( \Monolog\Logger $logger=null ) {
+    public function __construct(\Monolog\Logger $logger = null) {
 
         try {
             
-            parent::__construct( $logger );
+            parent::__construct($logger);
             
         }
         
-        catch ( CacheException $ce ) {
+        catch (CacheException $ce) {
             
             throw $ce;
             
@@ -66,7 +66,7 @@ class ApcCache extends CacheObject {
      * @return  bool
      * @throws \Comodojo\Exception\CacheException
      */
-    public function set($name, $data, $ttl=null) {
+    public function set($name, $data, $ttl = null) {
 
         if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
 
@@ -153,7 +153,7 @@ class ApcCache extends CacheObject {
 
             $shadowName = $namespace."-".md5($name);
 
-            $success=null;
+            $success = null;
 
             $return = apc_fetch($shadowName, $success);
 
@@ -184,7 +184,7 @@ class ApcCache extends CacheObject {
      * @return  bool
      * @throws \Comodojo\Exception\CacheException
      */
-    public function delete($name=null) {
+    public function delete($name = null) {
 
         if ( !$this->isEnabled() ) return false;
 
@@ -247,7 +247,7 @@ class ApcCache extends CacheObject {
             "options"   => array()
         );
 
-        $stats = apc_cache_info("user",true);
+        $stats = apc_cache_info("user", true);
 
         if ( isset($stats["num_entries"]) ) {
 
@@ -304,7 +304,7 @@ class ApcCache extends CacheObject {
      */
     private static function getApcStatus() {
 
-        return ( ( extension_loaded('apc') OR extension_loaded('apc') ) AND ini_get('apc.enabled') );
+        return ((extension_loaded('apc') OR extension_loaded('apc')) AND ini_get('apc.enabled'));
 
     }
 

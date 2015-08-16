@@ -77,7 +77,7 @@ abstract class CacheObject implements CacheInterface {
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct( $logger=null ) {
+    public function __construct($logger = null) {
 
         try {
             
@@ -103,7 +103,7 @@ abstract class CacheObject implements CacheInterface {
      * @param    string    $message       The message to log
      * @param    array     $parameters    (optional) Additional parameters
      */
-    public function raiseError($message, $parameters=array()) {
+    public function raiseError($message, $parameters = array()) {
 
         if ( $this->logger instanceof \Monolog\Logger ) {
 
@@ -129,7 +129,7 @@ abstract class CacheObject implements CacheInterface {
      *
      * @return  bool
      */
-    abstract public function set($name, $data, $ttl=null);
+    abstract public function set($name, $data, $ttl = null);
     
     /**
      * Get cache element
@@ -154,7 +154,7 @@ abstract class CacheObject implements CacheInterface {
      *
      * @return  bool
      */
-    abstract public function delete($name=null);
+    abstract public function delete($name = null);
     
     /**
      * Clean cache objects in all namespaces
@@ -224,7 +224,7 @@ abstract class CacheObject implements CacheInterface {
      * @return  \Comodojo\Cache\CacheObject\CacheObject
      * @throws  \Comodojo\Exception\CacheException
      */
-    final public function setTime( $time=null ) {
+    final public function setTime($time = null) {
         
         if ( is_null($time) ) $this->current_time = time();
 
@@ -248,7 +248,7 @@ abstract class CacheObject implements CacheInterface {
      * @return \Comodojo\Cache\CacheObject\CacheObject
      * @throws \Comodojo\Exception\CacheException
      */
-    final public function setTtl( $ttl=null ) {
+    final public function setTtl($ttl = null) {
         
         if ( is_null($ttl) ) {
             
@@ -276,7 +276,7 @@ abstract class CacheObject implements CacheInterface {
      * @return \Comodojo\Cache\CacheObject\CacheObject
      * @throws \Comodojo\Exception\CacheException
      */
-    final public function setNamespace( $namespace ) {
+    final public function setNamespace($namespace) {
 
         if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) AND strlen($namespace) <= 64 ) {
             
@@ -299,7 +299,7 @@ abstract class CacheObject implements CacheInterface {
      * 
      * @return \Comodojo\Cache\CacheObject\CacheObject
      */
-    final public function setLogger( \Monolog\Logger $logger ) {
+    final public function setLogger(\Monolog\Logger $logger) {
 
         $this->logger = $logger;
 

@@ -121,7 +121,7 @@ interface CacheInterface {
      * Set the logger instance
      *
      */
-    public function setLogger( \Monolog\Logger $logger );
+    public function setLogger(\Monolog\Logger $logger);
 
     /**
      * Get the current logger instance
