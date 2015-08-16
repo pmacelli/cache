@@ -487,7 +487,7 @@ class FileCache extends CacheObject {
      *
      * @return  bool
      */
-    static private function checkCacheFolder($folder) {
+    private static function checkCacheFolder($folder) {
         
         return is_writable( $folder );
         
@@ -498,7 +498,7 @@ class FileCache extends CacheObject {
      *
      * @return  bool
      */
-    static private function checkXattrSupport() {
+    private static function checkXattrSupport() {
         
         return function_exists( "xattr_supported" );
         
@@ -509,7 +509,7 @@ class FileCache extends CacheObject {
      *
      * @return  bool
      */
-    static private function checkXattrFilesystemSupport($folder) {
+    private static function checkXattrFilesystemSupport($folder) {
         
         return xattr_supported( $folder );
         

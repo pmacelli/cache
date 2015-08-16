@@ -225,7 +225,7 @@ class XCacheCache extends CacheObject {
      *
      * @return  bool
      */
-    static private function getXCacheStatus() {
+    private static function getXCacheStatus() {
 
         return ( extension_loaded('xcache') AND function_exists("xcache_get") );
 

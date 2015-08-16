@@ -360,7 +360,7 @@ class DatabaseCache extends CacheObject {
      *
      * @return  \Comodojo\Database\EnhancedDatabase
      */
-    public final function getInstance() {
+    final public function getInstance() {
 
         return $this->dbh;
 
@@ -372,7 +372,7 @@ class DatabaseCache extends CacheObject {
      * @return  \Comodojo\Database\QueryResult
      * @throws  \Comodojo\Exception\DatabaseException
      */
-    static private function getCacheObject($dbh, $table, $table_prefix, $name, $namespace, $expire=null) {
+    private static function getCacheObject($dbh, $table, $table_prefix, $name, $namespace, $expire=null) {
         
         try {
             
@@ -406,7 +406,7 @@ class DatabaseCache extends CacheObject {
      *
      * @throws  \Comodojo\Exception\DatabaseException
      */
-    static private function updateCacheObject($dbh, $table, $table_prefix, $name, $data, $scope, $expire) {
+    private static function updateCacheObject($dbh, $table, $table_prefix, $name, $data, $scope, $expire) {
         
         try {
             
@@ -431,7 +431,7 @@ class DatabaseCache extends CacheObject {
      *
      * @throws  \Comodojo\Exception\DatabaseException
      */
-    static private function addCacheObject($dbh, $table, $table_prefix, $name, $data, $scope, $expire) {
+    private static function addCacheObject($dbh, $table, $table_prefix, $name, $data, $scope, $expire) {
         
         try {
             
@@ -455,7 +455,7 @@ class DatabaseCache extends CacheObject {
      * @return \Comodojo\Database\EnhancedDatabase
      * @throws  \Comodojo\Exception\CacheException
      */
-    static public function getDatabase($model=null, $host=null, $port=null, $database=null, $user=null, $password=null) {
+    public static function getDatabase($model=null, $host=null, $port=null, $database=null, $user=null, $password=null) {
         
         $model = is_null($model) ? ( defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $model;
         $host = is_null($host) ? ( defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $host;

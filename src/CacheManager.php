@@ -46,9 +46,9 @@ class CacheManager {
     protected $namespace = "GLOBAL";
 
     /**
-     * current time (in msec)
+     * current time (in sec)
      *
-     * @var float
+     * @var int
      */
     protected $current_time = null;
     
@@ -261,7 +261,7 @@ class CacheManager {
 
         $this->caches[$cache_id] = $cache_provider;
 
-        $this->cache_weights[$cache_id] = $weight;
+        $this->cache_weights[$cache_id] = $corrected_weight;
 
         return $cache_id;
 
@@ -513,7 +513,9 @@ class CacheManager {
 
         $active_cache = false;
 
-        for ($i=0; $i < sizeof($caches); $i++) { 
+        $size = sizeof($caches);
+
+        for ($i=0; $i < $size; $i++) { 
             
             $cache_id = array_rand($caches);
 
@@ -557,7 +559,9 @@ class CacheManager {
 
         $active_cache = false;
 
-        for ($i=0; $i < sizeof($weights); $i++) { 
+        $size = sizeof($weights);
+
+        for ($i=0; $i < $size; $i++) { 
             
             $cache_ids = array_keys($weights, max($weights));
 

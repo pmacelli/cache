@@ -74,7 +74,7 @@ class PhpRedisCache extends CacheObject {
             )
         );
 
-        if ( $this->instance->connect($server, $port, $timeout) === false ) {
+        if ( $this->instance->connect($server, $port, $weight) === false ) {
 
             $this->raiseError( "Error communicating with server", array( $this->instance->getLastError() ) );
 
@@ -387,7 +387,7 @@ class PhpRedisCache extends CacheObject {
      *
      * @return  \Memcached
      */
-    public final function getInstance() {
+    final public function getInstance() {
 
         return $this->instance;
 
@@ -442,7 +442,7 @@ class PhpRedisCache extends CacheObject {
      *
      * @return  bool
      */
-    static private function getRedisStatus() {
+    private static function getRedisStatus() {
         
         return class_exists('Redis');
         

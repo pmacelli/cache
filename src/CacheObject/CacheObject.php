@@ -26,7 +26,7 @@ abstract class CacheObject implements CacheInterface {
     /**
      * Is cache enabled?
      *
-     * @var int
+     * @var bool
      */
     protected $enabled = true;
 
@@ -52,9 +52,9 @@ abstract class CacheObject implements CacheInterface {
     protected $namespace = "GLOBAL";
 
     /**
-     * current time (in msec)
+     * current time (in sec)
      *
-     * @var float
+     * @var int
      */
     protected $current_time = null;
     
@@ -388,7 +388,7 @@ abstract class CacheObject implements CacheInterface {
      *
      * @return string
      */
-    static protected function getUniqueId() {
+    protected static function getUniqueId() {
 
         return substr(md5(uniqid(rand(), true)), 0, 64);
 

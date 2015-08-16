@@ -338,7 +338,7 @@ class MemcachedCache extends CacheObject {
      *
      * @return  \Memcached
      */
-    public final function getInstance() {
+    final public function getInstance() {
 
         return $this->instance;
 
@@ -409,7 +409,7 @@ class MemcachedCache extends CacheObject {
      *
      * @return  bool
      */
-    static private function getMemcachedStatus() {
+    private static function getMemcachedStatus() {
         
         return class_exists('Memcached');
         
