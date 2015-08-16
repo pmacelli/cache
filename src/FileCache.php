@@ -36,17 +36,17 @@ class FileCache extends CacheObject {
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct( $cache_folder=null, \Monolog\Logger $logger=null ) {
+    public function __construct($cache_folder = null, \Monolog\Logger $logger = null) {
 
         if ( !empty($cache_folder) AND is_string($cache_folder) ) {
             
-            $this->cache_folder = $cache_folder[strlen($cache_folder)-1] == "/" ? $cache_folder : ( $cache_folder . "/" );
+            $this->cache_folder = $cache_folder[strlen($cache_folder) - 1] == "/" ? $cache_folder : ($cache_folder."/");
             
         } else if ( defined("COMODOJO_CACHE_FOLDER") ) {
             
             $folder = COMODOJO_CACHE_FOLDER;
             
-            $this->cache_folder = $folder[strlen($folder)-1] == "/" ? $folder : ( $folder . "/" );
+            $this->cache_folder = $folder[strlen($folder) - 1] == "/" ? $folder : ($folder."/");
             
         } else {
         
@@ -64,11 +64,11 @@ class FileCache extends CacheObject {
 
             try {
             
-                parent::__construct( $logger );
+                parent::__construct($logger);
                 
             }
             
-            catch ( CacheException $ce ) {
+            catch (CacheException $ce) {
                 
                 throw $ce;
                 
@@ -91,7 +91,7 @@ class FileCache extends CacheObject {
      * @return  bool
      * @throws \Comodojo\Exception\CacheException
      */
-    public function set($name, $data, $ttl=null) {
+    public function set($name, $data, $ttl = null) {
 
         if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
 
@@ -105,7 +105,7 @@ class FileCache extends CacheObject {
             
             $this->setTtl($ttl);
         
-            $shadowName = $this->cache_folder . md5($name)."-".$this->getNamespace();
+            $shadowName = $this->cache_folder.md5($name)."-".$this->getNamespace();
             
             $shadowData = serialize($data);
     
@@ -151,7 +151,7 @@ class FileCache extends CacheObject {
 
         $this->resetErrorState();
 
-        $shadowName = $this->cache_folder . md5($name)."-".$this->getNamespace();
+        $shadowName = $this->cache_folder.md5($name)."-".$this->getNamespace();
     
         if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
@@ -177,7 +177,7 @@ class FileCache extends CacheObject {
      *
      * @return  bool
      */
-    public function delete($name=null) {
+    public function delete($name = null) {
 
         if ( !$this->isEnabled() ) return false;
 
@@ -195,7 +195,7 @@ class FileCache extends CacheObject {
 
         }
 
-        foreach ($filesList as $file) {
+        foreach ( $filesList as $file ) {
 
             if ( unlink($file) === false ) {
 
@@ -230,7 +230,7 @@ class FileCache extends CacheObject {
 
         $filesList = glob($this->cache_folder."*.{cache,expire}", GLOB_BRACE);
 
-        foreach ($filesList as $file) {
+        foreach ( $filesList as $file ) {
 
             if ( unlink($file) === false ) {
 
@@ -293,7 +293,7 @@ class FileCache extends CacheObject {
      */
     private function setXattr($name, $data, $ttl) {
 
-        $cacheFile = $name . ".cache";
+        $cacheFile = $name.".cache";
 
         $cached = file_put_contents($cacheFile, $data, LOCK_EX);
 
@@ -334,9 +334,9 @@ class FileCache extends CacheObject {
      */
     private function setGhost($name, $data, $ttl) {
 
-        $cacheFile = $name . ".cache";
+        $cacheFile = $name.".cache";
 
-        $cacheGhost = $name . ".expire";
+        $cacheGhost = $name.".expire";
 
         $cached = file_put_contents($cacheFile, $data, LOCK_EX);
         
@@ -376,7 +376,7 @@ class FileCache extends CacheObject {
      */
     private function getXattr($name, $time) {
 
-        $cacheFile = $name . ".cache";
+        $cacheFile = $name.".cache";
 
         if ( file_exists($cacheFile) ) {
 
@@ -434,9 +434,9 @@ class FileCache extends CacheObject {
      */
     private function getGhost($name, $time) {
 
-        $cacheFile = $name . ".cache";
+        $cacheFile = $name.".cache";
 
-        $cacheGhost = $name . ".expire";
+        $cacheGhost = $name.".expire";
 
         if ( file_exists($cacheFile) ) {
 
@@ -489,7 +489,7 @@ class FileCache extends CacheObject {
      */
     private static function checkCacheFolder($folder) {
         
-        return is_writable( $folder );
+        return is_writable($folder);
         
     }
     
@@ -500,7 +500,7 @@ class FileCache extends CacheObject {
      */
     private static function checkXattrSupport() {
         
-        return function_exists( "xattr_supported" );
+        return function_exists("xattr_supported");
         
     }
     
@@ -511,7 +511,7 @@ class FileCache extends CacheObject {
      */
     private static function checkXattrFilesystemSupport($folder) {
         
-        return xattr_supported( $folder );
+        return xattr_supported($folder);
         
     }
     

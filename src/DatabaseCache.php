@@ -57,7 +57,7 @@ class DatabaseCache extends CacheObject {
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct( EnhancedDatabase $dbh, $table=null, $table_prefix=null, \Monolog\Logger $logger=null ) {
+    public function __construct(EnhancedDatabase $dbh, $table = null, $table_prefix = null, \Monolog\Logger $logger = null) {
     
         if ( !empty($table) ) {
             
@@ -89,11 +89,11 @@ class DatabaseCache extends CacheObject {
         
         try {
             
-            parent::__construct( $logger );
+            parent::__construct($logger);
             
         }
         
-        catch ( CacheException $ce ) {
+        catch (CacheException $ce) {
             
             throw $ce;
             
@@ -114,7 +114,7 @@ class DatabaseCache extends CacheObject {
      * @return  bool
      * @throws \Comodojo\Exception\CacheException
      */
-    public function set($name, $data, $ttl=null) {
+    public function set($name, $data, $ttl = null) {
         
         if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
             
@@ -136,11 +136,11 @@ class DatabaseCache extends CacheObject {
             
             if ( $is_in_cache->getLength() != 0 ) {
                 
-                self::updateCacheObject($this->dbh, $this->table, $this->table_prefix, $name, serialize($data), $namespace, $expire );
+                self::updateCacheObject($this->dbh, $this->table, $this->table_prefix, $name, serialize($data), $namespace, $expire);
                 
             } else {
                 
-                self::addCacheObject($this->dbh, $this->table, $this->table_prefix, $name, serialize($data), $namespace, $expire );
+                self::addCacheObject($this->dbh, $this->table, $this->table_prefix, $name, serialize($data), $namespace, $expire);
                 
             }
 
@@ -235,7 +235,7 @@ class DatabaseCache extends CacheObject {
      * @return  bool
      * @throws \Comodojo\Exception\CacheException
      */
-    public function delete($name=null) {
+    public function delete($name = null) {
 
         if ( !$this->isEnabled() ) return false;
 
@@ -245,9 +245,9 @@ class DatabaseCache extends CacheObject {
             
             $this->dbh->tablePrefix($this->table_prefix)
                 ->table($this->table)
-                ->where("namespace","=",$this->getNamespace());
+                ->where("namespace", "=", $this->getNamespace());
                 
-            if ( !empty($name) ) $this->dbh->andWhere("name","=",$name);
+            if ( !empty($name) ) $this->dbh->andWhere("name", "=", $name);
             
             $this->dbh->delete();
 
@@ -372,19 +372,19 @@ class DatabaseCache extends CacheObject {
      * @return  \Comodojo\Database\QueryResult
      * @throws  \Comodojo\Exception\DatabaseException
      */
-    private static function getCacheObject($dbh, $table, $table_prefix, $name, $namespace, $expire=null) {
+    private static function getCacheObject($dbh, $table, $table_prefix, $name, $namespace, $expire = null) {
         
         try {
             
             $dbh->tablePrefix($table_prefix)
                 ->table($table)
                 ->keys('data')
-                ->where("name","=",$name)
-                ->andWhere("namespace","=",$namespace); ;
+                ->where("name", "=", $name)
+                ->andWhere("namespace", "=", $namespace); ;
                 
             if ( is_int($expire) ) {
                 
-                $dbh->andWhere("expire",">",$expire); 
+                $dbh->andWhere("expire", ">", $expire); 
                 
             }
             
@@ -412,10 +412,10 @@ class DatabaseCache extends CacheObject {
             
             $dbh->tablePrefix($table_prefix)
                 ->table($table)
-                ->keys(array('data','expire'))
-                ->values(array($data,$expire))
-                ->where("name","=",$name)
-                ->andWhere("namespace","=",$scope)
+                ->keys(array('data', 'expire'))
+                ->values(array($data, $expire))
+                ->where("name", "=", $name)
+                ->andWhere("namespace", "=", $scope)
                 ->update();
         
         } catch (DatabaseException $de) {
@@ -455,14 +455,14 @@ class DatabaseCache extends CacheObject {
      * @return \Comodojo\Database\EnhancedDatabase
      * @throws  \Comodojo\Exception\CacheException
      */
-    public static function getDatabase($model=null, $host=null, $port=null, $database=null, $user=null, $password=null) {
+    public static function getDatabase($model = null, $host = null, $port = null, $database = null, $user = null, $password = null) {
         
-        $model = is_null($model) ? ( defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $model;
-        $host = is_null($host) ? ( defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $host;
-        $port = is_null($port) ? ( defined("COMODOJO_CACHE_DATABASE_PORT") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $port;
-        $database = is_null($database) ? ( defined("COMODOJO_CACHE_DATABASE_DATABASE") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $database;
-        $user = is_null($user) ? ( defined("COMODOJO_CACHE_DATABASE_USER") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $user;
-        $password = is_null($password) ? ( defined("COMODOJO_CACHE_DATABASE_PASSWORD") ? COMODOJO_CACHE_DATABASE_MODEL : null ) : $password;
+        $model = is_null($model) ? (defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $model;
+        $host = is_null($host) ? (defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $host;
+        $port = is_null($port) ? (defined("COMODOJO_CACHE_DATABASE_PORT") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $port;
+        $database = is_null($database) ? (defined("COMODOJO_CACHE_DATABASE_DATABASE") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $database;
+        $user = is_null($user) ? (defined("COMODOJO_CACHE_DATABASE_USER") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $user;
+        $password = is_null($password) ? (defined("COMODOJO_CACHE_DATABASE_PASSWORD") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $password;
         
         try {
             
@@ -477,7 +477,7 @@ class DatabaseCache extends CacheObject {
             
         } catch (Exception $e) {
             
-            throw new CacheException("Cannot init database: (" . $e->getCode() . ") " . $e->getMessage());
+            throw new CacheException("Cannot init database: (".$e->getCode().") ".$e->getMessage());
             
         }
         

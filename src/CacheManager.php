@@ -27,7 +27,7 @@ class CacheManager {
     const PICK_FIRST   = 1;
     const PICK_LAST    = 2;
     const PICK_RANDOM  = 3;
-    const PICK_BYWEIGHT= 4;
+    const PICK_BYWEIGHT = 4;
     const PICK_ALL     = 5;
 
     private $caches = array();
@@ -66,7 +66,7 @@ class CacheManager {
      */
     protected $ttl = null;
 
-    public function __construct( $select_mode=null, \Monolog\Logger $logger=null ) {
+    public function __construct($select_mode = null, \Monolog\Logger $logger = null) {
 
         $this->selector = filter_var($select_mode, FILTER_VALIDATE_INT, array(
             'options' => array(
@@ -136,7 +136,7 @@ class CacheManager {
         
     }
 
-    public function raiseError($message, $parameters=array()) {
+    public function raiseError($message, $parameters = array()) {
 
         if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
 
@@ -150,7 +150,7 @@ class CacheManager {
      * @return  \Comodojo\Cache\CacheObject\CacheObject
      * @throws  \Comodojo\Exception\CacheException
      */
-    final public function setTime( $time=null ) {
+    final public function setTime($time = null) {
         
         if ( is_null($time) ) $this->current_time = time();
 
@@ -162,7 +162,7 @@ class CacheManager {
             
         }
 
-        foreach ($this->caches as $cache) $cache->setTime($time);
+        foreach ( $this->caches as $cache ) $cache->setTime($time);
 
         return $this;
         
@@ -176,7 +176,7 @@ class CacheManager {
      * @return \Comodojo\Cache\CacheObject\CacheObject
      * @throws \Comodojo\Exception\CacheException
      */
-    final public function setTtl( $ttl=null ) {
+    final public function setTtl($ttl = null) {
         
         if ( is_null($ttl) ) {
             
@@ -192,7 +192,7 @@ class CacheManager {
             
         }
 
-        foreach ($this->caches as $cache) $cache->setTtl($ttl);
+        foreach ( $this->caches as $cache ) $cache->setTtl($ttl);
 
         return $this;
         
@@ -206,7 +206,7 @@ class CacheManager {
      * @return \Comodojo\Cache\CacheObject\CacheObject
      * @throws \Comodojo\Exception\CacheException
      */
-    final public function setNamespace( $namespace ) {
+    final public function setNamespace($namespace) {
 
         if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) AND strlen($namespace) <= 64 ) {
             
@@ -218,7 +218,7 @@ class CacheManager {
             
         }
 
-        foreach ($this->caches as $cache) $cache->setNamespace($namespace);
+        foreach ( $this->caches as $cache ) $cache->setNamespace($namespace);
 
         return $this;
 
@@ -231,17 +231,17 @@ class CacheManager {
      * 
      * @return \Comodojo\Cache\CacheObject\CacheObject
      */
-    final public function setLogger( \Monolog\Logger $logger ) {
+    final public function setLogger(\Monolog\Logger $logger) {
 
         $this->logger = $logger;
 
-        foreach ($this->caches as $cache) $cache->setLogger($logger);
+        foreach ( $this->caches as $cache ) $cache->setLogger($logger);
 
         return $this;
 
     }
 
-    public function addProvider( CacheInterface $cache_provider, $weight=0 ) {
+    public function addProvider(CacheInterface $cache_provider, $weight = 0) {
 
         $corrected_weight = filter_var($weight, FILTER_VALIDATE_INT, array(
             'options' => array(
@@ -255,7 +255,7 @@ class CacheManager {
 
         if ( array_key_exists($cache_id, $this->caches) ) throw new CacheException("Cache provider already registered");
 
-        $cache_provider->setTime( $this->getTime() )->setTtl( $this->getTtl() );
+        $cache_provider->setTime($this->getTime())->setTtl($this->getTtl());
 
         if ( $this->logger instanceof \Monolog\Logger ) $cache_provider->setLogger($this->logger);
 
@@ -285,7 +285,7 @@ class CacheManager {
 
     }
 
-    public function getProviders($type=null) {
+    public function getProviders($type = null) {
 
         $providers = array();
         
@@ -309,13 +309,13 @@ class CacheManager {
         
     }
 
-    public function set($name, $data, $ttl=null) {
+    public function set($name, $data, $ttl = null) {
 
         $set = array();
 
         try {
         
-            foreach ($this->caches as $cache_id => $cache) {
+            foreach ( $this->caches as $cache_id => $cache ) {
 
                 $set[$cache_id] = $cache->set($name, $data, $ttl);
 
@@ -345,25 +345,25 @@ class CacheManager {
             
                 case 1:
 
-                    $result = $this->getCacheByLoop( $this->caches, $name );
+                    $result = $this->getCacheByLoop($this->caches, $name);
 
                     break;
 
                 case 2:
 
-                    $result = $this->getCacheByLoop( array_reverse($this->caches, true), $name );
+                    $result = $this->getCacheByLoop(array_reverse($this->caches, true), $name);
                     
                     break;
 
                 case 3:
 
-                    $result = $this->getRandomCache( $this->caches, $name );
+                    $result = $this->getRandomCache($this->caches, $name);
                     
                     break;
 
                 case 4:
 
-                    $result = $this->getCacheByWeight( $this->caches, $this->cache_weights, $name );
+                    $result = $this->getCacheByWeight($this->caches, $this->cache_weights, $name);
 
                     break;
 
@@ -371,7 +371,7 @@ class CacheManager {
 
                     $values = array();
 
-                    foreach ($this->caches as $cache) {
+                    foreach ( $this->caches as $cache ) {
                         
                         $values[] = $cache->get($name);
 
@@ -403,13 +403,13 @@ class CacheManager {
 
     }
 
-    public function delete($name=null) {
+    public function delete($name = null) {
 
         $delete = array();
 
         try {
 
-            foreach ($this->caches as $cache_id => $cache) {
+            foreach ( $this->caches as $cache_id => $cache ) {
 
                 $delete[$cache_id] = $cache->delete($name);
 
@@ -431,7 +431,7 @@ class CacheManager {
 
         try {
 
-            foreach ($this->caches as $cache_id => $cache) {
+            foreach ( $this->caches as $cache_id => $cache ) {
 
                 $flush[$cache_id] = $cache->flush();
 
@@ -453,7 +453,7 @@ class CacheManager {
 
         try {
 
-            foreach ($this->caches as $cache_id => $cache) {
+            foreach ( $this->caches as $cache_id => $cache ) {
 
                 $status[$cache_id] = $cache->status();
 
@@ -481,7 +481,7 @@ class CacheManager {
 
         $active_cache = false;
 
-        foreach ($caches as $cache) {
+        foreach ( $caches as $cache ) {
             
             if ( $cache->isEnabled() ) {
 
@@ -515,7 +515,7 @@ class CacheManager {
 
         $size = sizeof($caches);
 
-        for ($i=0; $i < $size; $i++) { 
+        for ( $i = 0; $i < $size; $i++ ) { 
             
             $cache_id = array_rand($caches);
 
@@ -561,7 +561,7 @@ class CacheManager {
 
         $size = sizeof($weights);
 
-        for ($i=0; $i < $size; $i++) { 
+        for ( $i = 0; $i < $size; $i++ ) { 
             
             $cache_ids = array_keys($weights, max($weights));
 
@@ -602,4 +602,4 @@ class CacheManager {
     }
 
 } 
- 
+    
