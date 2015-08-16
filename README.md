@@ -32,7 +32,6 @@ First, a cache provider should be inited (look at next section to know more abou
 In following examples, `$cache` is a generic `\Comodojo\Cache\FileCache` provider like:
 
 ```php
-
 $cache = new \Comodojo\Cache\FileCache();
 
 ```
@@ -46,7 +45,6 @@ If not specified, cache items will be defined into *GLOBAL* namespace.
 Namespaces are alphanumeric, case-insensitive *strings* of a maximum length of 64 chars.
 
 ```php
-
 // set the namespace
 $cache->setNamespace('CUSTOMNAMESPACE');
 
@@ -62,7 +60,6 @@ A cache item should be defined as a key/value object with an optional time to li
 If no ttl is defined, lib will check if `COMODOJO_CACHE_DEFAULT_TTL` constant is defined; if not, the item will have a default ttl of 3600 secs.
 
 ```php
-
 // set an item
 $result = $cache->set('my_data', 'sample data', 3600);
 
@@ -74,7 +71,6 @@ $my_data = $cache->get('my_data');
 ### Delete a cache item
 
 ```php
-
 // delete an item
 $result = $cache->delete('my_data');
 
@@ -83,7 +79,6 @@ $result = $cache->delete('my_data');
 ### Delete the entire namespace
 
 ```php
-
 // delete current namespace
 $result = $cache->delete();
 
@@ -92,7 +87,6 @@ $result = $cache->delete();
 ### Flush whole cache
 
 ```php
-
 // delete current namespace
 $result = $cache->flush();
 
@@ -103,7 +97,6 @@ $result = $cache->flush();
 Each provider implements the `status()` method that will return an array like:
 
 ```php
-
 array (
     "provider"  => "file", //provider type
     "enabled"   => true, //provider status
@@ -132,7 +125,6 @@ Additionally, in case of error:
 - Set/get current (relative) time
 
     ```php
-    
     // define time
     $time = time();
     
@@ -147,7 +139,6 @@ Additionally, in case of error:
 - Set/get time to live
 
     ```php
-    
     // define ttl
     $ttl = 60;
     
@@ -162,7 +153,6 @@ Additionally, in case of error:
 - Administratively enable/disable provider
 
     ```php
-    
     // disable provider
     $cache->disable();
     
@@ -177,7 +167,6 @@ Additionally, in case of error:
 - Manage error state
 
     ```php
-    
     // put provider in error state
     $cache->setErrorState();
     
@@ -207,7 +196,6 @@ Following, a brief guide to providers' initialization.
 ### ApcCache
 
 ```php
-
 // create an instance of \Comodojo\Cache\ApcCache
 $cache = new \Comodojo\Cache\ApcCache();
 
@@ -216,7 +204,6 @@ $cache = new \Comodojo\Cache\ApcCache();
 ### DatabaseCache
 
 ```php
-
 // create an EnhancedDatabase instance
 $edb = \Comodojo\Cache\DatabaseCache::getDatabase('MYSQLI', '127.0.0.1', 3306, 'user', 'password');
 
@@ -228,7 +215,6 @@ $cache = new \Comodojo\Cache\DatabaseCache($edb, 'cache');
 ### FileCache
 
 ```php
-
 // folder to store files
 $cache_folder = "/mycachefolder/";    
 
@@ -240,7 +226,6 @@ $cache = new \Comodojo\Cache\FileCache($cache_folder);
 ### MemcachedCache
 
 ```php
-
 // create an instance of \Comodojo\Cache\MemcachedCache
 // Parameters: $port, $weight, $persistent_id are optional
 $cache = new new \Comodojo\Cache\MemcachedCache('127.0.0.1', 11211, 0, null);
@@ -250,7 +235,6 @@ $cache = new new \Comodojo\Cache\MemcachedCache('127.0.0.1', 11211, 0, null);
 ### PhpRedisCache
 
 ```php
-
 // create an instance of \Comodojo\Cache\PhpRedisCache
 // parameters $port and $timeout are optional
 $cache = new \Comodojo\Cache\PhpRedisCache('127.0.0.1');
@@ -260,7 +244,6 @@ $cache = new \Comodojo\Cache\PhpRedisCache('127.0.0.1');
 ### XCacheCache
 
 ```php
-
 // create an instance of \Comodojo\Cache\XCacheCache
 $cache = new \Comodojo\Cache\XCacheCache();
 
@@ -291,7 +274,6 @@ Please note that `\Comodojo\Cache\CacheManager::PICK_ALL` is significantly slowe
 ### Init the Manager
 
 ```php
-
 $manager = new CacheManager( CacheManager::PICK_FIRST );
 
 ```
@@ -301,7 +283,6 @@ $manager = new CacheManager( CacheManager::PICK_FIRST );
 Providers are registered in CacheManager via `addProvider()` method:
 
 ```php
-
 // pX will be the provider's unique id
 $p1 = $manager->addProvider( new DatabaseCache($edb, 'cache', 'comodojo_') );
 $p2 = $manager->addProvider( new FileCache($cache_folder) );
@@ -313,7 +294,6 @@ $p4 = $manager->addProvider( new PhpRedisCache('127.0.0.1') );
 Providers could be retrieved using the `getProviders()` and removed using the `removeProvider()` method.
 
 ```php
-
 // get the whole providers' list
 $providers = $manager->getProviders();
 
@@ -331,7 +311,6 @@ foreach ( $apc_providers as $id => $type ) {
 ### Set/get a cache item
 
 ```php
-
 // add item to all providers
 $manager->set('my_data', 'sample data', 3600);
 

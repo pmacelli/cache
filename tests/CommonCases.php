@@ -1,5 +1,8 @@
 <?php namespace Comodojo\Cache\Tests;
 
+use \Monolog\Logger;
+use \Monolog\Handler\StreamHandler;
+
 class CommonCases extends \PHPUnit_Framework_TestCase {
 
     private $string_content = "Lorem ipsum dolor";
@@ -155,6 +158,88 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $this->assertNull($this->cache->get("test-cache-2"));
         
         $this->assertNull($this->cache->get("test-cache-3"));
+
+        $this->assertFalse($this->cache->getErrorState());
+
+    }
+
+    public function testLogger() {
+
+        $className = join('', array_slice(explode('\\', get_called_class()), -1));
+
+        $log = new Logger('test');
+
+        $log->pushHandler(new StreamHandler(__DIR__ . "/tmp/" . $className . '.log', Logger::DEBUG));
+
+        $this->cache->setLogger($log);
+
+        $result = $this->cache->raiseError('test error');
+
+        $this->assertTrue($result);
+
+        $logger = $this->cache->getLogger();
+
+        $this->assertInstanceOf('\Monolog\Logger', $logger);
+
+    }
+
+    public function testSetGetTime() {
+
+        $time = time();
+
+        $result = $this->cache->setTime($time);
+
+        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+
+        $result = $this->cache->getTime();
+
+        $this->assertEquals($time, $result);
+
+    }
+
+    public function testSetGetTtl() {
+
+        $result = $this->cache->setTtl(300);
+
+        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+
+        $result = $this->cache->getTtl();
+
+        $this->assertEquals(300, $result);
+
+    }
+
+    public function testSetGetNamespace() {
+
+        $result = $this->cache->setNamespace('BOO');
+
+        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+
+        $result = $this->cache->getNamespace();
+
+        $this->assertEquals('BOO', $result);
+
+    }
+
+    public function testEnableDisableCache() {
+
+        $result = $this->cache->disable();
+
+        $this->assertFalse($this->cache->isEnabled());
+
+        $result = $this->cache->enable();
+
+        $this->assertTrue($this->cache->isEnabled());
+
+    }
+
+    public function testErrorState() {
+
+        $result = $this->cache->setErrorState();
+
+        $this->assertTrue($this->cache->getErrorState());
+        
+        $result = $this->cache->resetErrorState();
 
         $this->assertFalse($this->cache->getErrorState());
 

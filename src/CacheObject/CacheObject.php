@@ -105,7 +105,15 @@ abstract class CacheObject implements CacheInterface {
      */
     public function raiseError($message, $parameters=array()) {
 
-        if ( $this->logger instanceof \Monolog\Logger ) $this->logger->addError($message, $parameters);
+        if ( $this->logger instanceof \Monolog\Logger ) {
+
+            return $this->logger->addError($message, $parameters);
+
+        } else {
+
+            return false;
+
+        }
     
     }
     

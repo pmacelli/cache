@@ -5,9 +5,15 @@
     "type": "library",
     "keywords": [
         "cache",
-        "comodojo"
+        "comodojo",
+        "xattr",
+        "redis",
+        "memcached",
+        "apc",
+        "apcu",
+        "xcache"
     ],
-    "homepage": "http://comodojo.org",
+    "homepage": "https://comodojo.org",
      "support": {
         "issues": "https://github.com/comodojo/cache/issues"
     },
@@ -20,17 +26,18 @@
     ],
     "autoload": {
         "psr-4": {
-            "Comodojo\\Exception\\": "src/Exception",
             "Comodojo\\Cache\\": "src"
         }
     },
     "require": {
         "php": ">=5.3.9",
-        "comodojo/database": "1.0.x-dev"
+        "comodojo/database": "1.0.x-dev",
+        "comodojo/exceptions": "@stable"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
-        "scrutinizer/ocular": "~1.1"
+        "scrutinizer/ocular": "~1.1",
+        "monolog/monolog": "~1.0"
     },
     "suggest": {
         "monolog/monolog": "Enable error logging",
