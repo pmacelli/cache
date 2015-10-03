@@ -47,7 +47,7 @@ class MemcachedCache extends CacheObject {
 
         if ( empty($server) ) throw new CacheException("Invalid or unspecified memcached server");
 
-        if ( !is_null($persistent_id) AND !is_string($persistent_id) ) throw new CacheException("Invalid persistent id");
+        if ( !is_null($persistent_id) && !is_string($persistent_id) ) throw new CacheException("Invalid persistent id");
 
         if ( self::getMemcachedStatus() === false ) {
 
@@ -203,7 +203,7 @@ class MemcachedCache extends CacheObject {
 
             $return = $this->instance->get($shadowName);
 
-            if ( $return === false AND $this->instance->getResultCode() != Memcached::RES_NOTFOUND ) {
+            if ( $return === false && $this->instance->getResultCode() != Memcached::RES_NOTFOUND ) {
 
                 $this->raiseError("Error reading cache (Memcached), exiting gracefully", array(
                     "RESULTCODE" => $this->instance->getResultCode(),

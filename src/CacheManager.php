@@ -208,7 +208,7 @@ class CacheManager {
      */
     final public function setNamespace($namespace) {
 
-        if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) AND strlen($namespace) <= 64 ) {
+        if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) && strlen($namespace) <= 64 ) {
             
             $this->namespace = strtoupper($namespace);
             
@@ -269,7 +269,7 @@ class CacheManager {
 
     public function removeProvider($cache_id) {
 
-        if ( array_key_exists($cache_id, $this->caches) AND array_key_exists($cache_id, $this->cache_weights) ) {
+        if ( array_key_exists($cache_id, $this->caches) && array_key_exists($cache_id, $this->cache_weights) ) {
 
             unset($this->caches[$cache_id]);
 

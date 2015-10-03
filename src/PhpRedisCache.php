@@ -37,8 +37,8 @@ class PhpRedisCache extends CacheObject {
      * Class constructor
      *
      * @param   string          $server         Server address (or IP)
-     * @param   string          $port           (optional) Server port
-     * @param   string          $timeout        (optional) Timeout
+     * @param   integer         $port           (optional) Server port
+     * @param   integer         $timeout        (optional) Timeout
      * @param   \Monolog\Logger $logger         Logger instance
      * 
      * @throws \Comodojo\Exception\CacheException
@@ -396,7 +396,7 @@ class PhpRedisCache extends CacheObject {
     /**
      * Set key for namespace
      *
-     * @return  mixed
+     * @return  string
      */
     private function setNamespaceKey() {
 

@@ -38,7 +38,7 @@ class FileCache extends CacheObject {
      */
     public function __construct($cache_folder = null, \Monolog\Logger $logger = null) {
 
-        if ( !empty($cache_folder) AND is_string($cache_folder) ) {
+        if ( !empty($cache_folder) && is_string($cache_folder) ) {
             
             $this->cache_folder = $cache_folder[strlen($cache_folder) - 1] == "/" ? $cache_folder : ($cache_folder."/");
             
@@ -111,7 +111,7 @@ class FileCache extends CacheObject {
     
             $shadowTtl = $this->getTime() + $this->ttl;
         
-            if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
+            if ( self::checkXattrSupport() && self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
                 $return = $this->setXattr($shadowName, $shadowData, $shadowTtl);
 
@@ -153,7 +153,7 @@ class FileCache extends CacheObject {
 
         $shadowName = $this->cache_folder.md5($name)."-".$this->getNamespace();
     
-        if ( self::checkXattrSupport() AND self::checkXattrFilesystemSupport($this->cache_folder) ) {
+        if ( self::checkXattrSupport() && self::checkXattrFilesystemSupport($this->cache_folder) ) {
 
             $return = $this->getXattr($shadowName, $this->getTime());
 

@@ -278,7 +278,7 @@ abstract class CacheObject implements CacheInterface {
      */
     final public function setNamespace($namespace) {
 
-        if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) AND strlen($namespace) <= 64 ) {
+        if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) && strlen($namespace) <= 64 ) {
             
             $this->namespace = strtoupper($namespace);
             

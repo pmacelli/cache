@@ -304,7 +304,7 @@ class ApcCache extends CacheObject {
      */
     private static function getApcStatus() {
 
-        return ((extension_loaded('apc') OR extension_loaded('apc')) AND ini_get('apc.enabled'));
+        return ((extension_loaded('apc') || extension_loaded('apc')) && ini_get('apc.enabled'));
 
     }
 
