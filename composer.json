@@ -31,7 +31,7 @@
     },
     "require": {
         "php": ">=5.3.9",
-        "comodojo/database": "1.0.x-dev",
+        "comodojo/database": "1.*",
         "comodojo/exceptions": "@stable"
     },
     "require-dev": {
