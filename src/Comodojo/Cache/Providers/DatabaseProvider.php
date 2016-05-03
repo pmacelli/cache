@@ -1,6 +1,7 @@
-<?php namespace Comodojo\Cache;
+<?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\CacheObject\CacheObject;
+use \Comodojo\Cache\Components\AbstractProvider;
+use \Psr\Log\LoggerInterface;
 use \Comodojo\Database\EnhancedDatabase;
 use \Comodojo\Exception\DatabaseException;
 use \Comodojo\Exception\CacheException;
@@ -24,7 +25,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class DatabaseCache extends CacheObject {
+class DatabaseProvider extends AbstractProvider {
 
     /**
      * Internal database handler
@@ -50,69 +51,33 @@ class DatabaseCache extends CacheObject {
     /**
      * Class constructor
      * 
-     * @param   \Comodojo\Database\EnhancedDatabase $dbh    
-     * @param   string                              $table          Name of table
-     * @param   string                              $table_prefix   Prefix for table
-     * @param   \Monolog\Logger                     $logger         Logger instance
+     * @param   EnhancedDatabase $dbh    
+     * @param   string           $table          Name of table
+     * @param   string           $table_prefix   Prefix for table
+     * @param   LoggerInterface  $logger         Logger instance
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct(EnhancedDatabase $dbh, $table = null, $table_prefix = null, \Monolog\Logger $logger = null) {
+    public function __construct(EnhancedDatabase $dbh, $table, $table_prefix = null, LoggerInterface $logger = null) {
     
-        if ( !empty($table) ) {
+        if ( !empty($table) ) throw new CacheException("Database table cannot be undefined");
             
-            $this->table = $table;
-            
-        } else if ( defined("COMODOJO_CACHE_DATABASE_TABLE") ) {
-            
-            $this->table = COMODOJO_CACHE_DATABASE_TABLE;
-            
-        } else {
-            
-            throw new CacheException("Database table cannot be undefined");
-            
-        }
+        $this->table = $table;
         
-        if ( empty($table_prefix) ) {
+        $this->table_prefix = empty($table_prefix) ? null : $table_prefix;
             
-            $this->table_prefix = defined("COMODOJO_CACHE_DATABASE_TABLEPREFIX") ? COMODOJO_CACHE_DATABASE_TABLEPREFIX : null;
-            
-        } else {
-            
-            $this->table_prefix = $table_prefix;
-            
-        }
+        parent::__construct($logger);
     
         $this->dbh = $dbh;
         
+        $this->table = $table;
+        
         $this->dbh->autoClean();
-        
-        try {
-            
-            parent::__construct($logger);
-            
-        }
-        
-        catch (CacheException $ce) {
-            
-            throw $ce;
-            
-        }
        
     }
 
     /**
-     * Set cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     * @param   mixed   $data    Data to cache
-     * @param   int     $ttl     Time to live
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function set($name, $data, $ttl = null) {
         
@@ -150,7 +115,7 @@ class DatabaseCache extends CacheObject {
 
         } catch (DatabaseException $de) {
             
-            $this->raiseError("Error writing cache object (Database), exiting gracefully", array(
+            $this->logger->error("Error writing cache object (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -166,16 +131,7 @@ class DatabaseCache extends CacheObject {
     }
     
     /**
-     * Get cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a null value.
-     * In case of cache not found, it will return a null value.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  mixed
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function get($name) {
         
@@ -209,7 +165,7 @@ class DatabaseCache extends CacheObject {
 
         } catch (DatabaseException $de) {
            
-            $this->raiseError("Error reading cache object (Database), exiting gracefully", array(
+            $this->logger->error("Error reading cache object (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -225,15 +181,7 @@ class DatabaseCache extends CacheObject {
     }
     
     /**
-     * Delete cache object (or entire namespace if $name is null)
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function delete($name = null) {
 
@@ -253,7 +201,7 @@ class DatabaseCache extends CacheObject {
 
         } catch (DatabaseException $de) {
            
-            $this->raiseError("Failed to delete cache (Database), exiting gracefully", array(
+            $this->logger->error("Failed to delete cache (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -269,12 +217,7 @@ class DatabaseCache extends CacheObject {
     }
     
     /**
-     * Clean cache objects in all namespaces
-     *
-     * This method will throw only logical exceptions.
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function flush() {
         
@@ -288,7 +231,7 @@ class DatabaseCache extends CacheObject {
 
         } catch (DatabaseException $de) {
            
-            $this->raiseError("Failed to flush cache (Database), exiting gracefully", array(
+            $this->logger->error("Failed to flush cache (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -304,9 +247,7 @@ class DatabaseCache extends CacheObject {
     }
     
     /**
-     * Get cache status
-     *
-     * @return  array
+     * {@inheritdoc}
      */
     public function status() {
 
@@ -324,7 +265,7 @@ class DatabaseCache extends CacheObject {
 
         } catch (DatabaseException $de) {
            
-            $this->raiseError("Failed to get cache status (Database), exiting gracefully", array(
+            $this->logger->error("Failed to get cache status (Database), exiting gracefully", array(
                 "ERRORNO"   =>  $de->getCode(),
                 "ERROR"     =>  $de->getMessage()
             ));
@@ -453,16 +394,9 @@ class DatabaseCache extends CacheObject {
      * Generate an EnhancedDatabase object
      *
      * @return \Comodojo\Database\EnhancedDatabase
-     * @throws  \Comodojo\Exception\CacheException
+     * @throws \Comodojo\Exception\CacheException
      */
-    public static function getDatabase($model = null, $host = null, $port = null, $database = null, $user = null, $password = null) {
-        
-        $model = is_null($model) ? (defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $model;
-        $host = is_null($host) ? (defined("COMODOJO_CACHE_DATABASE_MODEL") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $host;
-        $port = is_null($port) ? (defined("COMODOJO_CACHE_DATABASE_PORT") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $port;
-        $database = is_null($database) ? (defined("COMODOJO_CACHE_DATABASE_DATABASE") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $database;
-        $user = is_null($user) ? (defined("COMODOJO_CACHE_DATABASE_USER") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $user;
-        $password = is_null($password) ? (defined("COMODOJO_CACHE_DATABASE_PASSWORD") ? COMODOJO_CACHE_DATABASE_MODEL : null) : $password;
+    public static function getDatabase($model, $host, $port, $database, $user, $password = null) {
         
         try {
             

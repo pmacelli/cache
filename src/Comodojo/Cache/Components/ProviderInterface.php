@@ -1,7 +1,9 @@
-<?php namespace Comodojo\Cache\CacheInterface;
+<?php namespace Comodojo\Cache\Components;
+
+use Psr\Log\LoggerInterface;
 
 /**
- * Object cache interface
+ * Cache provider interface
  * 
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -18,34 +20,8 @@
  * THE SOFTWARE.
  */
 
-interface CacheInterface {
-
-    /**
-     * administratively enable cache
-     *
-     */
-    public function enable();
-
-    /**
-     * administratively disable cache
-     *
-     */
-    public function disable();
-
-    /**
-     * check if cache is enabled
-     *
-     * @return bool
-     */
-    public function isEnabled();
-
-    /**
-     * return the id of the current cache provider
-     *
-     * @return string
-     */
-    public function getCacheId();
-
+interface ProviderInterface {
+    
     /**
      * Set cache element
      *
@@ -86,22 +62,6 @@ interface CacheInterface {
     public function delete($name);
 
     /**
-     * Set namespace
-     *
-     * @param   string  $namespace
-     *
-     * @return  Object  $this
-     */
-    public function setNamespace($namespace);
-
-    /**
-     * Get namespace
-     *
-     * @return  string
-     */
-    public function getNamespace();
-
-    /**
      * Clean cache objects in all namespaces
      *
      * This method will throw only logical exceptions.
@@ -118,33 +78,100 @@ interface CacheInterface {
     public function status();
 
     /**
-     * Set the logger instance
-     *
+     * administratively enable cache
+     * 
+     * @return bool
      */
-    public function setLogger(\Monolog\Logger $logger);
+    public function enable();
+
+    /**
+     * administratively disable cache
+     *
+     * @return bool
+     */
+    public function disable();
+
+    /**
+     * check if cache is enabled
+     *
+     * @return bool
+     */
+    public function isEnabled();
+
+    /**
+     * return the id of the current cache provider
+     *
+     * @return string
+     */
+    public function getCacheId();
+
+    /**
+     * Set the logger instance
+     * 
+     * @return ProviderInterface
+     */
+    public function setLogger(LoggerInterface $logger);
 
     /**
      * Get the current logger instance
-     *
+     * 
+     * @return LoggerInterface
      */
     public function getLogger();
 
     /**
      * Put provider in error state
      *
+     * @return ProviderInterface
      */
     public function setErrorState();
 
     /**
      * Reset error state
      *
+     * @return ProviderInterface
      */
     public function resetErrorState();
 
     /**
      * Check if provider is in error state
      *
+     * @return bool
      */
     public function getErrorState();
+    
+    /**
+     * Set current time
+     *
+     * @param   int    $time    Set current time (in msec - float)
+     * 
+     * @return  ProviderInterface
+     * @throws  CacheException
+     */
+    public function setTime($time);
+    
+    /**
+     * Get current time
+     *
+     * @return  int
+     */
+    public function getTime();
+    
+    /**
+     * Set namespace
+     *
+     * @param   string  $namespace
+     *
+     * @return  ProviderInterface
+     * @throws  CacheException
+     */
+    public function setNamespace($namespace);
+
+    /**
+     * Get namespace
+     *
+     * @return  string
+     */
+    public function getNamespace();
 
 }

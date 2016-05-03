@@ -1,6 +1,7 @@
-<?php namespace Comodojo\Cache;
+<?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\CacheObject\CacheObject;
+use \Comodojo\Cache\Components\AbstractProvider;
+use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 use \Exception;
 
@@ -22,30 +23,20 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class ApcCache extends CacheObject {
+class ApcProvider extends AbstractProvider {
 
     /**
      * Class constructor
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct(\Monolog\Logger $logger = null) {
+    public function __construct(LoggerInterface $logger = null) {
 
-        try {
-            
-            parent::__construct($logger);
-            
-        }
+        parent::__construct($logger);
         
-        catch (CacheException $ce) {
-            
-            throw $ce;
-            
-        }
-
         if ( self::getApcStatus() === false ) {
 
-            $this->raiseError("Apc extension not available, disabling cache administratively");
+            $this->logger->error("Apc extension not available, disabling ApcProvider administratively");
 
             $this->disable();
 
@@ -54,17 +45,7 @@ class ApcCache extends CacheObject {
     }
 
     /**
-     * Set cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     * @param   mixed   $data    Data to cache
-     * @param   int     $ttl     Time to live
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function set($name, $data, $ttl = null) {
 
@@ -89,7 +70,7 @@ class ApcCache extends CacheObject {
             // if namespace is still false, raise an error and exit gracefully
             if ( $namespace === false ) {
 
-                $this->raiseError("Error writing cache (APC), exiting gracefully");
+                $this->logger->error("Error writing cache (APC), exiting gracefully");
 
                 $this->setErrorState();
 
@@ -105,7 +86,7 @@ class ApcCache extends CacheObject {
 
                 if ( $return === false ) {
 
-                    $this->raiseError("Error writing cache (APC), exiting gracefully");
+                    $this->logger->error("Error writing cache (APC), exiting gracefully");
 
                     $this->setErrorState();
 
@@ -124,16 +105,7 @@ class ApcCache extends CacheObject {
     }
 
     /**
-     * Get cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a null value.
-     * In case of cache not found, it will return a null value.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  mixed
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function get($name) {
 
@@ -159,7 +131,7 @@ class ApcCache extends CacheObject {
 
             if ( $success === false ) {
 
-                $this->raiseError("Error reading cache (APC), exiting gracefully");
+                $this->logger->error("Error reading cache (APC), exiting gracefully");
 
                 $this->setErrorState();
 
@@ -174,15 +146,7 @@ class ApcCache extends CacheObject {
     }
 
     /**
-     * Delete cache object (or entire namespace if $name is null)
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function delete($name = null) {
 
@@ -206,7 +170,7 @@ class ApcCache extends CacheObject {
 
         if ( $delete === false ) {
 
-            $this->raiseError("Error deleting cache (APC), exiting gracefully");
+            $this->logger->error("Error deleting cache (APC), exiting gracefully");
 
             $this->setErrorState();
 
@@ -217,11 +181,7 @@ class ApcCache extends CacheObject {
     }
 
     /**
-     * Clean cache objects in all namespaces
-     *
-     * This method will throw only logical exceptions.
-     *
-     * @return  bool
+     * {@inheritdoc}
      */
     public function flush() {
 
@@ -234,9 +194,7 @@ class ApcCache extends CacheObject {
     }
 
     /**
-     * Get cache status
-     *
-     * @return  array
+     * {@inheritdoc}
      */
     public function status() {
 
@@ -255,7 +213,7 @@ class ApcCache extends CacheObject {
 
         } else {
 
-            // some APC extensions do not return the "num_entries", so let's try to calculate it
+            //  in some APC extensions the "num_entries" field is not available; let's try to calculate it
             $stats_2 = apc_cache_info("user");
 
             $objects = sizeof($stats_2["cache_list"]);

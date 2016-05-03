@@ -1,6 +1,7 @@
-<?php namespace Comodojo\Cache;
+<?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\CacheObject\CacheObject;
+use \Comodojo\Cache\Components\AbstractProvider;
+use \Psr\Log\LoggerInterface;
 use \Redis;
 use \Comodojo\Exception\CacheException;
 use \RedisException;
@@ -24,7 +25,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class PhpRedisCache extends CacheObject {
+class PhpRedisProvider extends AbstractProvider {
 
     /**
      * Internal phpredis handler
@@ -43,13 +44,15 @@ class PhpRedisCache extends CacheObject {
      * 
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct( $server, $port=6379, $timeout=0, \Monolog\Logger $logger=null ) {
+    public function __construct( $server, $port=6379, $timeout=0, LoggerInterface $logger=null ) {
 
         if ( empty($server) ) throw new CacheException("Invalid or unspecified memcached server");
         
+        parent::__construct($logger);
+        
         if ( self::getRedisStatus() === false ) {
 
-            $this->raiseError("PhpRedis extension not available, disabling cache administratively");
+            $this->logger->error("PhpRedis extension not available, disabling PhpRedisProvider administratively");
 
             $this->disable();
             
@@ -76,40 +79,16 @@ class PhpRedisCache extends CacheObject {
 
         if ( $this->instance->connect($server, $port, $weight) === false ) {
 
-            $this->raiseError( "Error communicating with server", array( $this->instance->getLastError() ) );
+            $this->logger->error("Error communicating with Redis server, disabling PhpRedisProvider administratively", array( $this->instance->getLastError() ) );
 
             $this->disable();
-
-        } else {
-
-            try {
-            
-                parent::__construct( $logger );
-                
-            }
-            
-            catch ( CacheException $ce ) {
-                
-                throw $ce;
-                
-            }
 
         }
 
     }
 
     /**
-     * Set cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     * @param   mixed   $data    Data to cache
-     * @param   int     $ttl     Time to live
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function set($name, $data, $ttl=null) {
 
@@ -131,7 +110,7 @@ class PhpRedisCache extends CacheObject {
 
             if ( $namespace === false ) {
 
-                $this->raiseError( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
+                $this->logger->error( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
 
                 $this->setErrorState();
 
@@ -149,7 +128,7 @@ class PhpRedisCache extends CacheObject {
 
                 if ( $return === false ) {
 
-                    $this->raiseError( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
+                    $this->logger->error( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
 
                     $this->setErrorState();
 
@@ -157,13 +136,9 @@ class PhpRedisCache extends CacheObject {
 
             }
 
-        } catch (CacheException $ce) {
-            
-            throw $ce;
-
         } catch (RedisException $re ) {
 
-            $this->raiseError("Server unreachable (PhpRedis), exiting gracefully", array(
+            $this->logger->error("Server unreachable (PhpRedis), exiting gracefully", array(
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
@@ -172,6 +147,10 @@ class PhpRedisCache extends CacheObject {
 
             return false;
 
+        } catch (CacheException $ce) {
+            
+            throw $ce;
+
         }
 
         return $return;
@@ -179,16 +158,7 @@ class PhpRedisCache extends CacheObject {
     }
 
     /**
-     * Get cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a null value.
-     * In case of cache not found, it will return a null value.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  mixed
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function get($name) {
 
@@ -214,7 +184,7 @@ class PhpRedisCache extends CacheObject {
 
                 if ( $return === false ) {
 
-                    $this->raiseError( "Error reading cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
+                    $this->logger->error( "Error reading cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
 
                     $this->setErrorState();
 
@@ -222,13 +192,9 @@ class PhpRedisCache extends CacheObject {
 
             }
 
-        } catch (CacheException $ce) {
-            
-            throw $ce;
-
         } catch (RedisException $re ) {
 
-            $this->raiseError("Server unreachable (PhpRedis), exiting gracefully", array(
+            $this->logger->error("Server unreachable (PhpRedis), exiting gracefully", array(
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
@@ -237,6 +203,10 @@ class PhpRedisCache extends CacheObject {
 
             return null;
 
+        } catch (CacheException $ce) {
+            
+            throw $ce;
+
         }
 
         return $return === false ? null : unserialize($return);
@@ -244,15 +214,7 @@ class PhpRedisCache extends CacheObject {
     }
 
     /**
-     * Delete cache object (or entire namespace if $name is null)
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function delete($name=null) {
 
@@ -276,13 +238,9 @@ class PhpRedisCache extends CacheObject {
 
             }
 
-        } catch (CacheException $ce) {
-            
-            throw $ce;
-
         } catch (RedisException $re ) {
 
-            $this->raiseError("Server unreachable (PhpRedis), exiting gracefully", array(
+            $this->logger->error("Server unreachable (PhpRedis), exiting gracefully", array(
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
@@ -291,6 +249,10 @@ class PhpRedisCache extends CacheObject {
 
             return false;
 
+        } catch (CacheException $ce) {
+            
+            throw $ce;
+
         }
 
         return true;
@@ -298,12 +260,7 @@ class PhpRedisCache extends CacheObject {
     }
 
     /**
-     * Clean cache objects in all namespaces
-     *
-     * This method will throw only logical exceptions.
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function flush() {
 
@@ -317,7 +274,7 @@ class PhpRedisCache extends CacheObject {
 
         } catch (RedisException $re ) {
 
-            $this->raiseError("Server unreachable (PhpRedis), exiting gracefully", array(
+            $this->logger->error("Server unreachable (PhpRedis), exiting gracefully", array(
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
@@ -333,9 +290,7 @@ class PhpRedisCache extends CacheObject {
     }
 
     /**
-     * Get cache status
-     *
-     * @return  array
+     * {@inheritdoc}
      */
     public function status() {
 
@@ -362,7 +317,7 @@ class PhpRedisCache extends CacheObject {
 
         } catch (RedisException $re ) {
 
-            $this->raiseError("Server unreachable (PhpRedis), exiting gracefully", array(
+            $this->logger->error("Server unreachable (PhpRedis), exiting gracefully", array(
                 "RESULTCODE" => $re->getCode(),
                 "RESULTMESSAGE" => $re->getMessage()
             ));
@@ -385,7 +340,7 @@ class PhpRedisCache extends CacheObject {
     /**
      * Get the current memcached instance
      *
-     * @return  \Memcached
+     * @return  Redis
      */
     final public function getInstance() {
 

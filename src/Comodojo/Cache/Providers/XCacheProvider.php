@@ -1,6 +1,7 @@
-<?php namespace Comodojo\Cache;
+<?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\CacheObject\CacheObject;
+use \Comodojo\Cache\Components\AbstractProvider;
+use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 use \Exception;
 
@@ -22,53 +23,31 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class XCacheCache extends CacheObject {
+class XCacheProvider extends AbstractProvider {
 
-    /**
+   /**
      * Class constructor
-     *
-     * @param   \Monolog\Logger $logger         Logger instance
      * 
+     * @param LoggerInterface $logger
+     *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct( \Monolog\Logger $logger=null ) {
+    public function __construct(LoggerInterface $logger=null ) {
 
+        parent::__construct($logger);
+        
         if ( self::getXCacheStatus() === false ) {
 
-            $this->raiseError("XCache extension not available, disabling cache administratively");
+            $this->logger->error("XCache extension not available, disabling XCacheProvider administratively");
 
             $this->disable();
-
-        } else {
-
-            try {
-            
-                parent::__construct( $logger );
-                
-            }
-            
-            catch ( CacheException $ce ) {
-                
-                throw $ce;
-                
-            }
 
         }
 
     }
 
     /**
-     * Set cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     * @param   mixed   $data    Data to cache
-     * @param   int     $ttl     Time to live
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function set($name, $data, $ttl=null) {
 
@@ -94,7 +73,7 @@ class XCacheCache extends CacheObject {
 
             if ( $return === false ) {
 
-                $this->raiseError("Error writing cache (XCache), exiting gracefully");
+                $this->logger->error("Error writing cache (XCache), exiting gracefully");
 
                 $this->setErrorState();
 
@@ -111,16 +90,7 @@ class XCacheCache extends CacheObject {
     }
 
     /**
-     * Get cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a null value.
-     * In case of cache not found, it will return a null value.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  mixed
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function get($name) {
 
@@ -136,7 +106,7 @@ class XCacheCache extends CacheObject {
 
         if ( $return === false ) {
 
-            $this->raiseError("Error reading cache (XCache), exiting gracefully");
+            $this->logger->error("Error reading cache (XCache), exiting gracefully");
 
             $this->setErrorState();
 
@@ -147,15 +117,7 @@ class XCacheCache extends CacheObject {
     }
 
     /**
-     * Delete cache object (or entire namespace if $name is null)
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function delete($name=null) {
 
@@ -175,7 +137,7 @@ class XCacheCache extends CacheObject {
 
         if ( $delete === false ) {
 
-            $this->raiseError("Error writing cache (XCache), exiting gracefully");
+            $this->logger->error("Error writing cache (XCache), exiting gracefully");
 
             $this->setErrorState();
 
@@ -187,12 +149,7 @@ class XCacheCache extends CacheObject {
     }
 
     /**
-     * Clean cache objects in all namespaces
-     *
-     * This method will throw only logical exceptions.
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function flush() {
 
@@ -205,9 +162,7 @@ class XCacheCache extends CacheObject {
     }
 
     /**
-     * Get cache status
-     *
-     * @return  array
+     * {@inheritdoc}
      */
     public function status() {
 

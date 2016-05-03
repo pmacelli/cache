@@ -1,6 +1,7 @@
-<?php namespace Comodojo\Cache;
+<?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\CacheObject\CacheObject;
+use \Comodojo\Cache\Components\AbstractProvider;
+use \Psr\Log\LoggerInterface;
 use \Memcached;
 use \Comodojo\Exception\CacheException;
 use \Exception;
@@ -23,7 +24,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class MemcachedCache extends CacheObject {
+class MemcachedProvider extends AbstractProvider {
 
     /**
      * Internal memcached handler
@@ -43,71 +44,32 @@ class MemcachedCache extends CacheObject {
      * 
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct( $server, $port=11211, $weight=0, $persistent_id=null, \Monolog\Logger $logger=null ) {
+    public function __construct( $server, $port=11211, $weight=0, $persistent_id=null, LoggerInterface $logger=null ) {
 
         if ( empty($server) ) throw new CacheException("Invalid or unspecified memcached server");
 
         if ( !is_null($persistent_id) && !is_string($persistent_id) ) throw new CacheException("Invalid persistent id");
+        
+        parent::__construct($logger);
 
         if ( self::getMemcachedStatus() === false ) {
 
-            $this->raiseError("Memcached extension not available, disabling cache administratively");
+            $this->logger->error("Memcached extension not available, disabling MemcachedProvider administratively");
 
             $this->disable();
-            
-            return;
 
-        }
+        } else {
+         
+            $this->instance = new Memcached($persistent_id);
         
-        $this->instance = new Memcached($persistent_id);
-
-        $port = filter_var($port, FILTER_VALIDATE_INT, array(
-            "options" => array(
-                "min_range" => 1,
-                "max_range" => 65535,
-                "default" => 11211 )
-            )
-        );
-
-        $weight = filter_var($weight, FILTER_VALIDATE_INT, array(
-            "options" => array(
-                "min_range" => 0,
-                "default" => 0 )
-            )
-        );
-
-        $this->addServer($server, $port, $weight);
-
-        if ( $this->isEnabled() ) {
-
-            try {
+            $this->addServer($server, $port, $weight);
             
-                parent::__construct( $logger );
-                
-            }
-            
-            catch ( CacheException $ce ) {
-                
-                throw $ce;
-                
-            }
-
         }
 
     }
 
     /**
-     * Set cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     * @param   mixed   $data    Data to cache
-     * @param   int     $ttl     Time to live
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function set($name, $data, $ttl=null) {
 
@@ -129,7 +91,7 @@ class MemcachedCache extends CacheObject {
 
             if ( $namespace === false ) {
 
-                $this->raiseError("Error writing cache (Memcached), exiting gracefully", array(
+                $this->logger->error("Error writing cache (Memcached), exiting gracefully", array(
                     "RESULTCODE" => $this->instance->getResultCode(),
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
@@ -150,7 +112,7 @@ class MemcachedCache extends CacheObject {
 
                 if ( $return === false ) {
 
-                    $this->raiseError("Error writing cache (Memcached), exiting gracefully", array(
+                    $this->logger->error("Error writing cache (Memcached), exiting gracefully", array(
                         "RESULTCODE" => $this->instance->getResultCode(),
                         "RESULTMESSAGE" => $this->instance->getResultMessage()
                     ));
@@ -172,16 +134,7 @@ class MemcachedCache extends CacheObject {
     }
 
     /**
-     * Get cache element
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a null value.
-     * In case of cache not found, it will return a null value.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  mixed
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function get($name) {
 
@@ -205,7 +158,7 @@ class MemcachedCache extends CacheObject {
 
             if ( $return === false && $this->instance->getResultCode() != Memcached::RES_NOTFOUND ) {
 
-                $this->raiseError("Error reading cache (Memcached), exiting gracefully", array(
+                $this->logger->error("Error reading cache (Memcached), exiting gracefully", array(
                     "RESULTCODE" => $this->instance->getResultCode(),
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
@@ -221,15 +174,7 @@ class MemcachedCache extends CacheObject {
     }
 
     /**
-     * Delete cache object (or entire namespace if $name is null)
-     *
-     * This method will throw only logical exceptions.
-     * In case of failures, it will return a boolean false.
-     *
-     * @param   string  $name    Name for cache element
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function delete($name=null) {
 
@@ -253,7 +198,7 @@ class MemcachedCache extends CacheObject {
 
         if ( $delete === false ) {
 
-            $this->raiseError("Error writing cache (Memcached), exiting gracefully", array(
+            $this->logger->error("Error writing cache (Memcached), exiting gracefully", array(
                 "RESULTCODE" => $this->instance->getResultCode(),
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
@@ -268,12 +213,7 @@ class MemcachedCache extends CacheObject {
     }
 
     /**
-     * Clean cache objects in all namespaces
-     *
-     * This method will throw only logical exceptions.
-     *
-     * @return  bool
-     * @throws \Comodojo\Exception\CacheException
+     * {@inheritdoc}
      */
     public function flush() {
 
@@ -285,7 +225,7 @@ class MemcachedCache extends CacheObject {
 
         if ( $result === false ) {
 
-            $this->raiseError("Error flushing cache (Memcached), exiting gracefully", array(
+            $this->logger->error("Error flushing cache (Memcached), exiting gracefully", array(
                 "RESULTCODE" => $this->instance->getResultCode(),
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
@@ -301,9 +241,7 @@ class MemcachedCache extends CacheObject {
     }
 
     /**
-     * Get cache status
-     *
-     * @return  array
+     * {@inheritdoc}
      */
     public function status() {
 
@@ -379,11 +317,26 @@ class MemcachedCache extends CacheObject {
      */
     private function addServer($server, $port, $weight) {
 
+        $port = filter_var($port, FILTER_VALIDATE_INT, array(
+            "options" => array(
+                "min_range" => 1,
+                "max_range" => 65535,
+                "default" => 11211 )
+            )
+        );
+
+        $weight = filter_var($weight, FILTER_VALIDATE_INT, array(
+            "options" => array(
+                "min_range" => 0,
+                "default" => 0 )
+            )
+        );
+
         $status = $this->instance->addServer($server, $port, $weight);
 
         if ( $status === false ) {
 
-            $this->raiseError("Error communicating with server", array(
+            $this->logger->error("Error communicating with server", array(
                 "RESULTCODE" => $this->instance->getResultCode(),
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
@@ -392,7 +345,7 @@ class MemcachedCache extends CacheObject {
 
         if ( sizeof($this->instance->getServerList()) == 0 ) {
 
-            $this->raiseError("No available server, disabling cache administratively");
+            $this->logger->error("No available server, disabling MemcachedProvider administratively");
 
             $this->disable();
 
