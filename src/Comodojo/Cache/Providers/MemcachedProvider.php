@@ -1,6 +1,7 @@
 <?php namespace Comodojo\Cache\Providers;
 
 use \Comodojo\Cache\Components\AbstractProvider;
+use \Comodojo\Cache\Components\InstanceTrait;
 use \Psr\Log\LoggerInterface;
 use \Memcached;
 use \Comodojo\Exception\CacheException;
@@ -8,13 +9,13 @@ use \Exception;
 
 /**
  * Memcached cache class
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,13 +27,8 @@ use \Exception;
 
 class MemcachedProvider extends AbstractProvider {
 
-    /**
-     * Internal memcached handler
-     *
-     * @var \Memcached
-     */
-    private $instance = null;
-
+    use InstanceTrait;
+    
     /**
      * Class constructor
      *
@@ -41,7 +37,7 @@ class MemcachedProvider extends AbstractProvider {
      * @param   string          $weight         (optional) Server weight
      * @param   string          $persistent_id  (optional) Persistent id
      * @param   \Monolog\Logger $logger         Logger instance
-     * 
+     *
      * @throws \Comodojo\Exception\CacheException
      */
     public function __construct( $server, $port=11211, $weight=0, $persistent_id=null, LoggerInterface $logger=null ) {
@@ -49,7 +45,7 @@ class MemcachedProvider extends AbstractProvider {
         if ( empty($server) ) throw new CacheException("Invalid or unspecified memcached server");
 
         if ( !is_null($persistent_id) && !is_string($persistent_id) ) throw new CacheException("Invalid persistent id");
-        
+
         parent::__construct($logger);
 
         if ( self::getMemcachedStatus() === false ) {
@@ -59,11 +55,11 @@ class MemcachedProvider extends AbstractProvider {
             $this->disable();
 
         } else {
-         
-            $this->instance = new Memcached($persistent_id);
-        
+
+            $this->setInstance(new Memcached($persistent_id));
+
             $this->addServer($server, $port, $weight);
-            
+
         }
 
     }
@@ -74,15 +70,15 @@ class MemcachedProvider extends AbstractProvider {
     public function set($name, $data, $ttl=null) {
 
         if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
-        
+
         if ( is_null($data) ) throw new CacheException("Object content cannot be null");
-        
+
         if ( !$this->isEnabled() ) return false;
 
         $this->resetErrorState();
 
         try {
-            
+
             $this->setTtl($ttl);
 
             $namespace = $this->getNamespaceKey();
@@ -103,11 +99,11 @@ class MemcachedProvider extends AbstractProvider {
             } else {
 
                 $shadowName = $namespace."-".md5($name);
-            
+
                 $shadowTtl = $this->getTime() + $this->ttl;
 
                 $shadowData = serialize($data);
-                
+
                 $return = $this->instance->set($shadowName, $shadowData, $shadowTtl);
 
                 if ( $return === false ) {
@@ -124,7 +120,7 @@ class MemcachedProvider extends AbstractProvider {
             }
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
 
         }
@@ -257,7 +253,7 @@ class MemcachedProvider extends AbstractProvider {
         $objects = 0;
 
         foreach ($stats as $key => $value) {
-            
+
             $objects = max($objects, $value['curr_items']);
 
         }
@@ -268,17 +264,6 @@ class MemcachedProvider extends AbstractProvider {
             "objects"   => intval($objects),
             "options"   => $stats
         );
-
-    }
-
-    /**
-     * Get the current memcached instance
-     *
-     * @return  \Memcached
-     */
-    final public function getInstance() {
-
-        return $this->instance;
 
     }
 
@@ -356,16 +341,16 @@ class MemcachedProvider extends AbstractProvider {
         }
 
     }
-    
+
     /**
      * Check Memcached availability
      *
      * @return  bool
      */
     private static function getMemcachedStatus() {
-        
+
         return class_exists('Memcached');
-        
+
     }
 
 }

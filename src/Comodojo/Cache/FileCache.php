@@ -5,13 +5,13 @@ use \Psr\Log\LoggerInterface;
 
 /**
  * File cache class (deprecated!)
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,7 +22,7 @@ use \Psr\Log\LoggerInterface;
  */
 
 class FileCache extends FileSystemProvider {
- 
+
     /**
      * Class constructor
      *
@@ -31,9 +31,9 @@ class FileCache extends FileSystemProvider {
     public function __construct($cache_folder, LoggerInterface $logger = null) {
 
         parent::__construct($cache_folder, $logger);
-        
-        $this->loggger->notice("Use of FileCache is deprecated, please use \Comodojo\Cache\Providers\FileSystemProvider in conjunction with CacheManager instead.");
+
+        $this->logger->notice("Use of FileCache is deprecated, please use FileSystemProvider instead.");
 
     }
-    
+
 }

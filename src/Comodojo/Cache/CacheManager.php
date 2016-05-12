@@ -21,7 +21,7 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class XCacheCache extends XCacheProvider {
+class CacheManager extends Cache {
 
     /**
      * Class constructor
@@ -30,11 +30,11 @@ class XCacheCache extends XCacheProvider {
      *
      * @throws \Comodojo\Exception\CacheException
      */
-    public function __construct(LoggerInterface $logger = null) {
+     public function __construct($select_mode = null, LoggerInterface $logger = null) {
 
-        parent::__construct($logger);
+        parent::__construct($select_mode, $logger);
 
-        $this->logger->notice("Use of XCacheCache is deprecated, please use XCacheProvider instead.");
+        $this->logger->notice("Use of CacheManager is deprecated, please use Cache class instead.");
 
     }
 

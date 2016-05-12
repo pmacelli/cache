@@ -1,6 +1,7 @@
 <?php namespace Comodojo\Cache\Providers;
 
 use \Comodojo\Cache\Components\AbstractProvider;
+use \Comodojo\Cache\Components\InstanceTrait;
 use \Psr\Log\LoggerInterface;
 use \Redis;
 use \Comodojo\Exception\CacheException;
@@ -9,13 +10,13 @@ use \Exception;
 
 /**
  * Redis cache class using PhpRedis extension
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,12 +28,7 @@ use \Exception;
 
 class PhpRedisProvider extends AbstractProvider {
 
-    /**
-     * Internal phpredis handler
-     *
-     * @var \Redis
-     */
-    private $instance = null;
+    use InstanceTrait;
 
     /**
      * Class constructor
@@ -41,26 +37,26 @@ class PhpRedisProvider extends AbstractProvider {
      * @param   integer         $port           (optional) Server port
      * @param   integer         $timeout        (optional) Timeout
      * @param   \Monolog\Logger $logger         Logger instance
-     * 
+     *
      * @throws \Comodojo\Exception\CacheException
      */
     public function __construct( $server, $port=6379, $timeout=0, LoggerInterface $logger=null ) {
 
         if ( empty($server) ) throw new CacheException("Invalid or unspecified memcached server");
-        
+
         parent::__construct($logger);
-        
+
         if ( self::getRedisStatus() === false ) {
 
             $this->logger->error("PhpRedis extension not available, disabling PhpRedisProvider administratively");
 
             $this->disable();
-            
+
             return;
 
         }
 
-        $this->instance = new Redis();
+        $this->setInstance(new Redis());
 
         $port = filter_var($port, FILTER_VALIDATE_INT, array(
             "options" => array(
@@ -93,7 +89,7 @@ class PhpRedisProvider extends AbstractProvider {
     public function set($name, $data, $ttl=null) {
 
         if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
-        
+
         if ( is_null($data) ) throw new CacheException("Object content cannot be null");
 
         if ( !$this->isEnabled() ) return false;
@@ -101,7 +97,7 @@ class PhpRedisProvider extends AbstractProvider {
         $this->resetErrorState();
 
         try {
-            
+
             $this->setTtl($ttl);
 
             $namespace = $this->getNamespaceKey();
@@ -119,11 +115,11 @@ class PhpRedisProvider extends AbstractProvider {
             } else {
 
                 $shadowName = $namespace."-".md5($name);
-            
+
                 $shadowTtl = $this->ttl;
 
                 $shadowData = serialize($data);
-                
+
                 $return = $this->instance->setex($shadowName, $shadowTtl, $shadowData);
 
                 if ( $return === false ) {
@@ -148,7 +144,7 @@ class PhpRedisProvider extends AbstractProvider {
             return false;
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
 
         }
@@ -169,7 +165,7 @@ class PhpRedisProvider extends AbstractProvider {
         $this->resetErrorState();
 
         try {
-            
+
             $namespace = $this->getNamespaceKey();
 
             if ( $namespace === false ) {
@@ -204,7 +200,7 @@ class PhpRedisProvider extends AbstractProvider {
             return null;
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
 
         }
@@ -250,7 +246,7 @@ class PhpRedisProvider extends AbstractProvider {
             return false;
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
 
         }
@@ -338,17 +334,6 @@ class PhpRedisProvider extends AbstractProvider {
     }
 
     /**
-     * Get the current memcached instance
-     *
-     * @return  Redis
-     */
-    final public function getInstance() {
-
-        return $this->instance;
-
-    }
-
-    /**
      * Set key for namespace
      *
      * @return  string
@@ -359,7 +344,7 @@ class PhpRedisProvider extends AbstractProvider {
 
         try {
 
-            $return = $this->instance->set($this->getNamespace(), $uId);    
+            $return = $this->instance->set($this->getNamespace(), $uId);
 
         } catch (RedisException $re ) {
 
@@ -391,16 +376,16 @@ class PhpRedisProvider extends AbstractProvider {
         return $return;
 
     }
-    
+
     /**
      * Check PhpRedis availability
      *
      * @return  bool
      */
     private static function getRedisStatus() {
-        
+
         return class_exists('Redis');
-        
+
     }
 
 }

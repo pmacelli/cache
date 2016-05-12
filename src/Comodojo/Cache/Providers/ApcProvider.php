@@ -6,14 +6,14 @@ use \Comodojo\Exception\CacheException;
 use \Exception;
 
 /**
- * Apc cache class
- * 
+ * Apc/Apcu cache class
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,8 @@ use \Exception;
 
 class ApcProvider extends AbstractProvider {
 
+    private static $is_apcu = false;
+
     /**
      * Class constructor
      *
@@ -33,7 +35,7 @@ class ApcProvider extends AbstractProvider {
     public function __construct(LoggerInterface $logger = null) {
 
         parent::__construct($logger);
-        
+
         if ( self::getApcStatus() === false ) {
 
             $this->logger->error("Apc extension not available, disabling ApcProvider administratively");
@@ -60,7 +62,7 @@ class ApcProvider extends AbstractProvider {
         $this->resetErrorState();
 
         try {
-            
+
             $this->setTtl($ttl);
 
             $namespace = $this->getNamespaceKey();
@@ -74,28 +76,34 @@ class ApcProvider extends AbstractProvider {
 
                 $this->setErrorState();
 
-                $return = false;
+                return false;
+
+            }
+
+            $shadowName = $namespace."-".md5($name);
+
+            $shadowTtl = $this->ttl;
+
+            if ( self::$is_apcu ) {
+
+                $return = apcu_store($shadowName, $data, $shadowTtl);
 
             } else {
 
-                $shadowName = $namespace."-".md5($name);
-            
-                $shadowTtl = $this->ttl;
-
                 $return = apc_store($shadowName, $data, $shadowTtl);
 
-                if ( $return === false ) {
+            }
 
-                    $this->logger->error("Error writing cache (APC), exiting gracefully");
+            if ( $return === false ) {
 
-                    $this->setErrorState();
+                $this->logger->error("Error writing cache (APC), exiting gracefully");
 
-                }
+                $this->setErrorState();
 
             }
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
 
         }
@@ -119,25 +127,31 @@ class ApcProvider extends AbstractProvider {
 
         if ( $namespace === false ) {
 
-            $return = null;
+            return null;
+
+        }
+
+        $shadowName = $namespace."-".md5($name);
+
+        $success = null;
+
+        if ( self::$is_apcu ) {
+
+            $return = apcu_fetch($shadowName, $success);
 
         } else {
 
-            $shadowName = $namespace."-".md5($name);
-
-            $success = null;
-
             $return = apc_fetch($shadowName, $success);
 
-            if ( $success === false ) {
+        }
 
-                $this->logger->error("Error reading cache (APC), exiting gracefully");
+        if ( $success === false ) {
 
-                $this->setErrorState();
+            $this->logger->error("Error reading cache (APC), exiting gracefully");
 
-                $return = null;
+            $this->setErrorState();
 
-            }
+            return null;
 
         }
 
@@ -158,13 +172,15 @@ class ApcProvider extends AbstractProvider {
 
         if ( $namespace === false ) return true;
 
-        if ( empty($name) ) {
+        $to_delete = empty($name) ? $this->getNamespace() : $namespace."-".md5($name);
 
-            $delete = apc_delete($this->getNamespace());
+        if ( self::$is_apcu ) {
+
+            $delete = apcu_delete($to_delete);
 
         } else {
 
-            $delete = apc_delete($namespace."-".md5($name));
+            $delete = apc_delete($to_delete);
 
         }
 
@@ -187,7 +203,7 @@ class ApcProvider extends AbstractProvider {
 
         if ( !$this->isEnabled() ) return false;
 
-        $result = apc_clear_cache("user");
+        $result = self::$is_apcu ? apcu_clear_cache() : apc_clear_cache("user");
 
         return $result;
 
@@ -205,7 +221,7 @@ class ApcProvider extends AbstractProvider {
             "options"   => array()
         );
 
-        $stats = apc_cache_info("user", true);
+        $stats = self::$is_apcu ? apcu_cache_info(true) : apc_cache_info("user", true);
 
         if ( isset($stats["num_entries"]) ) {
 
@@ -213,15 +229,15 @@ class ApcProvider extends AbstractProvider {
 
         } else {
 
-            //  in some APC extensions the "num_entries" field is not available; let's try to calculate it
-            $stats_2 = apc_cache_info("user");
+            //  in some APC versions the "num_entries" field is not available; let's try to calculate it
+            $stats_2 = self::$is_apcu ? apcu_cache_info() : apc_cache_info("user");
 
             $objects = sizeof($stats_2["cache_list"]);
 
         }
 
         return array(
-            "provider"  => "apc",
+            "provider"  => self::$is_apcu ? "apcu" : "apc",
             "enabled"   => $this->isEnabled(),
             "objects"   => intval($objects),
             "options"   => $stats
@@ -238,7 +254,7 @@ class ApcProvider extends AbstractProvider {
 
         $uId = self::getUniqueId();
 
-        $return = apc_store($this->getNamespace(), $uId, 0);
+        $return = self::$is_apcu ? apcu_store($this->getNamespace(), $uId, 0) : apc_store($this->getNamespace(), $uId, 0);
 
         return $return === false ? false : $uId;
 
@@ -251,7 +267,7 @@ class ApcProvider extends AbstractProvider {
      */
     private function getNamespaceKey() {
 
-        return apc_fetch($this->getNamespace());
+        return self::$is_apcu ? apcu_fetch($this->getNamespace()) : apc_fetch($this->getNamespace());
 
     }
 
@@ -262,7 +278,13 @@ class ApcProvider extends AbstractProvider {
      */
     private static function getApcStatus() {
 
-        return ((extension_loaded('apc') || extension_loaded('apc')) && ini_get('apc.enabled'));
+        $apc = extension_loaded('apc');
+
+        $apcu = extension_loaded('apcu');
+
+        if ( $apcu ) self::$is_apcu = true;
+
+        return ( ( $apc || $apcu ) && ini_get('apc.enabled') );
 
     }
 

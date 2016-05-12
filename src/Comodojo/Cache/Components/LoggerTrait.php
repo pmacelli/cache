@@ -4,13 +4,13 @@ use \Psr\Log\LoggerInterface;
 
 /**
  * Cache provider interface
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,21 +21,21 @@ use \Psr\Log\LoggerInterface;
  */
 
 trait LoggerTrait {
-    
+
     /**
      * Current logger
      *
      * @var LoggerInterface
      */
     protected $logger;
-    
+
     /**
      * {@inheritdoc}
      */
     public function getLogger() {
-        
+
         return $this->logger;
-        
+
     }
 
     /**
@@ -48,5 +48,5 @@ trait LoggerTrait {
         return $this;
 
     }
-    
+
 }

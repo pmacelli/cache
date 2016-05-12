@@ -1,10 +1,7 @@
-<?php namespace Comodojo\Cache;
-
-use \Comodojo\Cache\Providers\XCacheProvider;
-use \Psr\Log\LoggerInterface;
+<?php namespace Comodojo\Cache\Components;
 
 /**
- * XCache cache class
+ * Timestamp Trait
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -21,20 +18,34 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class XCacheCache extends XCacheProvider {
+trait InstanceTrait {
 
     /**
-     * Class constructor
+     * Local instance of handler
      *
-     * @param LoggerInterface $logger
-     *
-     * @throws \Comodojo\Exception\CacheException
+     * @var mixed
      */
-    public function __construct(LoggerInterface $logger = null) {
+    protected $instance;
 
-        parent::__construct($logger);
+    /**
+     * Return the current instance
+     *
+     * @return mixed
+     */
+    public function getInstance() {
 
-        $this->logger->notice("Use of XCacheCache is deprecated, please use XCacheProvider instead.");
+        return $this->current_time;
+
+    }
+
+    /**
+     * Set the current instance
+     */
+    protected function setInstance($instance) {
+
+        $this->instance = $instance;
+
+        return $this;
 
     }
 

@@ -5,13 +5,13 @@ use \Psr\Log\LoggerInterface;
 
 /**
  * Apc cache class (deprecated!)
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,7 +22,7 @@ use \Psr\Log\LoggerInterface;
  */
 
 class ApcCache extends ApcProvider {
- 
+
     /**
      * Class constructor
      *
@@ -31,9 +31,9 @@ class ApcCache extends ApcProvider {
     public function __construct(LoggerInterface $logger = null) {
 
         parent::__construct($logger);
-        
-        $this->loggger->notice("Use of ApcCache is deprecated, please use \Comodojo\Cache\Providers\ApcProvider in conjunction with CacheManager instead.");
+
+        $this->logger->notice("Use of ApcCache is deprecated, please use ApcProvider instead.");
 
     }
-    
+
 }

@@ -2,13 +2,13 @@
 
 /**
  * Enable/disable cache trait
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,23 +17,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 trait StatusSwitchTrait {
- 
+
     /**
      * Determine the current cache status
      *
      * @var bool
      */
-    protected $enabled = null;
-    
+    protected $enabled = true;
+
     /**
      * {@inheritdoc}
      */
     public function enable() {
 
         $this->enabled = true;
-        
+
         return $this;
 
     }
@@ -44,7 +44,7 @@ trait StatusSwitchTrait {
     public function disable() {
 
         $this->enabled = false;
-        
+
         return $this;
 
     }
@@ -57,5 +57,5 @@ trait StatusSwitchTrait {
         return $this->enabled;
 
     }
-    
+
 }

@@ -1,7 +1,6 @@
 <?php namespace Comodojo\Cache\Tests;
 
-use \Monolog\Logger;
-use \Monolog\Handler\StreamHandler;
+use \Comodojo\Cache\Components\NullLogger;
 
 class CommonCases extends \PHPUnit_Framework_TestCase {
 
@@ -14,7 +13,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         'Marvin'    =>  null
     );
 
-    protected $cache = null;
+    protected $cache;
 
     public function testGetCacheId() {
 
@@ -88,7 +87,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         sleep(3);
 
         $result = $this->cache->setTime()->get("test-cache-3");
-        
+
         $this->assertNull($result);
 
         $this->assertFalse($this->cache->getErrorState());
@@ -99,7 +98,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setNamespace('comodojo');
 
-        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
 
         $this->assertFalse($this->cache->getErrorState());
 
@@ -117,7 +116,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setNamespace('foonamespace');
 
-        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
 
         $this->assertFalse($this->cache->getErrorState());
 
@@ -126,7 +125,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $this->assertNull($result);
 
         $this->assertFalse($this->cache->getErrorState());
-        
+
     }
 
     public function testStatus() {
@@ -156,7 +155,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $this->assertNull($this->cache->get("test-cache-1"));
 
         $this->assertNull($this->cache->get("test-cache-2"));
-        
+
         $this->assertNull($this->cache->get("test-cache-3"));
 
         $this->assertFalse($this->cache->getErrorState());
@@ -167,19 +166,13 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $className = join('', array_slice(explode('\\', get_called_class()), -1));
 
-        $log = new Logger('test');
-
-        $log->pushHandler(new StreamHandler(__DIR__ . "/tmp/" . $className . '.log', Logger::DEBUG));
+        $log = new NullLogger();
 
         $this->cache->setLogger($log);
 
-        $result = $this->cache->raiseError('test error');
-
-        $this->assertTrue($result);
-
         $logger = $this->cache->getLogger();
 
-        $this->assertInstanceOf('\Monolog\Logger', $logger);
+        $this->assertInstanceOf('\Psr\Log\LoggerInterface', $logger);
 
     }
 
@@ -189,7 +182,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setTime($time);
 
-        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
 
         $result = $this->cache->getTime();
 
@@ -201,7 +194,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setTtl(300);
 
-        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
 
         $result = $this->cache->getTtl();
 
@@ -213,7 +206,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setNamespace('BOO');
 
-        $this->assertInstanceOf('\Comodojo\Cache\CacheInterface\CacheInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
 
         $result = $this->cache->getNamespace();
 
@@ -238,7 +231,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $result = $this->cache->setErrorState();
 
         $this->assertTrue($this->cache->getErrorState());
-        
+
         $result = $this->cache->resetErrorState();
 
         $this->assertFalse($this->cache->getErrorState());

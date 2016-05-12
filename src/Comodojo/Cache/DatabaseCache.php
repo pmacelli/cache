@@ -6,13 +6,13 @@ use \Psr\Log\LoggerInterface;
 
 /**
  * Database cache class
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,8 +26,8 @@ class DatabaseCache extends DatabaseProvider {
 
     /**
      * Class constructor
-     * 
-     * @param   EnhancedDatabase $dbh    
+     *
+     * @param   EnhancedDatabase $dbh
      * @param   string           $table          Name of table
      * @param   string           $table_prefix   Prefix for table
      * @param   LoggerInterface  $logger         Logger instance
@@ -35,12 +35,12 @@ class DatabaseCache extends DatabaseProvider {
      * @throws \Comodojo\Exception\CacheException
      */
     public function __construct(EnhancedDatabase $dbh, $table, $table_prefix = null, LoggerInterface $logger = null) {
-    
-        parent::__construct($dbh, $table, $table_prefix, $logger);
-        
-        $this->loggger->notice("Use of DatabaseCache is deprecated, please use \Comodojo\Cache\Providers\DatabaseProvider in conjunction with CacheManager instead.");
 
-       
+        parent::__construct($dbh, $table, $table_prefix, $logger);
+
+        $this->logger->notice("Use of DatabaseCache is deprecated, please use DatabaseProvider instead.");
+
+
     }
 
 }

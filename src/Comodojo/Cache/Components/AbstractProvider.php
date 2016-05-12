@@ -5,13 +5,13 @@ use \Comodojo\Exception\CacheException;
 
 /**
  * Cache controller
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@ use \Comodojo\Exception\CacheException;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 abstract class AbstractProvider implements ProviderInterface {
 
     use IdTrait;
@@ -31,7 +31,6 @@ abstract class AbstractProvider implements ProviderInterface {
     use LoggerTrait;
     use ErrorStateTrait;
     
-
     /**
      * Class constructor
      *
@@ -40,43 +39,43 @@ abstract class AbstractProvider implements ProviderInterface {
     public function __construct(LoggerInterface $logger = null) {
 
         try {
-            
+
             $this->setTime();
-            
+
             $this->setTtl();
-            
+
             $this->setCacheId();
-            
+
             $this->setLogger($logger);
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
-            
+
         }
-        
+
     }
-    
+
     /**
      * {@inheritdoc}
      */
     abstract public function set($name, $data, $ttl = null);
-    
+
     /**
      * {@inheritdoc}
      */
     abstract public function get($name);
-    
+
     /**
      * {@inheritdoc}
      */
     abstract public function delete($name = null);
-    
+
     /**
      * {@inheritdoc}
      */
     abstract public function flush();
-    
+
     /**
      * {@inheritdoc}
      */
