@@ -178,13 +178,13 @@ class PhpRedisProvider extends AbstractProvider {
 
                 $return = $this->instance->get($shadowName);
 
-                if ( $return === false ) {
-
-                    $this->logger->error( "Error reading cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
-
-                    $this->setErrorState();
-
-                }
+                // if ( $return === false ) {
+                //
+                //     $this->logger->error( "Error reading cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
+                //
+                //     $this->setErrorState();
+                //
+                // }
 
             }
 

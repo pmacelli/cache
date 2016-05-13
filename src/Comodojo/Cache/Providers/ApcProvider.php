@@ -42,6 +42,14 @@ class ApcProvider extends AbstractProvider {
 
             $this->disable();
 
+        } else {
+
+            // In cli, apcu SHOULD NOT use the request time for cache retrieve/invalidation.
+            // This is because in cli the request time is allways the same.
+            if ( php_sapi_name() === 'cli' ) {
+                ini_set('apc.use_request_time',0);
+            }
+
         }
 
     }
@@ -145,11 +153,11 @@ class ApcProvider extends AbstractProvider {
 
         }
 
-        if ( $success === false ) {
+        if ( $return === false ) {
 
-            $this->logger->error("Error reading cache (APC), exiting gracefully");
-
-            $this->setErrorState();
+            // This is actually not an error, just KNF flag
+            // $this->logger->error("Error reading cache (APC), exiting gracefully");
+            // $this->setErrorState();
 
             return null;
 

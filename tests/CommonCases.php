@@ -69,7 +69,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
-    public function testSetExpire() {
+    public function testExpire() {
 
         $result = $this->cache->set("test-cache-3", $this->string_content, 1);
 
@@ -77,16 +77,17 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertFalse($this->cache->getErrorState());
 
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testGetExpired() {
+        // echo "\nPreCacheTime: ".$this->cache->getTime()."\n";
 
         sleep(3);
 
-        $result = $this->cache->setTime()->get("test-cache-3");
+        // FileProvider & DatabaseProvider relay on local script time, so let's update it.
+        // this has no effect on other providers.
+        $time = $this->cache->setTime()->getTime();
+
+        // echo "\nPreCacheTime: $time\n";
+
+        $result = $this->cache->get("test-cache-3");
 
         $this->assertNull($result);
 
