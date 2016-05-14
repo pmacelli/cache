@@ -7,13 +7,13 @@ use \Exception;
 
 /**
  * XCache cache class
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,7 @@ class XCacheProvider extends AbstractProvider {
 
    /**
      * Class constructor
-     * 
+     *
      * @param LoggerInterface $logger
      *
      * @throws \Comodojo\Exception\CacheException
@@ -35,7 +35,7 @@ class XCacheProvider extends AbstractProvider {
     public function __construct(LoggerInterface $logger=null ) {
 
         parent::__construct($logger);
-        
+
         if ( self::getXCacheStatus() === false ) {
 
             $this->logger->error("XCache extension not available, disabling XCacheProvider administratively");
@@ -52,7 +52,7 @@ class XCacheProvider extends AbstractProvider {
     public function set($name, $data, $ttl=null) {
 
         if ( empty($name) ) throw new CacheException("Name of object cannot be empty");
-        
+
         if ( is_null($data) ) throw new CacheException("Object content cannot be null");
 
         if ( !$this->isEnabled() ) return false;
@@ -60,11 +60,11 @@ class XCacheProvider extends AbstractProvider {
         $this->resetErrorState();
 
         try {
-            
+
             $this->setTtl($ttl);
 
             $shadowName = $this->getNamespace()."-".md5($name);
-            
+
             $shadowTtl = $this->ttl;
 
             $shadowData = serialize($data);
@@ -80,7 +80,7 @@ class XCacheProvider extends AbstractProvider {
             }
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
 
         }

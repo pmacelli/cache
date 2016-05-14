@@ -89,13 +89,13 @@ class Cache extends AbstractManager {
 
                     foreach ( $this->caches as $cache ) {
 
-                        $values[] = $cache->get($name);
+                        $values[] = serialize($cache->get($name));
 
                     }
 
                     if ( count(array_unique($values)) === 1 ) {
 
-                        $result = $values[0];
+                        $result = unserialize($values[0]);
 
                     } else {
 
@@ -111,7 +111,7 @@ class Cache extends AbstractManager {
 
         } catch (Exception $e) {
 
-            throw $ce;
+            throw $e;
 
         }
 

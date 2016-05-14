@@ -6,13 +6,13 @@ use \Exception;
 
 /**
  * File cache class
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,7 +23,7 @@ use \Exception;
  */
 
 class FileSystemProvider extends AbstractFileSystemProvider {
- 
+
     /**
      * {@inheritdoc}
      */
@@ -36,17 +36,17 @@ class FileSystemProvider extends AbstractFileSystemProvider {
         if ( !$this->isEnabled() ) return false;
 
         $this->resetErrorState();
-        
+
         try {
-            
+
             $this->setTtl($ttl);
-        
+
             $shadowName = $this->cache_folder.md5($name)."-".$this->getNamespace();
-            
+
             $shadowData = serialize($data);
-    
+
             $shadowTtl = $this->getTime() + $this->ttl;
-        
+
             if ( FileSystemTools::checkXattrSupport() && FileSystemTools::checkXattrFilesystemSupport($this->cache_folder) ) {
 
                 $return = $this->setXattr($shadowName, $shadowData, $shadowTtl);
@@ -58,7 +58,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
             }
 
         } catch (CacheException $ce) {
-            
+
             throw $ce;
 
         }
@@ -66,7 +66,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
         return $return;
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -79,7 +79,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
         $this->resetErrorState();
 
         $shadowName = $this->cache_folder.md5($name)."-".$this->getNamespace();
-    
+
         if ( FileSystemTools::checkXattrSupport() && FileSystemTools::checkXattrFilesystemSupport($this->cache_folder) ) {
 
             $return = $this->getXattr($shadowName, $this->getTime());
@@ -93,7 +93,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
         return is_null($return) ? $return : unserialize($return);
 
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -122,7 +122,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
                 $this->logger->error("Failed to unlink cache file $file, exiting gracefully", pathinfo($file));
 
                 $this->setErrorState();
-                
+
                 $return = false;
 
             }
@@ -195,5 +195,5 @@ class FileSystemProvider extends AbstractFileSystemProvider {
         );
 
     }
-    
+
 }

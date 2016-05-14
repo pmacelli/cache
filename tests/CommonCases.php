@@ -85,7 +85,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         // this has no effect on other providers.
         $time = $this->cache->setTime()->getTime();
 
-        // echo "\nPreCacheTime: $time\n";
+        //echo "\nPreCacheTime: $time\n";
 
         $result = $this->cache->get("test-cache-3");
 
@@ -94,6 +94,20 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($this->cache->getErrorState());
 
     }
+
+    // /**
+    //  * @runInSeparateProcess
+    //  */
+    // public function testGetExpired() {
+    //
+    //     sleep(3);
+    //
+    //     $time = $this->cache->setTime()->getTime();
+    //     $result = $this->cache->get("test-cache-3");
+    //     $this->assertNull($result);
+    //     $this->assertFalse($this->cache->getErrorState());
+    //
+    // }
 
     public function testChangeNamespace() {
 

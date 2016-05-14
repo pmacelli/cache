@@ -1,6 +1,8 @@
 <?php namespace Comodojo\Cache\Components;
 
+use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
+use \Exception;
 
 /**
  * Abstract Manager class
@@ -28,13 +30,13 @@ abstract class AbstractManager extends AbstractProvider {
     const PICK_BYWEIGHT = 4;
     const PICK_ALL = 5;
 
-    private $caches = array();
+    protected $caches = array();
 
-    private $cache_weights = array();
+    protected $cache_weights = array();
 
-    private $selector;
+    protected $selector;
 
-    private $selected_cache;
+    protected $selected_cache;
 
     public function __construct($select_mode = null, LoggerInterface $logger = null) {
 
@@ -110,7 +112,7 @@ abstract class AbstractManager extends AbstractProvider {
 
     }
 
-    public function addProvider(CacheInterface $cache_provider, $weight = 0) {
+    public function addProvider(ProviderInterface $cache_provider, $weight = 0) {
 
         $corrected_weight = filter_var($weight, FILTER_VALIDATE_INT, array(
             'options' => array(

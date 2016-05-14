@@ -20,9 +20,10 @@ before_install:
   - if [[ "`phpenv version-name`" != "hhvm" ]] ; then phpenv config-add $TRAVIS_BUILD_DIR/tests/resources/ext.ini ; fi
   - travis_retry composer self-update
   - mysql -u root < $TRAVIS_BUILD_DIR/tests/resources/DatabaseCacheCreateSchema.sql
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('comodojo') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 
 install:
-  - if [[ "$TRAVIS_PHP_VERSION" == 5.3* ]] ; then travis_retry composer update --no-interaction --prefer-source ; else travis_retry composer install --no-interaction --prefer-source ; fi
+  - travis_retry composer install --no-interaction --prefer-source
 
 script:
   - if [ "$TRAVIS_PHP_VERSION" == "hhvm" ]; then vendor/bin/phpunit --testsuite $SUITE; fi

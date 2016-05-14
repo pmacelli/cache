@@ -4,7 +4,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Cache provider interface
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
@@ -21,7 +21,7 @@ use Psr\Log\LoggerInterface;
  */
 
 interface ProviderInterface {
-    
+
     /**
      * Set cache element
      *
@@ -79,7 +79,7 @@ interface ProviderInterface {
 
     /**
      * administratively enable cache
-     * 
+     *
      * @return bool
      */
     public function enable();
@@ -107,14 +107,14 @@ interface ProviderInterface {
 
     /**
      * Set the logger instance
-     * 
+     *
      * @return ProviderInterface
      */
     public function setLogger(LoggerInterface $logger);
 
     /**
      * Get the current logger instance
-     * 
+     *
      * @return LoggerInterface
      */
     public function getLogger();
@@ -139,24 +139,24 @@ interface ProviderInterface {
      * @return bool
      */
     public function getErrorState();
-    
+
     /**
      * Set current time
      *
      * @param   int    $time    Set current time (in msec - float)
-     * 
+     *
      * @return  ProviderInterface
      * @throws  CacheException
      */
     public function setTime($time);
-    
+
     /**
      * Get current time
      *
      * @return  int
      */
     public function getTime();
-    
+
     /**
      * Set namespace
      *

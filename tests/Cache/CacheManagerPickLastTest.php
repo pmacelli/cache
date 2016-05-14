@@ -11,19 +11,19 @@ use \Comodojo\Cache\Tests\ManagerCommonCases;
 class CacheManagerPickLastTest extends ManagerCommonCases {
 
     protected function setUp() {
-        
-        $cache_folder = __DIR__ . "/../localcache/";  
 
-        $edb = DatabaseCache::getDatabase('MYSQLI', '127.0.0.1', 3306, 'comodojo', 'root');
+        $cache_folder = __DIR__ . "/../localcache/";
+
+        $edb = DatabaseCache::getDatabase('MYSQLI', '127.0.0.1', 3306, 'comodojocache', 'root', 'comodojo');
 
         $this->manager = new CacheManager( CacheManager::PICK_LAST);
 
-        //$this->manager->add( new ApcCache() );
-        $this->manager->addProvider( new DatabaseCache($edb, 'cache', 'comodojo_') );
+        $this->manager->addProvider( new ApcCache() );
+        $this->manager->addProvider( new DatabaseCache($edb, 'cache', 'cmdj_') );
         $this->manager->addProvider( new FileCache($cache_folder) );
         $this->manager->addProvider( new MemcachedCache('127.0.0.1') );
         $this->manager->addProvider( new PhpRedisCache('127.0.0.1') );
-    
+
     }
 
     protected function tearDown() {

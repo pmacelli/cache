@@ -30,7 +30,7 @@ abstract class AbstractProvider implements ProviderInterface {
     use TtlTrait;
     use LoggerTrait;
     use ErrorStateTrait;
-    
+
     /**
      * Class constructor
      *

@@ -2,7 +2,7 @@
 
 /**
  * Unique Id Trait
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
@@ -17,16 +17,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
 trait IdTrait {
- 
+
     /**
      * A unique id for chache provider
      *
      * @var string
      */
     protected $id = null;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -35,15 +35,15 @@ trait IdTrait {
         return $this->id;
 
     }
-    
+
     /**
      * Set a unique id (64 chars)
      *
      */
     protected function setCacheId() {
-        
+
         $this->id = self::getUniqueId();
-        
+
     }
 
     /**
@@ -56,5 +56,5 @@ trait IdTrait {
         return substr(md5(uniqid(rand(), true)), 0, 64);
 
     }
-    
+
 }

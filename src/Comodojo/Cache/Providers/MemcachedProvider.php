@@ -28,7 +28,7 @@ use \Exception;
 class MemcachedProvider extends AbstractProvider {
 
     use InstanceTrait;
-    
+
     /**
      * Class constructor
      *
@@ -100,7 +100,7 @@ class MemcachedProvider extends AbstractProvider {
 
                 $shadowName = $namespace."-".md5($name);
 
-                $shadowTtl = $this->getTime() + $this->ttl;
+                $shadowTtl = /* $this->getTime() + */$this->ttl;
 
                 $shadowData = serialize($data);
 

@@ -56,7 +56,7 @@ class DatabaseProvider extends AbstractProvider {
      */
     public function __construct(EnhancedDatabase $dbh, $table, $table_prefix = null, LoggerInterface $logger = null) {
 
-        if ( !empty($table) ) throw new CacheException("Database table cannot be undefined");
+        if ( empty($table) ) throw new CacheException("Database table cannot be undefined");
 
         $this->table = $table;
 

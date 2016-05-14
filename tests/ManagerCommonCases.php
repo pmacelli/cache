@@ -17,11 +17,13 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->manager->set("test-cache-1", $this->string_content);
 
-        $this->assertInternalType('array', $result);
+        // $this->assertInternalType('array', $result);
+        //
+        // $this->assertCount(4, $result);
+        //
+        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
 
-        $this->assertCount(4, $result);
-
-        foreach ($result as $cache_result) $this->assertTrue($cache_result);
+        $this->assertTrue($result);
 
     }
 
@@ -41,24 +43,28 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->manager->delete("test-cache-1");
 
-        $this->assertInternalType('array', $result);
+        // $this->assertInternalType('array', $result);
+        //
+        // $this->assertCount(4, $result);
+        //
+        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
 
-        $this->assertCount(4, $result);
+        $this->assertTrue($result);
 
-        foreach ($result as $cache_result) $this->assertTrue($cache_result);
-        
     }
 
     public function testSetArray() {
 
         $result = $this->manager->set("test-cache-2", $this->array_content);
 
-        $this->assertInternalType('array', $result);
+        // $this->assertInternalType('array', $result);
+        //
+        // $this->assertCount(4, $result);
+        //
+        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
 
-        $this->assertCount(4, $result);
+        $this->assertTrue($result);
 
-        foreach ($result as $cache_result) $this->assertTrue($cache_result);
-        
         $result = $this->manager->get("test-cache-2");
 
         $this->assertSame($this->array_content, $result);
@@ -73,28 +79,21 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->manager->set("test-cache-3", $this->string_content, 1);
 
-        $this->assertInternalType('array', $result);
+        // $this->assertInternalType('array', $result);
+        //
+        // $this->assertCount(4, $result);
+        //
+        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
 
-        $this->assertCount(4, $result);
-
-        foreach ($result as $cache_result) $this->assertTrue($cache_result);
-        
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testGetExpired() {
+        $this->assertTrue($result);
 
         sleep(3);
 
+        $this->manager->setTime();
+
         $result = $this->manager->setTime()->get("test-cache-3");
-        
+
         $this->assertNull($result);
-
-        // $status = $this->manager->status();
-
-        // var_export($status[$this->manager->getSelectedCache()]['provider']);
 
     }
 
@@ -106,12 +105,14 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->manager->set("test-cache-4", $this->string_content);
 
-        $this->assertInternalType('array', $result);
+        // $this->assertInternalType('array', $result);
+        //
+        // $this->assertCount(4, $result);
+        //
+        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
 
-        $this->assertCount(4, $result);
+        $this->assertTrue($result);
 
-        foreach ($result as $cache_result) $this->assertTrue($cache_result);
-        
         $result = $this->manager->get("test-cache-4");
 
         $this->assertEquals($this->string_content, $result);
@@ -123,7 +124,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
         $result = $this->manager->get("test-cache-4");
 
         $this->assertNull($result);
-        
+
     }
 
     public function testStatus() {
@@ -132,7 +133,7 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(4, $result);
+        $this->assertCount(5, $result);
 
     }
 
@@ -140,16 +141,18 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->manager->flush();
 
-        $this->assertInternalType('array', $result);
+        // $this->assertInternalType('array', $result);
+        //
+        // $this->assertCount(4, $result);
+        //
+        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
 
-        $this->assertCount(4, $result);
+        $this->assertTrue($result);
 
-        foreach ($result as $cache_result) $this->assertTrue($cache_result);
-        
         $this->assertNull($this->manager->get("test-cache-1"));
 
         $this->assertNull($this->manager->get("test-cache-2"));
-        
+
         $this->assertNull($this->manager->get("test-cache-3"));
 
     }
