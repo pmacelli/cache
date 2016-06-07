@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\Provicers\AbstractCacheProvider;
+use \Comodojo\Cache\Providers\AbstractCacheProvider;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 use \Exception;
