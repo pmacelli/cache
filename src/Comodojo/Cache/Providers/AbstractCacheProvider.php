@@ -22,7 +22,7 @@ use \Comodojo\Cache\Components\AbstractManager;
 
 abstract class AbstractCacheProvider extends AbstractManager {
 
-    private function getCacheByLoop($caches, $name) {
+    protected function getCacheByLoop($caches, $name) {
 
         $result = null;
 
@@ -56,7 +56,7 @@ abstract class AbstractCacheProvider extends AbstractManager {
 
     }
 
-    private function getRandomCache($caches, $name) {
+    protected function getRandomCache($caches, $name) {
 
         $result = null;
 
@@ -104,7 +104,7 @@ abstract class AbstractCacheProvider extends AbstractManager {
 
     }
 
-    private function getCacheByWeight($caches, $weights, $name) {
+    protected function getCacheByWeight($caches, $weights, $name) {
 
         $result = null;
 
