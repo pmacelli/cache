@@ -22,6 +22,7 @@
             <file>tests/Cache/CachePickRandomTest.php</file>
             <file>tests/Cache/CachePickAllTest.php</file>
             <file>tests/Cache/CachePickByWeightTest.php</file>
+            <file>tests/Cache/CachePickTraverseTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>

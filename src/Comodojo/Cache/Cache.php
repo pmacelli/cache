@@ -64,6 +64,8 @@ class Cache extends AbstractProvider {
 
     protected $provider;
 
+    protected $auto_set_time = false;
+
     public function __construct($select_mode = null, LoggerInterface $logger = null, $default_ttl = 3600, $flap_interval = 600) {
 
         $this->selector = filter_var($select_mode, FILTER_VALIDATE_INT, array(
@@ -77,6 +79,24 @@ class Cache extends AbstractProvider {
         $this->stack = new StackManager($flap_interval);
 
         parent::__construct($logger);
+
+    }
+
+    public function getAutoSetTime() {
+
+        return $this->auto_set_time;
+
+    }
+
+    public function setAutoSetTime($mode=true) {
+
+        $this->auto_set_time = filter_var($mode, FILTER_VALIDATE_BOOLEAN, array(
+            'options' => array(
+                'default'   => true
+            )
+        ));
+
+        return $this;
 
     }
 
@@ -199,6 +219,8 @@ class Cache extends AbstractProvider {
 
         if ( !$this->isEnabled() ) return false;
 
+        if ( $this->auto_set_time ) $this->setTime();
+
         $set = array();
 
         foreach ($this->stack->getAll() as $id => $provider) {
@@ -216,6 +238,8 @@ class Cache extends AbstractProvider {
     public function get($name) {
 
         if ( !$this->isEnabled() ) return null;
+
+        if ( $this->auto_set_time ) $this->setTime();
 
         if ( $this->selector < 5 ) {
 
@@ -358,14 +382,14 @@ class Cache extends AbstractProvider {
 
     private function getTraverse($name) {
 
-        $data;
+        $data = null;
 
         $providers = $this->stack->getAll();
 
         foreach ($providers as $id => $provider) {
-            $data = $this->provider->get($name);
-            if ( $this->provider->getErrorState() ) {
-                $this->stack->disable($this->provider->getCacheId());
+            $data = $provider->get($name);
+            if ( $provider->getErrorState() ) {
+                $this->stack->disable($provider->getCacheId());
             } else {
                 if ( $data != null ) return $data;
             }

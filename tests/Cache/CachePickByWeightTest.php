@@ -23,6 +23,8 @@ class CachePickByWeightTest extends ManagerCommonCases {
 
         self::$cache = new Cache(Cache::PICK_BYWEIGHT, $logger, 3600, 5);
 
+        self::$cache->setAutoSetTime();
+
         self::$cache->addProvider( new Apc(), 10 );
         //self::$cache->addProvider( new DatabaseCache($edb, 'cache', 'cmdj_') );
         self::$cache->addProvider( new Filesystem($cache_folder), 20 );

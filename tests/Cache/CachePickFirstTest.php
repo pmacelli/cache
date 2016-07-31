@@ -23,6 +23,8 @@ class CachePickFirstTest extends ManagerCommonCases {
 
         self::$cache = new Cache(Cache::PICK_FIRST, $logger, 3600, 5);
 
+        self::$cache->setAutoSetTime();
+
         self::$cache->addProvider( new Apc() );
         //self::$cache->addProvider( new DatabaseCache($edb, 'cache', 'cmdj_') );
         self::$cache->addProvider( new Filesystem($cache_folder) );
@@ -46,7 +48,7 @@ class CachePickFirstTest extends ManagerCommonCases {
         $id = $provider->getCacheId();
 
         $cache->getLogger()->info("Provider that should be selected $id");
-        
+
         $cache->set("test-cache-0", "this is a test");
 
         $cache->get("test-cache-0");

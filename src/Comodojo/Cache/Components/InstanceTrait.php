@@ -34,7 +34,7 @@ trait InstanceTrait {
      */
     public function getInstance() {
 
-        return $this->current_time;
+        return $this->$instance;
 
     }
 

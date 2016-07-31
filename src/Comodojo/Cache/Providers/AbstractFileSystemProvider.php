@@ -80,8 +80,6 @@ abstract class AbstractFilesystemProvider extends AbstractProvider {
 
         if ( $cached === false ) {
 
-            $className = get_class($this);
-
             $this->logger->error("Error writing cache object $cacheFile, exiting gracefully", pathinfo($cacheFile));
 
             $this->setErrorState("Error writing cache object $cacheFile");
