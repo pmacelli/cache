@@ -34,7 +34,7 @@ trait InstanceTrait {
      */
     public function getInstance() {
 
-        return $this->$instance;
+        return $this->instance;
 
     }
 

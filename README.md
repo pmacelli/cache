@@ -2,15 +2,19 @@
 
 [![Build Status](https://api.travis-ci.org/comodojo/cache.png)](http://travis-ci.org/comodojo/cache) [![Latest Stable Version](https://poser.pugx.org/comodojo/cache/v/stable)](https://packagist.org/packages/comodojo/cache) [![Total Downloads](https://poser.pugx.org/comodojo/cache/downloads)](https://packagist.org/packages/comodojo/cache) [![Latest Unstable Version](https://poser.pugx.org/comodojo/cache/v/unstable)](https://packagist.org/packages/comodojo/cache) [![License](https://poser.pugx.org/comodojo/cache/license)](https://packagist.org/packages/comodojo/cache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/comodojo/cache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/comodojo/cache/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/comodojo/cache/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/comodojo/cache/?branch=master)
 
-Very fast PHP data caching across multiple storage engines.
+Very fast PHP cache manager across multiple storage engines.
+
+*** This is the development branch; documentation is not updated yet ***
 
 ## Introduction
 
 This library provides a fast, framework-independent, data caching layer for PHP applications; it can handle all types of data that PHP can serialize.
 
-It integrates also a Cache Manager to handle multiple cache types (and providers) at the same time using several data retrieval algorithms.
+All cache engines (cache providers) can be used independently or, preferably, invoked via a cache manager that can handle multiple providers, manage their status, recover a provider outage.
 
 Cache items are key/value objects, organized in namespaces, valid until the time to live has expired.
+
+This version is backward compatible with 1.0 branch.
 
 Main features:
 
@@ -23,16 +27,25 @@ Main features:
 
 Install [composer](https://getcomposer.org/), then:
 
-`` composer require comodojo/cache dev-master ``
+`` composer require comodojo/cache ^2.0 ``
 
 ## Basic usage
 
-First, a cache provider should be inited (look at next section to know more about providers).
+Both cache manager and providers implement the same ProviderInterface; that means that following examples are applicable both if provider is used as a single instance or loaded in a manager.
 
-In following examples, `$cache` is a generic `\Comodojo\Cache\FileCache` provider like:
+Using the generic `\Comodojo\Cache\Cache` manager (see next section for detailed information about attributes):
 
 ```php
-$cache = new \Comodojo\Cache\FileCache();
+$cache = new \Comodojo\Cache\Cache(\Comodojo\Cache\Cache::PICK_FIRST);
+
+$cache->addProvider( new \Comodojo\Cache\Providers\Apc() );
+
+```
+
+Using a single provider:
+
+```php
+$cache = new \Comodojo\Cache\Providers\Apc();
 
 ```
 
@@ -127,13 +140,13 @@ Additionally, in case of error:
     ```php
     // define time
     $time = time();
-    
+
     // set provider (relative) time
     $cache->setTime($time);
-    
+
     // get provider (relative) time
     $time = $cache->getTime();
-    
+
     ```
 
 - Set/get time to live
@@ -141,13 +154,13 @@ Additionally, in case of error:
     ```php
     // define ttl
     $ttl = 60;
-    
+
     // set provider ttl
     $cache->setTtl($ttl);
-    
+
     // get provider ttl
     $ttl = $cache->getTtl();
-    
+
     ```
 
 - Administratively enable/disable provider
@@ -155,13 +168,13 @@ Additionally, in case of error:
     ```php
     // disable provider
     $cache->disable();
-    
+
     // enable provider
     $cache->enable();
-    
+
     // get provider status
     $enabled = $cache->isEnabled();
-    
+
     ```
 
 - Manage error state
@@ -169,13 +182,13 @@ Additionally, in case of error:
     ```php
     // put provider in error state
     $cache->setErrorState();
-    
+
     // get current error state
     $state = $cache->getErrorState();
-    
+
     // reset error flag
     $cache->resetErrorState();
-    
+
     ```
 
 ## Cache providers
@@ -303,7 +316,7 @@ $apc_providers = $manager->getProviders('ApcCache');
 foreach ( $apc_providers as $id => $type ) {
 
     $manager->removeProvider($id);
-    
+
 }
 
 ```
