@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\Providers\MemcachedProvider;
+use \Comodojo\Cache\Providers\Memcached;
 use \Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +21,7 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class MemcachedCache extends MemcachedProvider {
+class MemcachedCache extends Memcached {
 
     /**
      * Class constructor
@@ -38,7 +38,7 @@ class MemcachedCache extends MemcachedProvider {
 
         parent::__construct($server, $port, $weight, $persistent_id, $logger);
 
-        $this->logger->notice("Use of MemcachedCache is deprecated, please use MemcachedProvider instead.");
+        $this->logger->notice("Use of MemcachedCache is deprecated, please use \Comodojo\Cache\Providers\Memcached instead.");
 
     }
 

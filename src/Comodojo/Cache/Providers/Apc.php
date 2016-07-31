@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\AbstractProvider;
+use \Comodojo\Cache\Providers\AbstractProvider;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 use \Exception;
@@ -23,7 +23,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class ApcProvider extends AbstractProvider {
+class Apc extends AbstractProvider {
 
     private static $is_apcu = false;
 
@@ -82,7 +82,7 @@ class ApcProvider extends AbstractProvider {
 
                 $this->logger->error("Error writing cache (APC), exiting gracefully");
 
-                $this->setErrorState();
+                $this->setErrorState("Error writing cache (APC)");
 
                 return false;
 
@@ -106,7 +106,7 @@ class ApcProvider extends AbstractProvider {
 
                 $this->logger->error("Error writing cache (APC), exiting gracefully");
 
-                $this->setErrorState();
+                $this->setErrorState("Error writing cache (APC)");
 
             }
 
@@ -192,13 +192,13 @@ class ApcProvider extends AbstractProvider {
 
         }
 
-        if ( $delete === false ) {
+        // if ( $delete === false ) {
 
-            $this->logger->error("Error deleting cache (APC), exiting gracefully");
+            // This is actually not an error, just KNF flag
+            // $this->logger->error("Error deleting cache (APC), exiting gracefully");
+            // $this->setErrorState();
 
-            $this->setErrorState();
-
-        }
+        // }
 
         return $delete;
 

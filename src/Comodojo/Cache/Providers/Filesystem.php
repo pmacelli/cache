@@ -22,7 +22,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class FileSystemProvider extends AbstractFileSystemProvider {
+class Filesystem extends AbstractFileSystemProvider {
 
     /**
      * {@inheritdoc}
@@ -47,7 +47,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
 
             $shadowTtl = $this->getTime() + $this->ttl;
 
-            if ( FileSystemTools::checkXattrSupport() && FileSystemTools::checkXattrFilesystemSupport($this->cache_folder) ) {
+            if ( $this->xattr_support ) {
 
                 $return = $this->setXattr($shadowName, $shadowData, $shadowTtl);
 
@@ -80,7 +80,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
 
         $shadowName = $this->cache_folder.md5($name)."-".$this->getNamespace();
 
-        if ( FileSystemTools::checkXattrSupport() && FileSystemTools::checkXattrFilesystemSupport($this->cache_folder) ) {
+        if ( $this->xattr_support ) {
 
             $return = $this->getXattr($shadowName, $this->getTime());
 
@@ -121,7 +121,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
 
                 $this->logger->error("Failed to unlink cache file $file, exiting gracefully", pathinfo($file));
 
-                $this->setErrorState();
+                $this->setErrorState("Failed to unlink cache file $file");
 
                 $return = false;
 
@@ -152,7 +152,7 @@ class FileSystemProvider extends AbstractFileSystemProvider {
 
                 $this->logger->error("Failed to unlink cache file $file, exiting gracefully", pathinfo($file));
 
-                $this->setErrorState();
+                $this->setErrorState("Failed to unlink cache file $file");
 
                 $return = false;
 

@@ -1,5 +1,12 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\Cache\Providers;
 
+use \Comodojo\Cache\Components\IdTrait;
+use \Comodojo\Cache\Components\NamespaceTrait;
+use \Comodojo\Cache\Components\StatusSwitchTrait;
+use \Comodojo\Cache\Components\TimeTrait;
+use \Comodojo\Cache\Components\TtlTrait;
+use \Comodojo\Cache\Components\LoggerTrait;
+use \Comodojo\Cache\Components\ErrorStateTrait;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 
@@ -53,6 +60,12 @@ abstract class AbstractProvider implements ProviderInterface {
             throw $ce;
 
         }
+
+    }
+
+    public function getType() {
+
+        return get_class($this);
 
     }
 

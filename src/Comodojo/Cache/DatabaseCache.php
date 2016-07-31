@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\Providers\DatabaseProvider;
+use \Comodojo\Cache\Providers\Database;
 use \Comodojo\Database\EnhancedDatabase;
 use \Psr\Log\LoggerInterface;
 
@@ -22,7 +22,7 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class DatabaseCache extends DatabaseProvider {
+class DatabaseCache extends Database {
 
     /**
      * Class constructor
@@ -38,7 +38,7 @@ class DatabaseCache extends DatabaseProvider {
 
         parent::__construct($dbh, $table, $table_prefix, $logger);
 
-        $this->logger->notice("Use of DatabaseCache is deprecated, please use DatabaseProvider instead.");
+        $this->logger->notice("Use of DatabaseCache is deprecated, please use \Comodojo\Cache\Providers\Database instead.");
 
 
     }

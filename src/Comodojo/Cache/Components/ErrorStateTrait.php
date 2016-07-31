@@ -28,11 +28,19 @@ trait ErrorStateTrait {
     private $error_state = false;
 
     /**
+     * Current error message (if any)
+     *
+     * @var string
+     */
+    private $error_message;
+
+    /**
      * {@inheritdoc}
      */
-    public function setErrorState() {
+    public function setErrorState($message = null) {
 
         $this->error_state = true;
+        $this->error_message = $message;
 
         return $this;
 
@@ -44,6 +52,7 @@ trait ErrorStateTrait {
     public function resetErrorState() {
 
         $this->error_state = false;
+        $this->error_message = null;
 
         return $this;
 
@@ -55,6 +64,15 @@ trait ErrorStateTrait {
     public function getErrorState() {
 
         return $this->error_state;
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getErrorMessage() {
+
+        return $this->error_message;
 
     }
 

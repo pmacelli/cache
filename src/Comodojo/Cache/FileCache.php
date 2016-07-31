@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\Providers\FileSystemProvider;
+use \Comodojo\Cache\Providers\Filesystem;
 use \Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +21,7 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class FileCache extends FileSystemProvider {
+class FileCache extends Filesystem {
 
     /**
      * Class constructor
@@ -32,7 +32,7 @@ class FileCache extends FileSystemProvider {
 
         parent::__construct($cache_folder, $logger);
 
-        $this->logger->notice("Use of FileCache is deprecated, please use FileSystemProvider instead.");
+        $this->logger->notice("Use of FileCache is deprecated, please use \Comodojo\Cache\Providers\Filesystem instead.");
 
     }
 

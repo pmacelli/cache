@@ -11,26 +11,32 @@
     stopOnFailure="false">
     <testsuites>
         <testsuite name="comodojo-cache-travis">
-            <file>tests/Cache/ApcCacheTest.php</file>
-            <file>tests/Cache/DatabaseCacheTest.php</file>
-            <file>tests/Cache/FileCacheTest.php</file>
-            <file>tests/Cache/MemcachedCacheTest.php</file>
-            <file>tests/Cache/PhpRedisCacheTest.php</file>
-            <file>tests/Cache/CacheManagerPickFirstTest.php</file>
-            <file>tests/Cache/CacheManagerPickLastTest.php</file>
-            <file>tests/Cache/CacheManagerPickRandomTest.php</file>
-            <file>tests/Cache/CacheManagerPickAllTest.php</file>
-            <file>tests/Cache/CacheManagerPickByWeightTest.php</file>
+            <file>tests/Cache/ApcTest.php</file>
+            <file>tests/Cache/FilesystemTest.php</file>
+            <file>tests/Cache/MemcachedTest.php</file>
+            <file>tests/Cache/PhpRedisTest.php</file>
+            <file>tests/Cache/DatabaseTest.php</file>
+            <file>tests/Cache/BackwardsTest.php</file>
+            <file>tests/Cache/CachePickFirstTest.php</file>
+            <file>tests/Cache/CachePickLastTest.php</file>
+            <file>tests/Cache/CachePickRandomTest.php</file>
+            <file>tests/Cache/CachePickAllTest.php</file>
+            <file>tests/Cache/CachePickByWeightTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>
-        <testsuite name="comodojo-cache-xcache">
-            <file>tests/Cache/XCacheCacheTest.php</file>
+        <testsuite name="comodojo-cache-unsupported">
+            <file>tests/Cache/XCacheTest.php</file>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="comodojo-cache-unstable">
+            <file>tests/Cache/DatabaseTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>
         <testsuite name="comodojo-cache-apc">
-            <file>tests/Cache/ApcCacheTest.php</file>
+            <file>tests/Cache/ApcTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>
@@ -51,4 +57,3 @@
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 </phpunit>
-

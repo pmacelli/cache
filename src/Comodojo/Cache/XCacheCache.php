@@ -34,7 +34,7 @@ class XCacheCache extends XCacheProvider {
 
         parent::__construct($logger);
 
-        $this->logger->notice("Use of XCacheCache is deprecated, please use XCacheProvider instead.");
+        $this->logger->notice("Use of XCacheCache is deprecated, please use \Comodojo\Cache\Providers\XCache instead.");
 
     }
 

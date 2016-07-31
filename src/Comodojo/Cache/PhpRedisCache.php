@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\Providers\PhpRedisProvider;
+use \Comodojo\Cache\Providers\PhpRedis;
 use \Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +21,7 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class PhpRedisCache extends PhpRedisProvider {
+class PhpRedisCache extends PhpRedis {
 
     /**
      * Class constructor
@@ -37,7 +37,7 @@ class PhpRedisCache extends PhpRedisProvider {
 
         parent::__construct($server, $port, $timeout, $logger);
 
-        $this->logger->notice("Use of PhpRedisCache is deprecated, please use PhpRedisProvider instead.");
+        $this->logger->notice("Use of PhpRedisCache is deprecated, please use \Comodojo\Cache\Providers\PhpRedis instead.");
 
     }
 

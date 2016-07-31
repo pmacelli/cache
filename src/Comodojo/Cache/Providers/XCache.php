@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\AbstractProvider;
+use \Comodojo\Cache\Providers\AbstractProvider;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 use \Exception;
@@ -23,7 +23,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class XCacheProvider extends AbstractProvider {
+class XCache extends AbstractProvider {
 
    /**
      * Class constructor
@@ -35,6 +35,8 @@ class XCacheProvider extends AbstractProvider {
     public function __construct(LoggerInterface $logger=null ) {
 
         parent::__construct($logger);
+
+        $this->logger->notice("XCache provider is not supported anymore nor tested. Consider to switch to an alternative provider.");
 
         if ( self::getXCacheStatus() === false ) {
 
@@ -75,7 +77,7 @@ class XCacheProvider extends AbstractProvider {
 
                 $this->logger->error("Error writing cache (XCache), exiting gracefully");
 
-                $this->setErrorState();
+                $this->setErrorState("Error writing cache (XCache)");
 
             }
 
@@ -108,7 +110,7 @@ class XCacheProvider extends AbstractProvider {
 
             $this->logger->error("Error reading cache (XCache), exiting gracefully");
 
-            $this->setErrorState();
+            $this->setErrorState("Error reading cache (XCache)");
 
         }
 
@@ -139,7 +141,7 @@ class XCacheProvider extends AbstractProvider {
 
             $this->logger->error("Error writing cache (XCache), exiting gracefully");
 
-            $this->setErrorState();
+            $this->setErrorState("Error writing cache (XCache)");
 
         }
 

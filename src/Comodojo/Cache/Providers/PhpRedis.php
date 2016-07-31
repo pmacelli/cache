@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\AbstractProvider;
 use \Comodojo\Cache\Components\InstanceTrait;
+use \Comodojo\Cache\Providers\AbstractProvider;
 use \Psr\Log\LoggerInterface;
 use \Redis;
 use \Comodojo\Exception\CacheException;
@@ -26,7 +26,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class PhpRedisProvider extends AbstractProvider {
+class PhpRedis extends AbstractProvider {
 
     use InstanceTrait;
 
@@ -106,9 +106,9 @@ class PhpRedisProvider extends AbstractProvider {
 
             if ( $namespace === false ) {
 
-                $this->logger->error( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
+                $this->logger->error("Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError()));
 
-                $this->setErrorState();
+                $this->setErrorState("Error writing cache (PhpRedis)");
 
                 $return = false;
 
@@ -124,9 +124,9 @@ class PhpRedisProvider extends AbstractProvider {
 
                 if ( $return === false ) {
 
-                    $this->logger->error( "Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError() ) );
+                    $this->logger->error("Error writing cache (PhpRedis), exiting gracefully", array( $this->instance->getLastError()));
 
-                    $this->setErrorState();
+                    $this->setErrorState("Error writing cache (PhpRedis)");
 
                 }
 
@@ -139,7 +139,7 @@ class PhpRedisProvider extends AbstractProvider {
                 "RESULTMESSAGE" => $re->getMessage()
             ));
 
-            $this->setErrorState();
+            $this->setErrorState("Server unreachable (PhpRedis)");
 
             return false;
 
@@ -195,7 +195,7 @@ class PhpRedisProvider extends AbstractProvider {
                 "RESULTMESSAGE" => $re->getMessage()
             ));
 
-            $this->setErrorState();
+            $this->setErrorState("Server unreachable (PhpRedis)");
 
             return null;
 
@@ -241,7 +241,7 @@ class PhpRedisProvider extends AbstractProvider {
                 "RESULTMESSAGE" => $re->getMessage()
             ));
 
-            $this->setErrorState();
+            $this->setErrorState("Server unreachable (PhpRedis)");
 
             return false;
 
@@ -275,7 +275,7 @@ class PhpRedisProvider extends AbstractProvider {
                 "RESULTMESSAGE" => $re->getMessage()
             ));
 
-            $this->setErrorState();
+            $this->setErrorState("Server unreachable (PhpRedis)");
 
             return false;
 
@@ -318,7 +318,7 @@ class PhpRedisProvider extends AbstractProvider {
                 "RESULTMESSAGE" => $re->getMessage()
             ));
 
-            $this->setErrorState();
+            $this->setErrorState("Server unreachable (PhpRedis)");
 
             $enabled = false;
 

@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\Providers\ApcProvider;
+use \Comodojo\Cache\Providers\Apc;
 use \Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +21,7 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class ApcCache extends ApcProvider {
+class ApcCache extends Apc {
 
     /**
      * Class constructor
@@ -32,7 +32,7 @@ class ApcCache extends ApcProvider {
 
         parent::__construct($logger);
 
-        $this->logger->notice("Use of ApcCache is deprecated, please use ApcProvider instead.");
+        $this->logger->notice("Use of ApcCache is deprecated, please use \Comodojo\Cache\Providers\Apc instead.");
 
     }
 

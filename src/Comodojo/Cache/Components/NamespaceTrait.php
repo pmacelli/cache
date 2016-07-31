@@ -41,9 +41,13 @@ trait NamespaceTrait {
     /**
      * {@inheritdoc}
      */
-    public function setNamespace($namespace) {
+    public function setNamespace($namespace=null) {
 
-        if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) && strlen($namespace) <= 64 ) {
+        if ( empty($namespace) ) {
+
+            $this->cache_namespace = "GLOBAL";
+
+        } else if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) && strlen($namespace) <= 64 ) {
 
             $this->cache_namespace = strtoupper($namespace);
 

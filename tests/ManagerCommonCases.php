@@ -11,17 +11,9 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
         'Marvin'    =>  null
     );
 
-    protected $manager = null;
-
     public function testSet() {
 
-        $result = $this->manager->set("test-cache-1", $this->string_content);
-
-        // $this->assertInternalType('array', $result);
-        //
-        // $this->assertCount(4, $result);
-        //
-        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
+        $result = static::$cache->set("test-cache-1", $this->string_content);
 
         $this->assertTrue($result);
 
@@ -29,69 +21,47 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
     public function testGet() {
 
-        $result = $this->manager->get("test-cache-1");
+        $result = static::$cache->get("test-cache-1");
 
         $this->assertEquals($this->string_content, $result);
-
-        // $status = $this->manager->status();
-
-        // var_export($status[$this->manager->getSelectedCache()]['provider']);
 
     }
 
     public function testDelete() {
 
-        $result = $this->manager->delete("test-cache-1");
-
-        // $this->assertInternalType('array', $result);
-        //
-        // $this->assertCount(4, $result);
-        //
-        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
+        $result = static::$cache->delete("test-cache-1");
 
         $this->assertTrue($result);
+
+        $result = static::$cache->get("test-cache-1");
+
+        $this->assertNull($result);
 
     }
 
     public function testSetArray() {
 
-        $result = $this->manager->set("test-cache-2", $this->array_content);
-
-        // $this->assertInternalType('array', $result);
-        //
-        // $this->assertCount(4, $result);
-        //
-        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
+        $result = static::$cache->set("test-cache-2", $this->array_content);
 
         $this->assertTrue($result);
 
-        $result = $this->manager->get("test-cache-2");
+        $result = static::$cache->get("test-cache-2");
 
         $this->assertSame($this->array_content, $result);
-
-        // $status = $this->manager->status();
-
-        // var_export($status[$this->manager->getSelectedCache()]['provider']);
 
     }
 
     public function testSetExpire() {
 
-        $result = $this->manager->set("test-cache-3", $this->string_content, 1);
-
-        // $this->assertInternalType('array', $result);
-        //
-        // $this->assertCount(4, $result);
-        //
-        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
+        $result = static::$cache->set("test-cache-3", $this->string_content, 1);
 
         $this->assertTrue($result);
 
         sleep(3);
 
-        $this->manager->setTime();
+        // static::$cache->setTime();
 
-        $result = $this->manager->setTime()->get("test-cache-3");
+        $result = static::$cache->get("test-cache-3");
 
         $this->assertNull($result);
 
@@ -99,61 +69,49 @@ class ManagerCommonCases extends \PHPUnit_Framework_TestCase {
 
     public function testChangeNamespace() {
 
-        $result = $this->manager->setNamespace('comodojo');
+        $result = static::$cache->setNamespace('comodojo');
 
-        $this->assertInstanceOf('\Comodojo\Cache\CacheManager', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Cache', $result);
 
-        $result = $this->manager->set("test-cache-4", $this->string_content);
-
-        // $this->assertInternalType('array', $result);
-        //
-        // $this->assertCount(4, $result);
-        //
-        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
+        $result = static::$cache->set("test-cache-4", $this->string_content);
 
         $this->assertTrue($result);
 
-        $result = $this->manager->get("test-cache-4");
+        $result = static::$cache->get("test-cache-4");
 
         $this->assertEquals($this->string_content, $result);
 
-        $result = $this->manager->setNamespace('foonamespace');
-
-        $this->assertInstanceOf('\Comodojo\Cache\CacheManager', $result);
-
-        $result = $this->manager->get("test-cache-4");
+        $result = static::$cache->setNamespace('foonamespace')->get("test-cache-4");
 
         $this->assertNull($result);
+
+        static::$cache->setNamespace();
 
     }
 
     public function testStatus() {
 
-        $result = $this->manager->status();
+        $result = static::$cache->status();
 
         $this->assertInternalType('array', $result);
 
-        $this->assertCount(5, $result);
+        $this->assertCount(4, $result);
 
     }
 
     public function testFlush() {
 
-        $result = $this->manager->flush();
-
-        // $this->assertInternalType('array', $result);
-        //
-        // $this->assertCount(4, $result);
-        //
-        // foreach ($result as $cache_result) $this->assertTrue($cache_result);
+        $result = static::$cache->flush();
 
         $this->assertTrue($result);
 
-        $this->assertNull($this->manager->get("test-cache-1"));
+        $this->assertNull(static::$cache->get("test-cache-1"));
 
-        $this->assertNull($this->manager->get("test-cache-2"));
+        $this->assertNull(static::$cache->get("test-cache-2"));
 
-        $this->assertNull($this->manager->get("test-cache-3"));
+        $this->assertNull(static::$cache->get("test-cache-3"));
+
+        $this->assertNull(static::$cache->setNamespace('comodojo')->get("test-cache-4"));
 
     }
 

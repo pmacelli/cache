@@ -1,9 +1,9 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\AbstractProvider;
 use \Comodojo\Cache\Components\InstanceTrait;
+use \Comodojo\Cache\Providers\AbstractProvider;
 use \Psr\Log\LoggerInterface;
-use \Memcached;
+use \Memcached as MemcachedInstance;
 use \Comodojo\Exception\CacheException;
 use \Exception;
 
@@ -25,7 +25,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class MemcachedProvider extends AbstractProvider {
+class Memcached extends AbstractProvider {
 
     use InstanceTrait;
 
@@ -56,7 +56,7 @@ class MemcachedProvider extends AbstractProvider {
 
         } else {
 
-            $this->setInstance(new Memcached($persistent_id));
+            $this->setInstance(new MemcachedInstance($persistent_id));
 
             $this->addServer($server, $port, $weight);
 
@@ -92,7 +92,7 @@ class MemcachedProvider extends AbstractProvider {
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
 
-                $this->setErrorState();
+                $this->setErrorState("Error writing cache (Memcached)");
 
                 $return = false;
 
@@ -113,7 +113,7 @@ class MemcachedProvider extends AbstractProvider {
                         "RESULTMESSAGE" => $this->instance->getResultMessage()
                     ));
 
-                    $this->setErrorState();
+                    $this->setErrorState("Error writing cache (Memcached)");
 
                 }
 
@@ -152,14 +152,14 @@ class MemcachedProvider extends AbstractProvider {
 
             $return = $this->instance->get($shadowName);
 
-            if ( $return === false && $this->instance->getResultCode() != Memcached::RES_NOTFOUND ) {
+            if ( $return === false && $this->instance->getResultCode() != MemcachedInstance::RES_NOTFOUND ) {
 
                 $this->logger->error("Error reading cache (Memcached), exiting gracefully", array(
                     "RESULTCODE" => $this->instance->getResultCode(),
                     "RESULTMESSAGE" => $this->instance->getResultMessage()
                 ));
 
-                $this->setErrorState();
+                $this->setErrorState("Error reading cache (Memcached)");
 
             }
 
@@ -199,7 +199,7 @@ class MemcachedProvider extends AbstractProvider {
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
 
-            $this->setErrorState();
+            $this->setErrorState("Error reading cache (Memcached)");
 
         }
 
@@ -226,7 +226,7 @@ class MemcachedProvider extends AbstractProvider {
                 "RESULTMESSAGE" => $this->instance->getResultMessage()
             ));
 
-            $this->setErrorState();
+            $this->setErrorState("Error flushing cache (Memcached)");
 
             return false;
 

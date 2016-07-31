@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\AbstractProvider;
+use \Comodojo\Cache\Providers\AbstractProvider;
 use \Comodojo\Cache\Components\InstanceTrait;
 use \Comodojo\Database\EnhancedDatabase;
 use \Psr\Log\LoggerInterface;
@@ -26,7 +26,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class DatabaseProvider extends AbstractProvider {
+class Database extends AbstractProvider {
 
     use InstanceTrait;
 

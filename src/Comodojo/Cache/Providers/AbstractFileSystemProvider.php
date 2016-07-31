@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\AbstractProvider;
 use \Comodojo\Cache\Components\FileSystemTools;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
@@ -24,7 +23,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-abstract class AbstractFileSystemProvider extends AbstractProvider {
+abstract class AbstractFilesystemProvider extends AbstractProvider {
 
     /**
      * Current cache folder
@@ -32,6 +31,8 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
      * @var string
      */
     protected $cache_folder;
+
+    protected $xattr_support = false;
 
     /**
      * Class constructor
@@ -58,6 +59,8 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
         }
 
+        $this->xattr_support = FileSystemTools::checkXattrSupport() && FileSystemTools::checkXattrFilesystemSupport($this->cache_folder);
+
     }
 
     /**
@@ -77,9 +80,11 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
         if ( $cached === false ) {
 
+            $className = get_class($this);
+
             $this->logger->error("Error writing cache object $cacheFile, exiting gracefully", pathinfo($cacheFile));
 
-            $this->setErrorState();
+            $this->setErrorState("Error writing cache object $cacheFile");
 
             return false;
 
@@ -91,7 +96,7 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
             $this->logger->error("Error writing cache ttl cacheFile (XATTR), exiting gracefully", pathinfo($cacheFile));
 
-            $this->setErrorState();
+            $this->setErrorState("Error writing cache ttl cacheFile (XATTR)");
 
             return false;
 
@@ -122,7 +127,7 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
             $this->logger->error("Error writing cache object $cacheFile, exiting gracefully", pathinfo($cacheFile));
 
-            $this->setErrorState();
+            $this->setErrorState("Error writing cache object $cacheFile");
 
             return false;
 
@@ -134,7 +139,7 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
             $this->logger->error("Error writing cache ttl cacheGhost (GHOST), exiting gracefully", pathinfo($cacheGhost));
 
-            $this->setErrorState();
+            $this->setErrorState("Error writing cache ttl cacheGhost (GHOST)");
 
             return false;
 
@@ -164,7 +169,7 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
                 $this->logger->error("Error reading cache ttl $cacheFile (XATTR), exiting gracefully", pathinfo($cacheFile));
 
-                $this->setErrorState();
+                $this->setErrorState("Error reading cache ttl $cacheFile (XATTR)");
 
                 $return = null;
 
@@ -180,7 +185,7 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
                     $this->logger->error("Error reading cache content $cacheFile, exiting gracefully", pathinfo($cacheFile));
 
-                    $this->setErrorState();
+                    $this->setErrorState("Error reading cache content $cacheFile");
 
                     $return = null;
 
@@ -224,6 +229,8 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
 
                 $this->logger->error("Error reading cache ttl $cacheGhost (GHOST), exiting gracefully", pathinfo($cacheGhost));
 
+                $this->setErrorState("Error reading cache ttl $cacheGhost (GHOST)");
+
                 $return = null;
 
             } else if ( intval($expire) < $time ) {
@@ -237,6 +244,8 @@ abstract class AbstractFileSystemProvider extends AbstractProvider {
                 if ( $data === false ) {
 
                     $this->logger->error("Error reading cache content $cacheFile, exiting gracefully", pathinfo($cacheFile));
+
+                    $this->setErrorState("Error reading cache content $cacheFile");
 
                     $return = null;
 

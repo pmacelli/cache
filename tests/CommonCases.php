@@ -113,7 +113,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setNamespace('comodojo');
 
-        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Providers\ProviderInterface', $result);
 
         $this->assertFalse($this->cache->getErrorState());
 
@@ -131,7 +131,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setNamespace('foonamespace');
 
-        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Providers\ProviderInterface', $result);
 
         $this->assertFalse($this->cache->getErrorState());
 
@@ -197,7 +197,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setTime($time);
 
-        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Providers\ProviderInterface', $result);
 
         $result = $this->cache->getTime();
 
@@ -209,7 +209,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setTtl(300);
 
-        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Providers\ProviderInterface', $result);
 
         $result = $this->cache->getTtl();
 
@@ -221,7 +221,7 @@ class CommonCases extends \PHPUnit_Framework_TestCase {
 
         $result = $this->cache->setNamespace('BOO');
 
-        $this->assertInstanceOf('\Comodojo\Cache\Components\ProviderInterface', $result);
+        $this->assertInstanceOf('\Comodojo\Cache\Providers\ProviderInterface', $result);
 
         $result = $this->cache->getNamespace();
 

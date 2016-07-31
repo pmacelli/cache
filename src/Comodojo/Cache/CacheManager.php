@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache;
 
-use \Comodojo\Cache\Providers\XCacheProvider;
+use \Comodojo\Cache\Providers\XCache;
 use \Psr\Log\LoggerInterface;
 
 /**
@@ -30,11 +30,11 @@ class CacheManager extends Cache {
      *
      * @throws \Comodojo\Exception\CacheException
      */
-     public function __construct($select_mode = null, LoggerInterface $logger = null) {
+     public function __construct($select_mode = null, LoggerInterface $logger = null, $default_ttl = 3600, $flap_interval = 600) {
 
         parent::__construct($select_mode, $logger);
 
-        $this->logger->notice("Use of CacheManager is deprecated, please use Cache class instead.");
+        $this->logger->notice("Use of CacheManager is deprecated, please use \Comodojo\Cache\Cache class instead.");
 
     }
 

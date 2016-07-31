@@ -1,6 +1,6 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\Cache\Providers;
 
-use Psr\Log\LoggerInterface;
+use \Psr\Log\LoggerInterface;
 
 /**
  * Cache provider interface
@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,6 +21,13 @@ use Psr\Log\LoggerInterface;
  */
 
 interface ProviderInterface {
+
+    /**
+     * Get type of provider
+     *
+     * @return  string
+     */
+    public function getType();
 
     /**
      * Set cache element
@@ -69,6 +76,23 @@ interface ProviderInterface {
      * @return  bool
      */
     public function flush();
+
+    /**
+     * Set namespace
+     *
+     * @param   string  $namespace
+     *
+     * @return  ProviderInterface
+     * @throws  CacheException
+     */
+    public function setNamespace($namespace);
+
+    /**
+     * Get namespace
+     *
+     * @return  string
+     */
+    public function getNamespace();
 
     /**
      * Get cache status
@@ -124,7 +148,7 @@ interface ProviderInterface {
      *
      * @return ProviderInterface
      */
-    public function setErrorState();
+    public function setErrorState($message = null);
 
     /**
      * Reset error state
@@ -139,6 +163,13 @@ interface ProviderInterface {
      * @return bool
      */
     public function getErrorState();
+
+    /**
+     * Retrieve last error message
+     *
+     * @return string
+     */
+    public function getErrorMessage();
 
     /**
      * Set current time
@@ -156,22 +187,5 @@ interface ProviderInterface {
      * @return  int
      */
     public function getTime();
-
-    /**
-     * Set namespace
-     *
-     * @param   string  $namespace
-     *
-     * @return  ProviderInterface
-     * @throws  CacheException
-     */
-    public function setNamespace($namespace);
-
-    /**
-     * Get namespace
-     *
-     * @return  string
-     */
-    public function getNamespace();
 
 }
