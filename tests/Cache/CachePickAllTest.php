@@ -21,7 +21,7 @@ class CachePickAllTest extends ManagerCommonCases {
 
         $cache_folder = __DIR__ . "/../localcache/";
 
-        self::$cache = new Cache(Cache::PICK_LAST, $logger, 3600, 5);
+        self::$cache = new Cache(Cache::PICK_ALL, $logger, 3600, 5);
 
         self::$cache->setAutoSetTime();
 

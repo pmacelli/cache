@@ -177,41 +177,41 @@ class Cache extends AbstractProvider {
 
     public function setNamespace($namespace = null) {
 
-        $return = parent::setNamespace($namespace);
+        parent::setNamespace($namespace);
 
         foreach ( $this->stack->getAll(false) as $provider ) $provider->setNamespace($namespace);
 
-        return $return;
+        return $this;
 
     }
 
     public function setTime($time = null) {
 
-        $return = parent::setTime($time);
+        parent::setTime($time);
 
         foreach ( $this->stack->getAll(false) as $provider ) $provider->setTime($time);
 
-        return $return;
+        return $this;
 
     }
 
     public function setTtl($ttl = null) {
 
-        $return = parent::setTtl($ttl);
+        parent::setTtl($ttl);
 
         foreach ( $this->stack->getAll(false) as $provider ) $provider->setTtl($ttl);
 
-        return $return;
+        return $this;
 
     }
 
     public function setLogger(LoggerInterface $logger = null) {
 
-        $return = parent::setLogger($logger);
+        parent::setLogger($logger);
 
         foreach ( $this->stack->getAll(false) as $provider ) $provider->setLogger($logger);
 
-        return $return;
+        return $this;
 
     }
 
@@ -366,8 +366,8 @@ class Cache extends AbstractProvider {
         $providers = $this->stack->getAll();
 
         foreach ($providers as $id => $provider) {
-            $data[] = $this->provider->get($name);
-            if ( $this->provider->getErrorState() ) $this->stack->disable($this->provider->getCacheId());
+            $data[] = $provider->get($name);
+            if ( $provider->getErrorState() ) $this->stack->disable($provider->getCacheId());
         }
 
         $values = array_unique(array_map('serialize', $data));
