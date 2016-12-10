@@ -1,9 +1,16 @@
 <?php namespace Comodojo\Cache\Components;
 
-use \Comodojo\Exception\CacheException;
+use \Comodojo\Cache\Components\CacheItemsArrayAccessTrait;
+use \Comodojo\Foundation\DataAccess\ArrayAccessTrait;
+use \Comodojo\Foundation\DataAccess\CountableTrait;
+use \Comodojo\Foundation\DataAccess\IteratorTrait;
+use \Psr\Cache\CacheItemInterface;
+use \Iterator;
+use \ArrayAccess;
+use \Countable;
 
 /**
- * Timestamp Trait
+ * CacheItemInterface extension to handle namespaces
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -20,41 +27,14 @@ use \Comodojo\Exception\CacheException;
  * THE SOFTWARE.
  */
 
-trait TimeTrait {
+class ItemsIterator implements Iterator, ArrayAccess, Countable {
 
-    /**
-     * Relative cache time
-     *
-     * @var int
-     */
-    protected $current_time;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTime() {
-
-        return $this->current_time;
-
+    use CountableTrait;
+    use IteratorTrait;
+    use ArrayAccessTrait, CacheItemsArrayAccessTrait {
+        CacheItemsArrayAccessTrait::offsetSet insteadof ArrayAccessTrait;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setTime($time = null) {
-
-        if ( is_null($time) ) $this->current_time = time();
-
-        else if ( preg_match('/^[0-9]{10}$/', $time) ) $this->current_time = $time;
-
-        else {
-
-            throw new CacheException("Invalid time");
-
-        }
-
-        return $this;
-
-    }
+    private $data = [];
 
 }

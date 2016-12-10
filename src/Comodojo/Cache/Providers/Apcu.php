@@ -10,7 +10,7 @@ use \Exception;
 use \DateTime;
 
 /**
- * Apc provider
+ * Apcu provider
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -27,7 +27,7 @@ use \DateTime;
  * THE SOFTWARE.
  */
 
-class Apc extends AbstractStatefulProvider {
+class Apcu extends AbstractStatefulProvider {
 
     use BasicCacheItemPoolTrait;
 
@@ -35,9 +35,9 @@ class Apc extends AbstractStatefulProvider {
 
         parent::__construct($logger);
 
-        if ( self::getApcStatus() === false ) {
+        if ( self::getApcuStatus() === false ) {
 
-            $error = "Apc extension not available, disabling provider ".$this->getId()." administratively";
+            $error = "Apcu extension not available, disabling provider ".$this->getId()." administratively";
 
             $this->logger->error($error);
 
@@ -45,7 +45,7 @@ class Apc extends AbstractStatefulProvider {
 
         }
 
-        self::makeApcCliCompatible();
+        self::makeApcuCliCompatible();
 
     }
 
@@ -61,7 +61,7 @@ class Apc extends AbstractStatefulProvider {
 
         $shadowName = "$namespace-$key";
 
-        $data = apc_fetch($shadowName, $success);
+        $data = apcu_fetch($shadowName, $success);
 
         if ( $data === false ) return new Item($key);
 
@@ -79,13 +79,13 @@ class Apc extends AbstractStatefulProvider {
 
         $shadowName = "$namespace-$key";
 
-        return apc_exists($shadowName);
+        return apcu_exists($shadowName);
 
     }
 
     public function clear() {
 
-        return apc_clear_cache("user");
+        return apcu_clear_cache();
 
     }
 
@@ -95,7 +95,7 @@ class Apc extends AbstractStatefulProvider {
 
         if ( $namespace === false ) return false;
 
-        return apc_delete($namespace);
+        return apcu_delete($namespace);
 
     }
 
@@ -107,7 +107,7 @@ class Apc extends AbstractStatefulProvider {
 
         $shadowName = "$namespace-$key";
 
-        return apc_delete($shadowName);
+        return apcu_delete($shadowName);
 
     }
 
@@ -128,17 +128,17 @@ class Apc extends AbstractStatefulProvider {
 
         $shadowName = "$namespace-".$item->getKey();
 
-        return apc_store($shadowName, $item->getRaw(), $ttl);
+        return apcu_store($shadowName, $item->getRaw(), $ttl);
 
     }
 
     public function getStatus() {
 
-        $info = apc_cache_info("user", true);
+        $info = apcu_cache_info(true);
 
         $entries = isset($info['num_entries']) ? $info['num_entries'] : null;
 
-        return new StatefulCacheItemPoolStatus('apc', $this->getState(), $entries, $info);
+        return new StatefulCacheItemPoolStatus('apcu', $this->getState(), $entries, $info);
 
     }
 
@@ -147,20 +147,20 @@ class Apc extends AbstractStatefulProvider {
      *
      * @return  bool
      */
-    private static function getApcStatus() {
+    private static function getApcuStatus() {
 
-        $apc = extension_loaded('apc');
+        $apcu = extension_loaded('apcu');
 
-        return ( $apc && ini_get('apc.enabled') );
+        return ( $apcu && ini_get('apc.enabled') );
 
     }
 
     /**
      * If in CLI, disable apc request time
      */
-    private static function makeApcCliCompatible() {
+    private static function makeApcuCliCompatible() {
 
-        // In cli, apc SHOULD NOT use the request time for cache retrieve/invalidation.
+        // In cli, apcu SHOULD NOT use the request time for cache retrieve/invalidation.
         // This is because in cli the request time is allways the same.
         if ( php_sapi_name() === 'cli' ) {
             ini_set('apc.use_request_time', 0);
@@ -177,7 +177,7 @@ class Apc extends AbstractStatefulProvider {
 
         $uId = self::getUniqueId();
 
-        return apc_store($this->getNamespace(), $uId, 0) === false ? false : $uId;
+        return apcu_store($this->getNamespace(), $uId, 0) === false ? false : $uId;
 
     }
 
@@ -188,7 +188,7 @@ class Apc extends AbstractStatefulProvider {
      */
     private function getNamespaceKey() {
 
-        return apc_fetch($this->getNamespace());
+        return apcu_fetch($this->getNamespace());
 
     }
 

@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Components;
 
-use \Comodojo\Exception\CacheException;
+use \Comodojo\Exception\InvalidCacheArgumentException;
 
 /**
  * Cache provider interface
@@ -27,14 +27,14 @@ trait NamespaceTrait {
      *
      * @var string
      */
-    protected $cache_namespace = "GLOBAL";
+    private $namespace = "GLOBAL";
 
     /**
      * {@inheritdoc}
      */
     public function getNamespace() {
 
-        return $this->cache_namespace;
+        return $this->namespace;
 
     }
 
@@ -45,15 +45,15 @@ trait NamespaceTrait {
 
         if ( empty($namespace) ) {
 
-            $this->cache_namespace = "GLOBAL";
+            $this->namespace = "GLOBAL";
 
-        } else if ( preg_match('/^[0-9a-zA-Z]+$/', $namespace) && strlen($namespace) <= 64 ) {
+        } else if ( KeyValidator::validateKey($namespace) && strlen($namespace) <= 64 ) {
 
-            $this->cache_namespace = strtoupper($namespace);
+            $this->namespace = strtoupper($namespace);
 
         } else {
 
-            throw new CacheException("Invalid namespace");
+            throw new InvalidCacheArgumentException("Invalid namespace provided");
 
         }
 

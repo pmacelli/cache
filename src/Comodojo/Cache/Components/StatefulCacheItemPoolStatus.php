@@ -1,14 +1,14 @@
 <?php namespace Comodojo\Cache\Components;
 
 /**
- * Unique Id Trait
+ *
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,42 +18,46 @@
  * THE SOFTWARE.
  */
 
-trait IdTrait {
+class StatefulCacheItemPoolStatus {
 
-    /**
-     * A unique id for chache provider
-     *
-     * @var string
-     */
-    protected $id = null;
+    protected $provider;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheId() {
+    protected $status;
 
-        return $this->id;
+    protected $objects = 0;
 
-    }
+    protected $options = [];
 
-    /**
-     * Set a unique id (64 chars)
-     *
-     */
-    protected function setCacheId() {
+    public function __construct($provider, $status = 0, $objects = 0, $options = []) {
 
-        $this->id = self::getUniqueId();
+        $this->provider = $provider;
+        $this->status = $status;
+        $this->objects = $objects;
+        $this->options = $options;
 
     }
 
-    /**
-     * Generate a unique id (64 chars)
-     *
-     * @return string
-     */
-    protected static function getUniqueId() {
+    public function getProvider() {
 
-        return substr(md5(uniqid(rand(), true)), 0, 64);
+        return $this->provider;
+
+    }
+
+    public function getStatus() {
+
+        return $this->status;
+
+    }
+
+    public function getObjects() {
+
+        return $this->objects;
+
+    }
+
+    public function getOptions() {
+
+        return $this->options;
 
     }
 

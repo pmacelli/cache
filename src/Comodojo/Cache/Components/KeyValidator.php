@@ -1,9 +1,7 @@
 <?php namespace Comodojo\Cache\Components;
 
-use \Comodojo\Exception\CacheException;
-
 /**
- * Cache provider interface
+ *
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -20,51 +18,23 @@ use \Comodojo\Exception\CacheException;
  * THE SOFTWARE.
  */
 
-trait TtlTrait {
+class KeyValidator {
 
     /**
-     * Default cache ttl
+     * Determines if the specified key is legal under PSR-6.
      *
-     * @var int
+     * @param string $key
+     *   The key to validate.
+     * @return bool
+     *   TRUE if the specified key is legal.
      */
-    public static $default_ttl = 3600;
+    public static function validateKey($key) {
 
-    /**
-     * Cache ttl (in seconds)
-     *
-     * @var int
-     */
-    protected $ttl;
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function getTtl() {
-
-        return $this->ttl;
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTtl($ttl = null) {
-
-        if ( is_null($ttl) ) {
-
-            $this->ttl = self::$default_ttl;
-
-        } else if ( is_int($ttl) ) {
-
-            $this->ttl = $ttl;
-
-        } else {
-
-            throw new CacheException("Invalid time to live");
-
+        if (!is_string($key) || empty($key) || preg_match('#[{}()/\\\@:]#', $key) > 0) {
+            return false;
         }
 
-        return $this;
+        return true;
 
     }
 

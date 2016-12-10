@@ -11,18 +11,11 @@
     stopOnFailure="false">
     <testsuites>
         <testsuite name="comodojo-cache-travis">
-            <file>tests/Cache/ApcTest.php</file>
-            <file>tests/Cache/FilesystemTest.php</file>
-            <file>tests/Cache/MemcachedTest.php</file>
-            <file>tests/Cache/PhpRedisTest.php</file>
-            <file>tests/Cache/DatabaseTest.php</file>
-            <file>tests/Cache/BackwardsTest.php</file>
-            <file>tests/Cache/CachePickFirstTest.php</file>
-            <file>tests/Cache/CachePickLastTest.php</file>
-            <file>tests/Cache/CachePickRandomTest.php</file>
-            <file>tests/Cache/CachePickAllTest.php</file>
-            <file>tests/Cache/CachePickByWeightTest.php</file>
-            <file>tests/Cache/CachePickTraverseTest.php</file>
+            <file>tests/Comodojo/Cache/ItemTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/MemoryTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/VoidTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/ApcuTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/ApcTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>
@@ -47,7 +40,7 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/</directory>
+            <directory suffix=".php">src/Comodojo/Cache/</directory>
         </whitelist>
     </filter>
     <logging>

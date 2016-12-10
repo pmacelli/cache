@@ -1,17 +1,14 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\IdTrait;
-use \Comodojo\Cache\Components\NamespaceTrait;
-use \Comodojo\Cache\Components\StatusSwitchTrait;
-use \Comodojo\Cache\Components\TimeTrait;
-use \Comodojo\Cache\Components\TtlTrait;
-use \Comodojo\Cache\Components\LoggerTrait;
-use \Comodojo\Cache\Components\ErrorStateTrait;
+use \Comodojo\Foundation\Logging\Manager as LogManager;
+use \Comodojo\Cache\Components\NullLogger;
+use \Psr\Cache\CacheItemPoolInterface;
+use \Psr\Cache\CacheItemInterface;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 
 /**
- * Cache controller
+ * Abstract provider implementation
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -28,15 +25,14 @@ use \Comodojo\Exception\CacheException;
  * THE SOFTWARE.
  */
 
-abstract class AbstractProvider implements ProviderInterface {
+abstract class AbstractProvider implements CacheItemPoolInterface {
 
-    use IdTrait;
-    use NamespaceTrait;
-    use StatusSwitchTrait;
-    use TimeTrait;
-    use TtlTrait;
-    use LoggerTrait;
-    use ErrorStateTrait;
+    /**
+     * Current logger
+     *
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * Class constructor
@@ -45,53 +41,46 @@ abstract class AbstractProvider implements ProviderInterface {
      */
     public function __construct(LoggerInterface $logger = null) {
 
-        try {
-
-            $this->setTime();
-
-            $this->setTtl();
-
-            $this->setCacheId();
-
-            $this->setLogger($logger);
-
-        } catch (CacheException $ce) {
-
-            throw $ce;
-
-        }
-
-    }
-
-    public function getType() {
-
-        return get_class($this);
+        $this->setLogger($logger);
 
     }
 
     /**
      * {@inheritdoc}
      */
-    abstract public function set($name, $data, $ttl = null);
+    public function getLogger() {
+
+        return $this->logger;
+
+    }
 
     /**
      * {@inheritdoc}
      */
-    abstract public function get($name);
+    public function setLogger(LoggerInterface $logger = null) {
 
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function delete($name = null);
+        $this->logger = is_null($logger) ? LogManager::create('cache',false)->getLogger() : $logger;
 
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function flush();
+        return $this;
 
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function status();
+    }
+
+    abstract public function getItem($key);
+
+    abstract public function getItems(array $keys = array());
+
+    abstract public function hasItem($key);
+
+    abstract public function clear();
+
+    abstract public function deleteItem($key);
+
+    abstract public function deleteItems(array $keys);
+
+    abstract public function save(CacheItemInterface $item);
+
+    abstract public function saveDeferred(CacheItemInterface $item);
+
+    abstract public function commit();
 
 }

@@ -1,7 +1,9 @@
 <?php namespace Comodojo\Cache\Components;
 
+use \DateTime;
+
 /**
- * Timestamp Trait
+ *
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -18,32 +20,47 @@
  * THE SOFTWARE.
  */
 
-trait InstanceTrait {
+trait StatefulTrait {
 
-    /**
-     * Local instance of handler
-     *
-     * @var mixed
-     */
-    protected $instance;
+    private $id;
 
-    /**
-     * Return the current instance
-     *
-     * @return mixed
-     */
-    public function getInstance() {
+    private $state = 0;
 
-        return $this->instance;
+    private $state_message;
+
+    private $state_time;
+
+    public function getId() {
+
+        return $this->id;
 
     }
 
-    /**
-     * Set the current instance
-     */
-    protected function setInstance($instance) {
+    public function getState() {
 
-        $this->instance = $instance;
+        return $this->state;
+
+    }
+
+    public function getStateMessage() {
+
+        return $this->state_message;
+
+    }
+
+    public function getStateTime() {
+
+        return $this->state_time;
+
+    }
+
+    public function setState($state, $message = null) {
+
+        $this->state = $state === self::CACHE_SUCCESS ? self::CACHE_SUCCESS : self::CACHE_ERROR;
+
+        $this->state_message = $message;
+
+        $this->state_time = new DateTime('now');
 
         return $this;
 

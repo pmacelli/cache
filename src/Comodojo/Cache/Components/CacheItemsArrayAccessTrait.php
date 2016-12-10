@@ -1,12 +1,10 @@
-<?php namespace Comodojo\Cache;
+<?php namespace Comodojo\Cache\Components;
 
-use \Comodojo\Cache\Providers\XCacheProvider;
-use \Psr\Log\LoggerInterface;
+use \Psr\Cache\CacheItemInterface;
+use \Comodojo\Exception\CacheException;
 
 /**
- * XCache cache class
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Foundation
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -21,21 +19,22 @@ use \Psr\Log\LoggerInterface;
  * THE SOFTWARE.
  */
 
-class XCacheCache extends XCacheProvider {
+trait CacheItemsArrayAccessTrait {
 
     /**
-     * Class constructor
+     * Assigns a value to index offset
      *
-     * @param LoggerInterface $logger
-     *
-     * @throws \Comodojo\Exception\CacheException
+     * @param string $index The offset to assign the value to
+     * @param mixed  $value The value to set
      */
-    public function __construct(LoggerInterface $logger = null) {
+     public function offsetSet($index, $value) {
 
-        parent::__construct($logger);
+        if ( ($value instanceof CacheItemInterface) == false ) {
+            throw new CacheException("Item value is not an instance of \Psr\Cache\CacheItemInterface");
+        }
 
-        $this->logger->notice("Use of XCacheCache is deprecated, please use \Comodojo\Cache\Providers\XCache instead.");
+        $this->data[$index] = $value;
 
-    }
+     }
 
 }
