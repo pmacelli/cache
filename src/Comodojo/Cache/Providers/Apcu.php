@@ -2,7 +2,7 @@
 
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Components\BasicCacheItemPoolTrait;
-use \Comodojo\Cache\Components\StatefulCacheItemPoolStatus;
+use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
 use \Comodojo\Exception\CacheException;
@@ -27,7 +27,7 @@ use \DateTime;
  * THE SOFTWARE.
  */
 
-class Apcu extends AbstractStatefulProvider {
+class Apcu extends AbstractEnhancedProvider {
 
     use BasicCacheItemPoolTrait;
 
@@ -35,15 +35,7 @@ class Apcu extends AbstractStatefulProvider {
 
         parent::__construct($logger);
 
-        if ( self::getApcuStatus() === false ) {
-
-            $error = "Apcu extension not available, disabling provider ".$this->getId()." administratively";
-
-            $this->logger->error($error);
-
-            $this->setState(self::CACHE_ERROR, $error);
-
-        }
+        $this->getApcuStatus();
 
         self::makeApcuCliCompatible();
 
@@ -132,13 +124,19 @@ class Apcu extends AbstractStatefulProvider {
 
     }
 
-    public function getStatus() {
+    public function getStats() {
 
         $info = apcu_cache_info(true);
 
         $entries = isset($info['num_entries']) ? $info['num_entries'] : null;
 
-        return new StatefulCacheItemPoolStatus('apcu', $this->getState(), $entries, $info);
+        return new EnhancedCacheItemPoolStats('apcu', $this->getState(), $entries, $info);
+
+    }
+
+    public function test() {
+
+        return $this->getApcuStatus();
 
     }
 
@@ -147,11 +145,25 @@ class Apcu extends AbstractStatefulProvider {
      *
      * @return  bool
      */
-    private static function getApcuStatus() {
+    private function getApcuStatus() {
 
         $apcu = extension_loaded('apcu');
 
-        return ( $apcu && ini_get('apc.enabled') );
+        if ( $apcu && ini_get('apc.enabled') ) {
+
+            $this->setState(self::CACHE_SUCCESS);
+
+            return true;
+
+        }
+
+        $error = "Apcu extension not available, disabling provider ".$this->getId()." administratively";
+
+        $this->logger->error($error);
+
+        $this->setState(self::CACHE_ERROR, $error);
+
+        return false;
 
     }
 

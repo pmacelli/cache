@@ -18,7 +18,7 @@
  * THE SOFTWARE.
  */
 
-class StatefulCacheItemPoolStatus {
+class EnhancedCacheItemPoolStats {
 
     protected $provider;
 
@@ -43,7 +43,7 @@ class StatefulCacheItemPoolStatus {
 
     }
 
-    public function getStatus() {
+    public function getStats() {
 
         return $this->status;
 

@@ -20,7 +20,7 @@ use \Psr\Cache\CacheItemPoolInterface;
  * THE SOFTWARE.
  */
 
-interface StatefulCacheItemPoolInterface extends CacheItemPoolInterface {
+interface EnhancedCacheItemPoolInterface extends CacheItemPoolInterface {
 
     const CACHE_SUCCESS = 0;
 
@@ -71,6 +71,8 @@ interface StatefulCacheItemPoolInterface extends CacheItemPoolInterface {
      */
     public function setState($state, $message = null);
 
+    public function test();
+
     public function getNamespace();
 
     public function setNamespace($namespace);
@@ -80,8 +82,8 @@ interface StatefulCacheItemPoolInterface extends CacheItemPoolInterface {
     /**
      * Disable provider
      *
-     * @return StatefulCacheItemPoolStatus
+     * @return EnhancedCacheItemPoolStats
      */
-    public function getStatus();
+    public function getStats();
 
 }

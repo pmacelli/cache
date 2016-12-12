@@ -2,7 +2,7 @@
 
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Components\BasicCacheItemPoolTrait;
-use \Comodojo\Cache\Components\StatefulCacheItemPoolStatus;
+use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
 use \Comodojo\Exception\CacheException;
@@ -27,7 +27,7 @@ use \DateTime;
  * THE SOFTWARE.
  */
 
-class Apc extends AbstractStatefulProvider {
+class Apc extends AbstractEnhancedProvider {
 
     use BasicCacheItemPoolTrait;
 
@@ -35,15 +35,7 @@ class Apc extends AbstractStatefulProvider {
 
         parent::__construct($logger);
 
-        if ( self::getApcStatus() === false ) {
-
-            $error = "Apc extension not available, disabling provider ".$this->getId()." administratively";
-
-            $this->logger->error($error);
-
-            $this->setState(self::CACHE_ERROR, $error);
-
-        }
+        $this->getApcStatus();
 
         self::makeApcCliCompatible();
 
@@ -132,13 +124,19 @@ class Apc extends AbstractStatefulProvider {
 
     }
 
-    public function getStatus() {
+    public function getStats() {
 
         $info = apc_cache_info("user", true);
 
         $entries = isset($info['num_entries']) ? $info['num_entries'] : null;
 
-        return new StatefulCacheItemPoolStatus('apc', $this->getState(), $entries, $info);
+        return new EnhancedCacheItemPoolStats('apc', $this->getState(), $entries, $info);
+
+    }
+
+    public function test() {
+
+        return $this->getApcStatus();
 
     }
 
@@ -147,11 +145,25 @@ class Apc extends AbstractStatefulProvider {
      *
      * @return  bool
      */
-    private static function getApcStatus() {
+    private function getApcStatus() {
 
         $apc = extension_loaded('apc');
 
-        return ( $apc && ini_get('apc.enabled') );
+        if ( $apc && ini_get('apc.enabled') ) {
+
+            $this->setState(self::CACHE_SUCCESS);
+
+            return true;
+
+        }
+
+        $error = "Apc extension not available, disabling provider ".$this->getId()." administratively";
+
+        $this->logger->error($error);
+
+        $this->setState(self::CACHE_ERROR, $error);
+
+        return false;
 
     }
 

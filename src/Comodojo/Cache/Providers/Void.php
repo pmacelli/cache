@@ -2,7 +2,7 @@
 
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Components\ItemIterator;
-use \Comodojo\Cache\Components\StatefulCacheItemPoolStatus;
+use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Psr\Cache\CacheItemInterface;
 use \Comodojo\Exception\CacheException;
 use \Exception;
@@ -25,7 +25,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class Void extends AbstractStatefulProvider {
+class Void extends AbstractEnhancedProvider {
 
     public function getItem($key) {
 
@@ -93,10 +93,15 @@ class Void extends AbstractStatefulProvider {
 
     }
 
-    public function getStatus() {
+    public function getStats() {
 
-        return new StatefulCacheItemPoolStatus('void');
+        return new EnhancedCacheItemPoolStats('void');
 
+    }
+
+    public function test() {
+        $this->setState(self::CACHE_SUCCESS);
+        return true;
     }
 
 }

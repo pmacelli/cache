@@ -108,21 +108,6 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
-    public function testClear() {
-
-        $item = $this->pool->getItem('Perfect');
-        $item->set('I\'m Ford!');
-        $this->pool->save($item);
-
-        $this->pool->clear();
-
-        $item = $this->pool->getItem('Perfect');
-
-        $this->assertFalse($item->isHit());
-        $this->assertNull($item->get());
-
-    }
-
     /**
      * Provides a set of test values for saving and retrieving.
      *
@@ -206,12 +191,45 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
-    public function testStatus() {
+    public function testStats() {
 
-        $status = $this->pool->getStatus();
+        $status = $this->pool->getStats();
 
-        $this->assertInstanceOf('\Comodojo\Cache\Components\StatefulCacheItemPoolStatus', $status);
+        $this->assertInstanceOf('\Comodojo\Cache\Components\EnhancedCacheItemPoolStats', $status);
 
     }
 
+    public function testSimulatedFailure() {
+
+        $status = $this->pool::CACHE_ERROR;
+
+        $message = 'this is a simulated failure';
+
+        $this->pool->setState($status, $message);
+
+        $this->assertEquals($status, $this->pool->getState());
+        $this->assertEquals($message, $this->pool->getStateMessage());
+        $this->assertInstanceOf('\DateTimeInterface', $this->pool->getStateTime());
+
+        $this->assertTrue($this->pool->test());
+
+        $this->assertEquals($this->pool::CACHE_SUCCESS, $this->pool->getState());
+        $this->assertNull($this->pool->getStateMessage());
+
+    }
+
+    public function testClear() {
+
+        $item = $this->pool->getItem('Perfect');
+        $item->set('I\'m Ford!');
+        $this->pool->save($item);
+
+        $this->pool->clear();
+
+        $item = $this->pool->getItem('Perfect');
+
+        $this->assertFalse($item->isHit());
+        $this->assertNull($item->get());
+
+    }
 }

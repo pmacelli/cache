@@ -2,7 +2,7 @@
 
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Components\BasicCacheItemPoolTrait;
-use \Comodojo\Cache\Components\StatefulCacheItemPoolStatus;
+use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
 use \Comodojo\Exception\CacheException;
@@ -27,7 +27,7 @@ use \DateTime;
  * THE SOFTWARE.
  */
 
-class Memory extends AbstractStatefulProvider {
+class Memory extends AbstractEnhancedProvider {
 
     use BasicCacheItemPoolTrait;
 
@@ -113,9 +113,9 @@ class Memory extends AbstractStatefulProvider {
 
     }
 
-    public function getStatus() {
+    public function getStats() {
 
-        return new StatefulCacheItemPoolStatus('memory', $this->getState(), count($this->data));
+        return new EnhancedCacheItemPoolStats('memory', $this->getState(), count($this->data));
 
     }
 
@@ -153,6 +153,11 @@ class Memory extends AbstractStatefulProvider {
             return false;
         }
 
+    }
+
+    public function test() {
+        $this->setState(self::CACHE_SUCCESS);
+        return true;
     }
 
 }

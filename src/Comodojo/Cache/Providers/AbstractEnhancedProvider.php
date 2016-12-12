@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\StatefulCacheItemPoolInterface;
+use \Comodojo\Cache\Components\EnhancedCacheItemPoolInterface;
 use \Comodojo\Cache\Components\StatefulTrait;
 use \Comodojo\Cache\Components\NamespaceTrait;
 
@@ -22,9 +22,9 @@ use \Comodojo\Cache\Components\NamespaceTrait;
  * THE SOFTWARE.
  */
 
-abstract class AbstractStatefulProvider
+abstract class AbstractEnhancedProvider
     extends AbstractProvider
-    implements StatefulCacheItemPoolInterface {
+    implements EnhancedCacheItemPoolInterface {
 
     use StatefulTrait;
     use NamespaceTrait;
@@ -39,7 +39,7 @@ abstract class AbstractStatefulProvider
 
     }
 
-    abstract public function getStatus();
+    abstract public function getStats();
 
     abstract public function clearNamespace();
 
