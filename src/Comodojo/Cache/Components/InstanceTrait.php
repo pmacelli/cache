@@ -1,9 +1,7 @@
 <?php namespace Comodojo\Cache\Components;
 
-use \Comodojo\Foundation\Validation\DataValidation;
-
 /**
- *
+ * 
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -20,21 +18,34 @@ use \Comodojo\Foundation\Validation\DataValidation;
  * THE SOFTWARE.
  */
 
-class KeyValidator {
+trait InstanceTrait {
 
     /**
-     * Determines if the specified key is legal under PSR-6.
+     * Local instance of handler
      *
-     * @param string $key
-     *   The key to validate.
-     * @return bool
-     *   TRUE if the specified key is legal.
+     * @var mixed
      */
-    public static function validateKey($key) {
+    protected $instance;
 
-        return DataValidation::validateString($key, function($data) {
-            return preg_match('#[{}()/\\\@:]#', $data) === 0;
-        });
+    /**
+     * Return the current instance
+     *
+     * @return mixed
+     */
+    public function getInstance() {
+
+        return $this->instance;
+
+    }
+
+    /**
+     * Set the current instance
+     */
+    protected function setInstance($instance) {
+
+        $this->instance = $instance;
+
+        return $this;
 
     }
 

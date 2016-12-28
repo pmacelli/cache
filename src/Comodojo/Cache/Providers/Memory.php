@@ -6,6 +6,7 @@ use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
 use \Comodojo\Exception\CacheException;
+use \Comodojo\Exception\InvalidCacheArgumentException;
 use \Exception;
 use \DateTime;
 

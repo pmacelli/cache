@@ -1,4 +1,4 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\Cache\Providers;
 
 use \Psr\Cache\CacheItemPoolInterface;
 
@@ -71,6 +71,16 @@ interface EnhancedCacheItemPoolInterface extends CacheItemPoolInterface {
      */
     public function setState($state, $message = null);
 
+    /**
+     * Test the pool
+     *
+     * Test should be used to ensure the status flag is setted correctly.
+     * If test is passed, the status should be == CACHE_SUCCESS, otherwise it
+     * should correspond to CACHE_ERROR
+     *
+     * @return bool
+     *
+     */
     public function test();
 
     public function getNamespace();

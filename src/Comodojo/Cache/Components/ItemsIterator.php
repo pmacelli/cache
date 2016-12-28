@@ -37,4 +37,11 @@ class ItemsIterator implements Iterator, ArrayAccess, Countable {
 
     private $data = [];
 
+    public function merge(array $data = []) {
+
+        $this->data = $data;
+        return $this;
+
+    }
+
 }

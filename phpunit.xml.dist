@@ -17,6 +17,7 @@
             <file>tests/Comodojo/Cache/Providers/ApcuTest.php</file>
             <file>tests/Comodojo/Cache/Providers/ApcTest.php</file>
             <file>tests/Comodojo/Cache/Providers/FilesystemTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/MemcachedTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>

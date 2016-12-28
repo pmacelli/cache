@@ -1,6 +1,5 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\EnhancedCacheItemPoolInterface;
 use \Comodojo\Cache\Components\StatefulTrait;
 use \Comodojo\Cache\Components\NamespaceTrait;
 

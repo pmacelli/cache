@@ -108,6 +108,25 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testMissDeleteItems() {
+
+        $item = $this->pool->getItem('Ford');
+        $item->set('I\'m perfect!');
+        $this->pool->save($item);
+
+        $item = $this->pool->getItem('Marvin');
+        $item->set('I\'m sad!');
+        $this->pool->save($item);
+
+        $this->assertFalse($this->pool->deleteItems(['Trillian','Ford','Marvin']));
+
+    }
+
+    public function testEmptyGetItems() {
+        $items = $this->pool->getItems([]);
+        $this->assertInstanceOf('\Traversable', $items);
+    }
+
     /**
      * Provides a set of test values for saving and retrieving.
      *

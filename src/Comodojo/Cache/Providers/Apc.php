@@ -6,6 +6,7 @@ use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
 use \Comodojo\Exception\CacheException;
+use \Comodojo\Exception\InvalidCacheArgumentException;
 use \Exception;
 use \DateTime;
 
@@ -32,6 +33,8 @@ class Apc extends AbstractEnhancedProvider {
     use BasicCacheItemPoolTrait;
 
     public function __construct(LoggerInterface $logger = null) {
+
+        self::checkApcAvailability();
 
         parent::__construct($logger);
 
@@ -147,9 +150,7 @@ class Apc extends AbstractEnhancedProvider {
      */
     private function getApcStatus() {
 
-        $apc = extension_loaded('apc');
-
-        if ( $apc && ini_get('apc.enabled') ) {
+        if ( ini_get('apc.enabled') ) {
 
             $this->setState(self::CACHE_SUCCESS);
 
@@ -164,6 +165,12 @@ class Apc extends AbstractEnhancedProvider {
         $this->setState(self::CACHE_ERROR, $error);
 
         return false;
+
+    }
+
+    private static function checkApcAvailability() {
+
+        if ( extension_loaded('apc') === false ) throw new CacheException("ext-apc not available");
 
     }
 
