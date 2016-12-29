@@ -101,7 +101,7 @@ class Memcached extends AbstractEnhancedProvider {
 
         $item = new Item($key, true);
 
-        return $item->set($data);
+        return $item->set(unserialize($data));
 
     }
 
@@ -136,7 +136,7 @@ class Memcached extends AbstractEnhancedProvider {
             array_walk($values, function ($value, $key) {
                 if ( is_null($value) ) return new Item($key);
                 $item = new Item($key, true);
-                return $item->set($value);
+                return $item->set(unserialize($value));
             });
 
         }
@@ -214,7 +214,7 @@ class Memcached extends AbstractEnhancedProvider {
 
         $shadowName = "$namespace-".$item->getKey();
 
-        return $this->getInstance()->set($shadowName, $item->getRaw(), $ttl);
+        return $this->getInstance()->set($shadowName, serialize($item->getRaw()), $ttl);
 
     }
 

@@ -133,12 +133,15 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
      * @return array
      */
     public function providerPrimitiveValues() {
+        $object = new \stdClass();
+        $object->name = 'Marvin';
         return [
             ['bar', 'string'],
             [1, 'integer'],
             [3.141592, 'double'],
             [['a', 'b', 'c'], 'array'],
             [['a' => 'A', 'b' => 'B', 'c' => 'C'], 'array'],
+            [$object, 'object']
         ];
     }
 
