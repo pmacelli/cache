@@ -1,4 +1,4 @@
-<?php namespace Comodojo\Cache\Providers;
+<?php namespace Comodojo\Cache\Traits;
 
 use \Comodojo\Exception\CacheException;
 use \Exception;

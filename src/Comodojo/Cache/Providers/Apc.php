@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cache\Providers;
 
 use \Comodojo\Cache\Item;
-use \Comodojo\Cache\Components\BasicCacheItemPoolTrait;
+use \Comodojo\Cache\Traits\BasicCacheItemPoolTrait;
 use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
@@ -133,7 +133,7 @@ class Apc extends AbstractEnhancedProvider {
 
         $entries = isset($info['num_entries']) ? $info['num_entries'] : null;
 
-        return new EnhancedCacheItemPoolStats('apc', $this->getState(), $entries, $info);
+        return new EnhancedCacheItemPoolStats($this->getId(), 'apc', $this->getState(), $entries, $info);
 
     }
 

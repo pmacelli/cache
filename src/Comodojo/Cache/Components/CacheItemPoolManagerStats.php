@@ -1,16 +1,14 @@
 <?php namespace Comodojo\Cache\Components;
 
-use \Comodojo\Cache\Traits\CacheItemsArrayAccessTrait;
 use \Comodojo\Foundation\DataAccess\ArrayAccessTrait;
 use \Comodojo\Foundation\DataAccess\CountableTrait;
 use \Comodojo\Foundation\DataAccess\IteratorTrait;
-use \Psr\Cache\CacheItemInterface;
 use \Iterator;
 use \ArrayAccess;
 use \Countable;
 
 /**
- * CacheItemInterface extension to handle namespaces
+ *
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -27,20 +25,17 @@ use \Countable;
  * THE SOFTWARE.
  */
 
-class ItemsIterator implements Iterator, ArrayAccess, Countable {
+class CacheItemPoolManagerStats implements Iterator, ArrayAccess, Countable {
 
     use CountableTrait;
     use IteratorTrait;
-    use ArrayAccessTrait, CacheItemsArrayAccessTrait {
-        CacheItemsArrayAccessTrait::offsetSet insteadof ArrayAccessTrait;
-    }
+    use ArrayAccessTrait;
 
     private $data = [];
 
-    public function merge(array $data = []) {
+    public function add(EnhancedCacheItemPoolStats $pool_stats) {
 
-        $this->data = $data;
-        return $this;
+        $this[$pool_stats->getId()] = $pool_stats;
 
     }
 

@@ -20,6 +20,8 @@
 
 class EnhancedCacheItemPoolStats {
 
+    protected $id;
+
     protected $provider;
 
     protected $status;
@@ -28,12 +30,19 @@ class EnhancedCacheItemPoolStats {
 
     protected $options = [];
 
-    public function __construct($provider, $status = 0, $objects = 0, $options = []) {
+    public function __construct($id, $provider, $status = 0, $objects = 0, array $options = []) {
 
+        $this->id = $id;
         $this->provider = $provider;
         $this->status = $status;
         $this->objects = $objects;
         $this->options = $options;
+
+    }
+
+    public function getId() {
+
+        return $this->id;
 
     }
 

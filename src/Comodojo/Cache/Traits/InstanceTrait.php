@@ -1,10 +1,9 @@
-<?php namespace Comodojo\Cache\Components;
-
-use \Psr\Cache\CacheItemInterface;
-use \Comodojo\Exception\CacheException;
+<?php namespace Comodojo\Cache\Traits;
 
 /**
- * @package     Comodojo Foundation
+ *
+ *
+ * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -19,22 +18,35 @@ use \Comodojo\Exception\CacheException;
  * THE SOFTWARE.
  */
 
-trait CacheItemsArrayAccessTrait {
+trait InstanceTrait {
 
     /**
-     * Assigns a value to index offset
+     * Local instance of handler
      *
-     * @param string $index The offset to assign the value to
-     * @param mixed  $value The value to set
+     * @var mixed
      */
-     public function offsetSet($index, $value) {
+    protected $instance;
 
-        if ( ($value instanceof CacheItemInterface) == false ) {
-            throw new CacheException("Item value is not an instance of \Psr\Cache\CacheItemInterface");
-        }
+    /**
+     * Return the current instance
+     *
+     * @return mixed
+     */
+    public function getInstance() {
 
-        $this->data[$index] = $value;
+        return $this->instance;
 
-     }
+    }
+
+    /**
+     * Set the current instance
+     */
+    protected function setInstance($instance) {
+
+        $this->instance = $instance;
+
+        return $this;
+
+    }
 
 }

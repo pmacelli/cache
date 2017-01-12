@@ -1,7 +1,8 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Components\StatefulTrait;
-use \Comodojo\Cache\Components\NamespaceTrait;
+use \Comodojo\Cache\Traits\StatefulTrait;
+use \Comodojo\Cache\Traits\NamespaceTrait;
+use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
 
 /**
  * Abstract stateful provider implementation

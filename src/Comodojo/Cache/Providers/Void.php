@@ -96,7 +96,7 @@ class Void extends AbstractEnhancedProvider {
 
     public function getStats() {
 
-        return new EnhancedCacheItemPoolStats('void');
+        return new EnhancedCacheItemPoolStats($this->getId(), 'void');
 
     }
 

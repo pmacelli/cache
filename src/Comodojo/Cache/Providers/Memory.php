@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cache\Providers;
 
 use \Comodojo\Cache\Item;
-use \Comodojo\Cache\Components\BasicCacheItemPoolTrait;
+use \Comodojo\Cache\Traits\BasicCacheItemPoolTrait;
 use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
@@ -116,7 +116,7 @@ class Memory extends AbstractEnhancedProvider {
 
     public function getStats() {
 
-        return new EnhancedCacheItemPoolStats('memory', $this->getState(), count($this->data));
+        return new EnhancedCacheItemPoolStats($this->getId(), 'memory', $this->getState(), count($this->data));
 
     }
 

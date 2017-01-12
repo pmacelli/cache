@@ -1,7 +1,10 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\Cache;
+
+use \Comodojo\Cache\Providers\AbstractProvider;
+use \Comodojo\Cache\Interfaces\CacheItemPoolManagerInterface;
+use \Comodojo\Cache\Tratis\NamespaceTrait;
 
 /**
- * 
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -18,35 +21,8 @@
  * THE SOFTWARE.
  */
 
-trait InstanceTrait {
+class Manager extends AbstractProvider implements CacheItemPoolManagerInterface {
 
-    /**
-     * Local instance of handler
-     *
-     * @var mixed
-     */
-    protected $instance;
-
-    /**
-     * Return the current instance
-     *
-     * @return mixed
-     */
-    public function getInstance() {
-
-        return $this->instance;
-
-    }
-
-    /**
-     * Set the current instance
-     */
-    protected function setInstance($instance) {
-
-        $this->instance = $instance;
-
-        return $this;
-
-    }
+    use NamespaceTrait;
 
 }

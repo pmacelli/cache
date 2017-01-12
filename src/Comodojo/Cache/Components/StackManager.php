@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Components;
 
-use \Comodojo\Cache\Providers\EnhancedCacheItemPoolInterface;
+use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
 use \Comodojo\Exception\CacheException;
 use \Exception;
 

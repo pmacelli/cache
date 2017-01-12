@@ -1,5 +1,6 @@
-<?php namespace Comodojo\Cache\Providers;
+<?php namespace Comodojo\Cache\Interfaces;
 
+use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
 use \Psr\Cache\CacheItemPoolInterface;
 
 /**

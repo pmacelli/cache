@@ -1,10 +1,10 @@
 <?php namespace Comodojo\Cache\Providers;
 
 use \Comodojo\Cache\Item;
-use \Comodojo\Cache\Components\BasicCacheItemPoolTrait;
+use \Comodojo\Cache\Traits\BasicCacheItemPoolTrait;
 use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
-use \Comodojo\Cache\Components\InstanceTrait;
+use \Comodojo\Cache\Traits\InstanceTrait;
 use \Comodojo\Cache\Components\ItemsIterator;
 use \Comodojo\Foundation\Validation\DataValidation;
 use \Comodojo\Foundation\Validation\DataFilter;
@@ -230,7 +230,7 @@ class Memcached extends AbstractEnhancedProvider {
 
         }
 
-        return new EnhancedCacheItemPoolStats('memcached', $this->getState(), $objects, $stats);
+        return new EnhancedCacheItemPoolStats($this->getId(), 'memcached', $this->getState(), $objects, $stats);
 
     }
 

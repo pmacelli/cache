@@ -1,5 +1,6 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\Cache\Traits;
 
+use \Comodojo\Cache\Components\KeyValidator;
 use \Comodojo\Exception\InvalidCacheArgumentException;
 
 /**

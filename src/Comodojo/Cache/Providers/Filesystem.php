@@ -1,7 +1,8 @@
 <?php namespace Comodojo\Cache\Providers;
 
 use \Comodojo\Cache\Item;
-use \Comodojo\Cache\Components\BasicCacheItemPoolTrait;
+use \Comodojo\Cache\Traits\BasicCacheItemPoolTrait;
+use \Comodojo\Cache\Traits\FilesystemBackendTrait;
 use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Comodojo\Cache\Components\KeyValidator;
 use \Psr\Cache\CacheItemInterface;
@@ -187,6 +188,7 @@ class Filesystem extends AbstractEnhancedProvider {
     public function getStats() {
 
         return new EnhancedCacheItemPoolStats(
+            $this->getId(), 
             'filesystem',
             $this->getState(),
             count(glob($this->cache_folder."*.cache")),

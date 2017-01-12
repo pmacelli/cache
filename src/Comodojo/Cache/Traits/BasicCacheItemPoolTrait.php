@@ -1,4 +1,4 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\Cache\Traits;
 
 use \Comodojo\Cache\Components\ItemsIterator;
 use \Psr\Cache\CacheItemInterface;

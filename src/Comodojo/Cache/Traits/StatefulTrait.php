@@ -1,4 +1,4 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\Cache\Traits;
 
 use \DateTime;
 
