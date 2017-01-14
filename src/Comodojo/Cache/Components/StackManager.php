@@ -1,8 +1,10 @@
 <?php namespace Comodojo\Cache\Components;
 
 use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
+use \Comodojo\Cache\Traits\FlapIntervalTrait;
 use \Comodojo\Exception\CacheException;
 use \Exception;
+use \FilterIterator;
 
 /**
  *
@@ -21,153 +23,135 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class StackManager {
+class StackManager extends FilterIterator {
 
-    private $stack = [];
+    use FlapIntervalTrait;
 
-    private $weights = [];
+    public function accept() {
 
-    private $failures = [];
+        $provider = $this->getInnerIterator()->current();
+        $provider = $provider[0];
 
-    private $flap_interval = 600;
+        $status = $provider->getState();
 
-    public function __construct($flap_interval) {
+        if (
+            $status === $provider::CACHE_ERROR &&
+            date_create('now')->diff($provider->getStateTime())->format('%s') > $this->getFlapInterval()
+        ) {
 
-        $this->flap_interval = $flap_interval;
+            return $provider->test();
 
-    }
+        }
 
-    public function getFlapInterval() {
-
-        return $this->flap_interval;
-
-    }
-
-    public function setFlapInterval($ttl) {
-
-        $this->flap_interval = $ttl;
-
-        return $this;
+        return $status == $provider::CACHE_SUCCESS ? true : false;
 
     }
 
-    public function add(EnhancedCacheItemPoolInterface $provider, $weight = 0) {
+    public function add(EnhancedCacheItemPoolInterface $provider, $weight) {
 
-        $id = $provider->getCacheId();
+        $pools = $this->getInnerIterator();
 
-        if ( array_key_exists($id, $this->stack) ) throw new CacheException("Provider $id already registered");
+        $id = $provider->getId();
 
-        $this->stack[$id] = $provider;
-
-        $this->weights[$id] = $weight;
-
-        return $id;
+        $pools[$id] = [$provider, $weight];
 
     }
 
     public function remove($id) {
 
-        if ( array_key_exists($id, $this->stack) && array_key_exists($id, $this->weights) ) {
+        $pools = $this->getInnerIterator();
 
-            unset($this->stack[$id]);
-
-            unset($this->weights[$id]);
-
-            if ( array_key_exists($id, $this->failures) ) unset($this->failures[$id]);
-
-        } else {
-
-            throw new CacheException("Provider not registered");
-
+        if ( isset($pools[$id]) ) {
+            unset($pools[$id]);
+            return true;
         }
+
+        throw new CacheException("Provider $id not registered into the stack");
 
     }
 
     public function get($id) {
 
-        if ( array_key_exists($id, $this->stack) && array_key_exists($id, $this->weights) ) {
+        $pools = $this->getInnerIterator();
 
-            return $this->stack[$id];
+        if ( isset($pools[$id]) ) return $pools[$id][0];
 
-        }
-
-        throw new CacheException("Provider not registered");
+        throw new CacheException("Provider $id not registered into the stack");
 
     }
 
-    public function disable($id) {
+    public function getAll($enabled = false) {
 
-        if ( array_key_exists($id, $this->stack) && array_key_exists($id, $this->weights) ) {
+        $result = [];
 
-            $this->stack[$id]->disable();
+        if ( $enabled === true ) {
 
-            $this->failures[$id] = time();
+            foreach($this as $id => $provider) $result[$id] = $provider[0];
 
         } else {
 
-            throw new CacheException("Provider not registered");
+            foreach($this->getInnerIterator() as $id => $provider) $result[$id] = $provider[0];
 
         }
 
-    }
-
-    public function enable($id) {
-
-        if ( array_key_exists($id, $this->stack) && array_key_exists($id, $this->weights) ) {
-
-            $this->stack[$id]->enable();
-
-            if ( array_key_exists($id, $this->failures) ) unset($this->failures[$id]);
-
-        } else {
-
-            throw new CacheException("Provider not registered");
-
-        }
+        return $result;
 
     }
 
-    public function getAll($enabled=true) {
+    public function getCurrent() {
 
-        return $enabled ? $this->getEnabled() : $this->stack;
-
-    }
-
-    public function getRandom() {
-
-        return $this->stack[array_rand($this->getEnabled())];
+        $current = $this->current();
+        return $current[0];
 
     }
 
-    public function getFirst() {
+    public function has($id) {
 
-        $providers = $this->getEnabled();
+        $pools = $this->getInnerIterator();
 
-        if ( empty($providers) ) return null;
-
-        reset($providers);
-
-        return current($providers);
+        return isset($pools[$id]);
 
     }
 
-    public function getLast() {
+    public function getRandomProvider() {
 
-        $providers = $this->getEnabled();
+        $stack = $this->getAll(true);
 
-        if ( empty($providers) ) return null;
+        $rand = array_rand($stack);
 
-        reset($providers);
+        return $stack[$rand];
+
+    }
+
+    public function getFirstProvider() {
+
+        $this->rewind();
+
+        $current = $this->current();
+
+        return $current[0];
+
+        // $providers = $this->getAll();
+
+        // return current($providers);
+
+    }
+
+    public function getLastProvider() {
+
+        $this->rewind();
+
+        $providers = $this->getAll(true);
 
         return end($providers);
 
     }
 
-    public function getByWeight() {
+    public function getHeavyProvider() {
 
-        $providers = $this->getEnabled();
+        $providers = $this->getAll(true);
 
-        $weights = array_intersect_key($this->weights, $providers);
+        $weights = $this->getWeights();
 
         asort($weights);
 
@@ -177,29 +161,13 @@ class StackManager {
 
     }
 
-    private function checkCacheFlap($cache_id, $cache) {
+    private function getWeights() {
 
-        if ( $cache->isEnabled() === false && array_key_exists($cache_id, $this->failures) ) {
+        $result = [];
 
-            if ( $this->failures[$cache_id] < time() + $this->flap_interval ) {
-                $cache->enable();
-                unset($this->failures[$cache_id]);
-            }
+        foreach($this as $id => $provider) $result[$id] = $provider[1];
 
-        }
-
-    }
-
-    private function getEnabled() {
-
-        $return = array();
-
-        foreach ($this->stack as $id => $cache) {
-            $this->checkCacheFlap($id, $cache);
-            if ( $cache->isEnabled() ) $return[$id] = $cache;
-        }
-
-        return $return;
+        return $result;
 
     }
 

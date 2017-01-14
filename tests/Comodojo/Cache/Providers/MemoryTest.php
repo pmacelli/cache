@@ -1,9 +1,9 @@
 <?php namespace Comodojo\Cache\Tests\Providers;
 
-use \Comodojo\Cache\Tests\Utils\ProviderCommonCases;
+use \Comodojo\Cache\Tests\Utils\EnhancedProviderCommonCases;
 use \Comodojo\Cache\Providers\Memory;
 
-class MemoryTest extends ProviderCommonCases {
+class MemoryTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {
 

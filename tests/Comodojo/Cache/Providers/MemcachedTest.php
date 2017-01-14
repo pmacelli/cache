@@ -1,9 +1,9 @@
 <?php namespace Comodojo\Cache\Tests\Providers;
 
-use \Comodojo\Cache\Tests\Utils\ProviderCommonCases;
+use \Comodojo\Cache\Tests\Utils\EnhancedProviderCommonCases;
 use \Comodojo\Cache\Providers\Memcached;
 
-class MemcachedTest extends ProviderCommonCases {
+class MemcachedTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {
 

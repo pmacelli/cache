@@ -28,7 +28,7 @@ trait NamespaceTrait {
      *
      * @var string
      */
-    private $namespace = "GLOBAL";
+    protected $namespace = "GLOBAL";
 
     /**
      * {@inheritdoc}

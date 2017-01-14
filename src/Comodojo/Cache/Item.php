@@ -180,4 +180,10 @@ class Item implements CacheItemInterface {
 
     }
 
+    public function __toString() {
+
+        return serialize($this->get());
+
+    }
+
 }

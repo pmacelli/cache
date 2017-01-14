@@ -1,6 +1,7 @@
 <?php namespace Comodojo\Cache\Interfaces;
 
 use \Psr\Cache\CacheItemPoolInterface;
+use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
 
 /**
  * CacheItemPoolInterface extension to handle it's state
@@ -22,6 +23,20 @@ use \Psr\Cache\CacheItemPoolInterface;
 
 interface CacheItemPoolManagerInterface extends CacheItemPoolInterface {
 
+    public function getNamespace();
+
+    public function setNamespace($namespace);
+
+    public function clearNamespace();
+
+    public function addProvider(EnhancedCacheItemPoolInterface $provider, $weight);
+
+    public function removeProvider($id);
+
+    public function getProvider($id);
+
+    public function getProviders($enabled);
+
     /**
      * get the last selected provider
      *
@@ -30,11 +45,6 @@ interface CacheItemPoolManagerInterface extends CacheItemPoolInterface {
      */
     public function getSelectedProvider();
 
-    public function getNamespace();
-
-    public function setNamespace($namespace);
-
-    public function clearNamespace();
 
     /**
      * Get stats from all providers

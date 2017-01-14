@@ -1,9 +1,9 @@
 <?php namespace Comodojo\Cache\Tests\Providers;
 
-use \Comodojo\Cache\Tests\Utils\ProviderCommonCases;
+use \Comodojo\Cache\Tests\Utils\EnhancedProviderCommonCases;
 use \Comodojo\Cache\Providers\Apcu;
 
-class ApcuTest extends ProviderCommonCases {
+class ApcuTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {
 

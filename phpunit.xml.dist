@@ -19,6 +19,7 @@
             <file>tests/Comodojo/Cache/Providers/FilesystemTest.php</file>
             <file>tests/Comodojo/Cache/Providers/MemcachedTest.php</file>
             <file>tests/Comodojo/Cache/Providers/PhpRedisTest.php</file>
+            <file>tests/Comodojo/Cache/ManagerAsProviderTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>

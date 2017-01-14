@@ -43,6 +43,8 @@ abstract class AbstractEnhancedProvider
 
     abstract public function clearNamespace();
 
+    abstract public function test();
+
     /**
      * Generate a unique id (64 chars)
      *
