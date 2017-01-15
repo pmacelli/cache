@@ -9,6 +9,7 @@ use \Comodojo\Cache\Components\ItemsIterator;
 use \Comodojo\Foundation\Validation\DataValidation;
 use \Comodojo\Foundation\Validation\DataFilter;
 use \Psr\Cache\CacheItemInterface;
+use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 use \Comodojo\Exception\InvalidCacheArgumentException;
 use \Memcached as MemcachedInstance;

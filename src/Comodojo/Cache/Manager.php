@@ -2,6 +2,7 @@
 
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Providers\AbstractProvider;
+use \Comodojo\Cache\Providers\Void;
 use \Comodojo\Cache\Interfaces\CacheItemPoolManagerInterface;
 use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
 use \Comodojo\Cache\Traits\NamespaceTrait;
@@ -9,6 +10,7 @@ use \Comodojo\Cache\Traits\BasicCacheItemPoolTrait;
 use \Comodojo\Cache\Components\StackManager;
 use \Comodojo\Foundation\Validation\DataFilter;
 use \Psr\Cache\CacheItemInterface;
+use \Psr\Log\LoggerInterface;
 use \ArrayObject;
 
 /**
@@ -72,6 +74,10 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
     protected $align_cache;
 
+    protected $void;
+
+    protected $selected;
+
     public function __construct(
         $pick_mode = null,
         LoggerInterface $logger = null,
@@ -89,6 +95,10 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
         $this->stack->setFlapInterval($flap_interval);
 
         parent::__construct($logger);
+
+        $this->void = new Void($this->logger);
+
+        $this->logger->info("Cache manager online; pick mode ".$this->pick_mode);
 
     }
 
@@ -120,7 +130,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
     public function getSelectedProvider() {
 
-        return $this->stack->getCurrent();
+        return $this->selected === null ? $this->void : $this->selected;
 
     }
 
@@ -182,7 +192,14 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         foreach ($this->stack as $provider) {
 
-            $result[] = $provider[0]->save($item);
+            $pro = $provider[0];
+
+            $provider_result = $pro->save($item);
+
+            $this->logger->debug("Saving item ".$item->getKey()." into provider ".
+                $pro->getId().": ".($provider_result ? "OK" : "NOK - ".$pro->getStateMessage()));
+
+            $result[] = $provider_result;
 
         }
 
@@ -249,7 +266,9 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         }
 
-        return $provider;
+        $this->selected = $provider == null ? $this->void : $provider;
+
+        return $this->selected;
 
     }
 
@@ -265,7 +284,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         } else {
 
-            $result = $this->traverse($key);
+            $result = $this->traverse($mode, $key);
 
         }
 
@@ -293,6 +312,9 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
                 $result[] = $provider[0]->getItem($key);
 
+                // selected provider has no sense in this case
+                $this->selected = $provider[0];
+
             }
 
             if ( count(array_unique($result)) == 1 ) return $result[0];
@@ -305,6 +327,9 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
                 $result[] = $provider[0]->hasItem($key);
 
+                // selected provider has no sense in this case
+                $this->selected = $provider[0];
+
             }
 
             return !in_array(false, $result);
@@ -313,19 +338,55 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
     }
 
-    protected function traverse($key) {
+    protected function traverse($mode, $key) {
 
         $this->stack->rewind();
 
-        foreach ($this->stack as $provider) {
+        if ( $mode == 'GET' ) {
 
-            $item = $provider[0]->getItem($key);
+            foreach ($this->stack as $provider) {
 
-            if ( $item->isHit() ) return $item;
+                $item = $provider[0]->getItem($key);
+
+                if ( $item->isHit() ) {
+
+                    // selected provider has no sense in this case
+                    $this->selected = $provider[0];
+
+                    return $item;
+
+                }
+
+            }
+
+            // selected provider has no sense in this case
+            $this->selected = $this->void;
+
+            return new Item($key);
+
+        } else {
+
+            foreach ($this->stack as $provider) {
+
+                $item = $provider[0]->hasItem($key);
+
+                if ( $item === true ) {
+
+                    // selected provider has no sense in this case
+                    $this->selected = $provider[0];
+
+                    return true;
+
+                }
+
+            }
+
+            // selected provider has no sense in this case
+            $this->selected = $this->void;
+
+            return false;
 
         }
-
-        return new Item($key);
 
     }
 

@@ -143,7 +143,9 @@ class StackManager extends FilterIterator {
 
         $providers = $this->getAll(true);
 
-        return end($providers);
+        $provider = end($providers);
+
+        return $provider;
 
     }
 

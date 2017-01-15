@@ -1,4 +1,4 @@
-<?php namespace Comodojo\Cache\Tests\Providers;
+<?php namespace Comodojo\Cache\Tests\Manager;
 
 use \Comodojo\Cache\Tests\Utils\ProviderCommonCases;
 use \Comodojo\Cache\Manager;

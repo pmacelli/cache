@@ -4,6 +4,7 @@ use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Components\ItemIterator;
 use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Psr\Cache\CacheItemInterface;
+use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
 use \Comodojo\Exception\InvalidCacheArgumentException;
 use \Exception;

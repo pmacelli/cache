@@ -10,7 +10,13 @@
     processIsolation="false"
     stopOnFailure="false">
     <testsuites>
-        <testsuite name="comodojo-cache-travis">
+        <testsuite name="comodojo-cache-manager">
+            <file>tests/Comodojo/Cache/Manager/ManagerAsProviderTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickFirstTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickLastTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickTraverseTest.php</file>
+        </testsuite>
+        <testsuite name="comodojo-cache-providers">
             <file>tests/Comodojo/Cache/ItemTest.php</file>
             <file>tests/Comodojo/Cache/Providers/MemoryTest.php</file>
             <file>tests/Comodojo/Cache/Providers/VoidTest.php</file>
@@ -19,7 +25,6 @@
             <file>tests/Comodojo/Cache/Providers/FilesystemTest.php</file>
             <file>tests/Comodojo/Cache/Providers/MemcachedTest.php</file>
             <file>tests/Comodojo/Cache/Providers/PhpRedisTest.php</file>
-            <file>tests/Comodojo/Cache/ManagerAsProviderTest.php</file>
         </testsuite>
     </testsuites>
     <testsuites>

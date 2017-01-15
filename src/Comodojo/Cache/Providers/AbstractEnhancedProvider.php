@@ -3,6 +3,7 @@
 use \Comodojo\Cache\Traits\StatefulTrait;
 use \Comodojo\Cache\Traits\NamespaceTrait;
 use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
+use \Psr\Log\LoggerInterface;
 
 /**
  * Abstract stateful provider implementation
