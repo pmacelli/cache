@@ -7,7 +7,7 @@ class FilesystemTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {
 
-        $cache_folder = __DIR__ . "/../../../localcache/";
+        $cache_folder = realpath(__DIR__ . "/../../../")."/localcache";
 
         $this->pool = new Filesystem($cache_folder);
 

@@ -1,16 +1,14 @@
 <?php namespace Comodojo\Cache\Providers;
 
+use \Comodojo\Cache\Drivers\Void as VoidDriver;
 use \Comodojo\Cache\Item;
-use \Comodojo\Cache\Components\ItemIterator;
 use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
-use \Psr\Cache\CacheItemInterface;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Exception\CacheException;
-use \Comodojo\Exception\InvalidCacheArgumentException;
 use \Exception;
 
 /**
- * A useless null provider
+ * Apcu provider
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -29,81 +27,24 @@ use \Exception;
 
 class Void extends AbstractEnhancedProvider {
 
-    public function getItem($key) {
+    public function __construct(LoggerInterface $logger = null) {
 
-        return new Item($key);
+        $this->driver = new VoidDriver();
 
-    }
-
-    public function getItems(array $keys = []) {
-
-        $items = new ItemsIterator();
-
-        foreach ($keys as $key) {
-            $items[$key] = new Item($key);
-        }
-
-        return $items;
-
-    }
-
-    public function hasItem($key) {
-
-        return false;
-
-    }
-
-    public function clear() {
-
-        return true;
-
-    }
-
-    public function clearNamespace() {
-
-        return true;
-
-    }
-
-    public function deleteItem($key) {
-
-        return true;
-
-    }
-
-    public function deleteItems(array $keys) {
-
-        return true;
-
-    }
-
-    public function save(CacheItemInterface $item) {
-
-        return true;
-
-    }
-
-    public function saveDeferred(CacheItemInterface $item) {
-
-        return true;
-
-    }
-
-    public function commit() {
-
-        return true;
+        parent::__construct($logger);
 
     }
 
     public function getStats() {
 
-        return new EnhancedCacheItemPoolStats($this->getId(), 'void');
+        return new EnhancedCacheItemPoolStats(
+            $this->getId(),
+            $this->driver->getName(),
+            $this->getState(),
+            0,
+            []
+        );
 
-    }
-
-    public function test() {
-        $this->setState(self::CACHE_SUCCESS);
-        return true;
     }
 
 }

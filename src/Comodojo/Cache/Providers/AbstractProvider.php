@@ -1,7 +1,6 @@
 <?php namespace Comodojo\Cache\Providers;
 
 use \Comodojo\Foundation\Logging\Manager as LogManager;
-use \Comodojo\Cache\Components\NullLogger;
 use \Psr\Cache\CacheItemPoolInterface;
 use \Psr\Cache\CacheItemInterface;
 use \Psr\Log\LoggerInterface;

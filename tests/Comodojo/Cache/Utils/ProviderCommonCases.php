@@ -94,7 +94,7 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
 
     public function testEmptyGetItems() {
         $items = $this->pool->getItems([]);
-        $this->assertInstanceOf('\Traversable', $items);
+        $this->assertInternalType('array', $items);
     }
 
     /**
@@ -194,6 +194,22 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
         $item = $this->pool->getItem('Perfect');
 
         $this->assertFalse($item->isHit());
+        $this->assertNull($item->get());
+
+    }
+
+    public function testStoreNullValue() {
+
+        $item = $this->pool->getItem('Slarti');
+        $this->assertFalse($item->isHit());
+
+        $item->set(null);
+        $item->expiresAfter(100);
+        $this->assertTrue($this->pool->save($item));
+
+        $item = $this->pool->getItem('Slarti');
+
+        $this->assertTrue($item->isHit());
         $this->assertNull($item->get());
 
     }

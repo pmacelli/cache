@@ -27,7 +27,7 @@ trait BasicCacheItemPoolTrait {
 
     public function getItems(array $keys = []) {
 
-        $items = new ItemsIterator();
+        $items = [];
 
         foreach ($keys as $key) {
 
