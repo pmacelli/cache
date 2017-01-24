@@ -158,7 +158,7 @@ class PhpRedis extends AbstractDriver {
 
                 if ( $scope === false ) return false;
 
-                return (bool) $this->getInstance()->delete($scope);
+                return (bool) $this->getInstance()->delete($namespace);
 
             }
 
@@ -188,7 +188,7 @@ class PhpRedis extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key => $value) {
+        foreach ($key_values as $key => $value) {
             $result[] = $this->set($key, $namespace, $value, $ttl);
         }
 

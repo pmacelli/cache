@@ -107,7 +107,7 @@ class Memory extends AbstractDriver {
         $result = [];
 
         foreach ($key_values as $key => $value) {
-            $result[$key] = $this->set($key, $namespace);
+            $result[$key] = $this->set($key, $namespace, $value, $ttl);
         }
 
         return !in_array(false, $result);

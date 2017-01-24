@@ -97,7 +97,7 @@ class Apc extends AbstractDriver {
 
             if ( $scope === false ) return false;
 
-            return apc_delete($scope);
+            return apc_delete($namespace);
 
         }
 
@@ -144,7 +144,9 @@ class Apc extends AbstractDriver {
             $shadowNames["$scope-$key"] = $value;
         }
 
-        return apc_store($shadowNames, null, $ttl);
+        $data = apc_store($shadowNames, null, $ttl);
+
+        return empty($data) ? true : false;
 
     }
 

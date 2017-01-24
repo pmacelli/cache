@@ -1,7 +1,8 @@
-<?php namespace Comodojo\Cache\Components;
+<?php namespace Comodojo\SimpleCache\Components;
 
-use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
-use \Comodojo\Exception\CacheException;
+use \Comodojo\Cache\Components\AbstractStackManager;
+use \Comodojo\SimpleCache\Interfaces\EnhancedSimpleCacheInterface;
+use \Comodojo\Exception\SimpleCacheException;
 use \Exception;
 
 /**
@@ -23,7 +24,7 @@ use \Exception;
 
 class StackManager extends AbstractStackManager {
 
-    public function add(EnhancedCacheItemPoolInterface $provider, $weight) {
+    public function add(EnhancedSimpleCacheInterface $provider, $weight) {
 
         parent::genericAdd($provider, $weight);
 
@@ -37,7 +38,7 @@ class StackManager extends AbstractStackManager {
 
         } catch (Exception $e) {
 
-            throw new CacheException($e->getMessage());
+            throw new SimpleCacheException($e->getMessage());
 
         }
 
@@ -51,7 +52,7 @@ class StackManager extends AbstractStackManager {
 
         } catch (Exception $e) {
 
-            throw new CacheException($e->getMessage());
+            throw new SimpleCacheException($e->getMessage());
 
         }
 

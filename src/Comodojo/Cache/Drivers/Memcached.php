@@ -101,7 +101,7 @@ class Memcached extends AbstractDriver {
 
             if ( $scope === false ) return false;
 
-            return $this->getInstance()->delete($scope);
+            return $this->getInstance()->delete($namespace);
 
         }
 

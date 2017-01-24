@@ -15,6 +15,16 @@
             <file>tests/Comodojo/Cache/Manager/ManagerPickFirstTest.php</file>
             <file>tests/Comodojo/Cache/Manager/ManagerPickLastTest.php</file>
             <file>tests/Comodojo/Cache/Manager/ManagerPickTraverseTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickRandomTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickAllTest.php</file>
+        </testsuite>
+        <testsuite name="comodojo-simplecache-manager">
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerAsProviderTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickFirstTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickLastTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickTraverseTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickRandomTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickAllTest.php</file>
         </testsuite>
         <testsuite name="comodojo-cache-providers">
             <file>tests/Comodojo/Cache/ItemTest.php</file>
@@ -26,30 +36,19 @@
             <file>tests/Comodojo/Cache/Providers/MemcachedTest.php</file>
             <file>tests/Comodojo/Cache/Providers/PhpRedisTest.php</file>
         </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="comodojo-cache-unsupported">
-            <file>tests/Cache/XCacheTest.php</file>
-        </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="comodojo-cache-unstable">
-            <file>tests/Cache/DatabaseTest.php</file>
-        </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="comodojo-cache-apc">
-            <file>tests/Cache/ApcTest.php</file>
-        </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="comodojo-cache-all">
-            <directory>tests/Cache/</directory>
+        <testsuite name="comodojo-simplecache-providers">
+            <file>tests/Comodojo/SimpleCache/Providers/MemoryTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/VoidTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/ApcuTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/ApcTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/FilesystemTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/MemcachedTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/PhpRedisTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/Comodojo/Cache/</directory>
+            <directory suffix=".php">src/Comodojo/</directory>
         </whitelist>
     </filter>
     <logging>

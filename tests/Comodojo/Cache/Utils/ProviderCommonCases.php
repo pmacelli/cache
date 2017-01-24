@@ -111,7 +111,8 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
             [3.141592, 'double'],
             [['a', 'b', 'c'], 'array'],
             [['a' => 'A', 'b' => 'B', 'c' => 'C'], 'array'],
-            [$object, 'object']
+            [$object, 'object'],
+            [null, 'NULL']
         ];
     }
 
@@ -124,7 +125,7 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
      * @dataProvider providerPrimitiveValues
      */
     public function testExpiresAt($value) {
-
+        $this->pool->clear();
         $item = $this->pool->getItem('foo');
         $item->set($value)
             ->expiresAt(new DateTime('-1 minute'));
@@ -158,6 +159,11 @@ class ProviderCommonCases extends \PHPUnit_Framework_TestCase {
         $item = $this->pool->getItem('foo');
         $this->assertEquals($value, $item->get());
         $this->assertTrue($item->isHit());
+
+        $this->assertTrue($this->pool->clearNamespace());
+
+        $item = $this->pool->getItem('foo');
+        $this->assertFalse($item->isHit());
 
     }
 

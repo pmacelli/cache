@@ -136,7 +136,7 @@ class FilesystemXattr extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key => $value) {
+        foreach ($key_values as $key => $value) {
             $result[] = $this->set($key, $namespace, $value, $ttl);
         }
 

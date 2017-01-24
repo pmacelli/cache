@@ -97,7 +97,7 @@ class Apcu extends AbstractDriver {
 
             if ( $scope === false ) return false;
 
-            return apcu_delete($scope);
+            return apcu_delete($namespace);
 
         }
 
@@ -144,7 +144,9 @@ class Apcu extends AbstractDriver {
             $shadowNames["$scope-$key"] = $value;
         }
 
-        return apcu_store($shadowNames, null, $ttl);
+        $data = apcu_store($shadowNames, null, $ttl);
+
+        return empty($data) ? true : false;
 
     }
 

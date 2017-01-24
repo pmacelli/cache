@@ -1,7 +1,7 @@
-<?php namespace Comodojo\Cache\Interfaces;
+<?php namespace Comodojo\SimpleCache\Interfaces;
 
-use \Psr\Cache\CacheItemPoolInterface;
-use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
+use \Psr\SimpleCache\CacheInterface;
+use \Comodojo\SimpleCache\Interfaces\EnhancedSimpleCacheInterface;
 
 /**
  * CacheItemPoolInterface extension to handle it's state
@@ -21,7 +21,7 @@ use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
  * THE SOFTWARE.
  */
 
-interface CacheItemPoolManagerInterface extends CacheItemPoolInterface {
+interface SimpleCacheManagerInterface extends CacheInterface {
 
     /**
      * Select the first (enabled) provider in queue, do not traverse the queue.
@@ -60,7 +60,7 @@ interface CacheItemPoolManagerInterface extends CacheItemPoolInterface {
 
     public function clearNamespace();
 
-    public function addProvider(EnhancedCacheItemPoolInterface $provider, $weight);
+    public function addProvider(EnhancedSimpleCacheInterface $provider, $weight);
 
     public function removeProvider($id);
 

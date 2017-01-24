@@ -1,33 +1,27 @@
-<?php namespace Comodojo\Cache\Tests\Manager;
+<?php namespace Comodojo\SimpleCache\Tests\Manager;
 
-use \Comodojo\Cache\Tests\Utils\ProviderCommonCases;
-use \Comodojo\Cache\Manager;
-use \Comodojo\Cache\Providers\Apc;
-use \Comodojo\Cache\Providers\Memcached;
+use \Comodojo\SimpleCache\Tests\Utils\SimpleCacheCommonCases;
+use \Comodojo\SimpleCache\Manager;
+use \Comodojo\SimpleCache\Providers\Apc;
+use \Comodojo\SimpleCache\Providers\Memcached;
 
-class ManagerAsProviderTest extends ProviderCommonCases {
+class ManagerAsProviderTest extends SimpleCacheCommonCases {
 
     protected function setUp() {
 
         $apc = new Apc();
         $memcached = new Memcached('127.0.0.1');
 
-        $this->pool = new Manager();
-        $this->pool
+        $this->provider = new Manager();
+        $this->provider
             ->addProvider($apc, 20)
             ->addProvider($memcached, 10);
 
     }
 
-    protected function tearDown() {
-
-        unset($this->pool);
-
-    }
-
     public function testManagerStats() {
 
-        $stats = $this->pool->getStats();
+        $stats = $this->provider->getStats();
 
         $this->assertInternalType('array', $stats);
 

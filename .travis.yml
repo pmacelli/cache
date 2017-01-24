@@ -6,9 +6,6 @@ php:
   - 7.1
   - hhvm
 
-env:
-  - SUITE=comodojo-cache-travis
-
 services:
   - memcached
   - redis-server
@@ -21,15 +18,13 @@ before_install:
   - if [[ $TRAVIS_PHP_VERSION =~ 5.[456] ]] ; then echo yes | pecl install apcu-4.0.10; fi;
   - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then pecl config-set preferred_state beta; echo yes | pecl install apcu; fi;
   - travis_retry composer self-update
-  - mysql -u root < $TRAVIS_BUILD_DIR/tests/resources/DatabaseCacheCreateSchema.sql
-  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('comodojo') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 
 install:
   - travis_retry composer install --no-interaction --prefer-source
 
 script:
-  - if [ "$TRAVIS_PHP_VERSION" == "hhvm" ]; then vendor/bin/phpunit --testsuite $SUITE; fi
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then vendor/bin/phpunit --testsuite $SUITE --coverage-text --coverage-clover=coverage.clover; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "hhvm" ]; then vendor/bin/phpunit; fi
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover; fi
 
 after_script:
   - bash -c 'if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi;'
