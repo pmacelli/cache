@@ -34,7 +34,8 @@ class EnhancedProviderCommonCases extends SimpleCacheCommonCases {
 
     public function testSimulatedFailure() {
 
-        $status = $this->provider::CACHE_ERROR;
+        $provider = $this->provider;
+        $status = $provider::CACHE_ERROR;
 
         $message = 'this is a simulated failure';
 
@@ -46,7 +47,7 @@ class EnhancedProviderCommonCases extends SimpleCacheCommonCases {
 
         $this->assertTrue($this->provider->test());
 
-        $this->assertEquals($this->provider::CACHE_SUCCESS, $this->provider->getState());
+        $this->assertEquals($provider::CACHE_SUCCESS, $this->provider->getState());
         $this->assertNull($this->provider->getStateMessage());
 
     }

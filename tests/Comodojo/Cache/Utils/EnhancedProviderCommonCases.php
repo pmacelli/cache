@@ -37,7 +37,8 @@ class EnhancedProviderCommonCases extends ProviderCommonCases {
 
     public function testSimulatedFailure() {
 
-        $status = $this->pool::CACHE_ERROR;
+        $pool = $this->pool;
+        $status = $pool::CACHE_ERROR;
 
         $message = 'this is a simulated failure';
 
@@ -49,7 +50,7 @@ class EnhancedProviderCommonCases extends ProviderCommonCases {
 
         $this->assertTrue($this->pool->test());
 
-        $this->assertEquals($this->pool::CACHE_SUCCESS, $this->pool->getState());
+        $this->assertEquals($pool::CACHE_SUCCESS, $this->pool->getState());
         $this->assertNull($this->pool->getStateMessage());
 
     }
