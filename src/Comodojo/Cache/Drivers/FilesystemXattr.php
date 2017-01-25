@@ -98,8 +98,6 @@ class FilesystemXattr extends AbstractDriver {
 
     public function clear($namespace = null) {
 
-        $file_list;
-
         $result = [];
 
         if ( $namespace === null ) {

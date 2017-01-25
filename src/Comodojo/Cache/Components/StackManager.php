@@ -25,7 +25,7 @@ class StackManager extends AbstractStackManager {
 
     public function add(EnhancedCacheItemPoolInterface $provider, $weight) {
 
-        parent::genericAdd($provider, $weight);
+        return $this->genericAdd($provider, $weight);
 
     }
 

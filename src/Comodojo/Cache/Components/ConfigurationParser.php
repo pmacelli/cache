@@ -114,7 +114,7 @@ class ConfigurationParser {
 
     }
 
-    protected static function buildProviders(Configuration $configuration, LoggerInterface $logger = null) {
+    protected static function buildProviders(Configuration $configuration, LoggerInterface $logger) {
 
         $cache = $configuration->get('cache');
         $build = [];
@@ -213,7 +213,7 @@ class ConfigurationParser {
 
                 default:
                     $logger->error("Unknown type $type for cache provider: $name");
-                    continue;
+                    continue 2;
                     break;
 
             }

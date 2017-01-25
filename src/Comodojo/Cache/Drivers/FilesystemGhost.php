@@ -97,8 +97,6 @@ class FilesystemGhost extends FilesystemXattr {
 
     public function clear($namespace = null) {
 
-        $file_list;
-
         $result = [];
 
         if ( $namespace === null ) {
