@@ -86,6 +86,8 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     public function set($key, $value, $ttl = null) {
 
+        if (iterator_count($this->stack) == 0) return $this->vacuum->set($key, $value, $ttl);
+
         if ( $this->align_cache === false && $this->pick_mode < 5) {
             return $this->selectProvider()->set($key, $value, $ttl);
         }
@@ -111,6 +113,8 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     public function delete($key) {
 
+        if (iterator_count($this->stack) == 0) return $this->vacuum->delete($key);
+
         if ( $this->align_cache === false && $this->pick_mode < 5) {
             return $this->selectProvider()->delete($key);
         }
@@ -135,6 +139,8 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     public function setMultiple($values, $ttl = null) {
 
+        if (iterator_count($this->stack) == 0) return $this->vacuum->setMultiple($values, $ttl);
+
         if ( $this->align_cache === false && $this->pick_mode < 5) {
             return $this->selectProvider()->setMultiple($values, $ttl);
         }
@@ -152,6 +158,8 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
     }
 
     public function deleteMultiple($keys) {
+
+        if (iterator_count($this->stack) == 0) return $this->vacuum->deleteMultiple($keys);
 
         if ( $this->align_cache === false && $this->pick_mode < 5) {
             return $this->selectProvider()->deleteMultiple($keys);

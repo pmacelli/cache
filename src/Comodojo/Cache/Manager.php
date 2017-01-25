@@ -96,6 +96,8 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
     public function deleteItem($key) {
 
+        if (iterator_count($this->stack) == 0) return $this->vacuum->deleteItem($key);
+
         if ( $this->align_cache === false && $this->pick_mode < 5) {
             return $this->selectProvider()->deleteItem($key);
         }
@@ -113,6 +115,8 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
     }
 
     public function save(CacheItemInterface $item) {
+
+        if (iterator_count($this->stack) == 0) return $this->vacuum->save($item);
 
         if ( $this->align_cache === false && $this->pick_mode < 5) {
             return $this->selectProvider()->save($item);

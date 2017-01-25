@@ -59,7 +59,7 @@ class Vacuum extends AbstractDriver {
 
     public function getMultiple(array $keys, $namespace) {
 
-        $keypad = array_combine($keys, array_fill(0, count($keys), null));
+        return array_combine($keys, array_fill(0, count($keys), null));
 
     }
 
@@ -71,7 +71,7 @@ class Vacuum extends AbstractDriver {
 
     public function deleteMultiple(array $keys, $namespace) {
 
-        return true;
+        return false;
 
     }
 
