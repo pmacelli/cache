@@ -10,6 +10,8 @@ use \Comodojo\Cache\Traits\BasicCacheItemPoolTrait;
 use \Comodojo\Cache\Traits\GenericManagerTrait;
 use \Comodojo\Cache\Components\StackManager;
 use \Comodojo\Foundation\Validation\DataFilter;
+use \Comodojo\Cache\Components\ConfigurationParser;
+use \Comodojo\Foundation\Base\Configuration;
 use \Psr\Cache\CacheItemInterface;
 use \Psr\Log\LoggerInterface;
 use \ArrayObject;
@@ -132,6 +134,24 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
         }
 
         return !in_array(false, $result);
+
+    }
+
+    public static function createFromConfiguration(Configuration $configuration, LoggerInterface $logger) {
+
+        list($manager_configuration, $providers) = ConfigurationParser::parse($configuration, $logger);
+
+        $manager = new Manager(...$manager_configuration);
+
+        foreach ($providers as $name => $provider) {
+            $instance = $provider->instance;
+            $weight = $provider->weight;
+            $id = $instance->getId();
+            $logger->debug("Adding provider $name ($id) to cache manager (w $weight)");
+            $manager->addProvider($instance, $weight);
+        }
+
+        return $manager;
 
     }
 

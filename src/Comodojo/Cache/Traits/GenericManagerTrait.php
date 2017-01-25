@@ -48,7 +48,7 @@ trait GenericManagerTrait {
 
     public function getSelectedProvider() {
 
-        return $this->selected === null ? $this->void : $this->selected;
+        return $this->selected === null ? $this->vacuum : $this->selected;
 
     }
 
@@ -129,7 +129,7 @@ trait GenericManagerTrait {
 
         }
 
-        $this->selected = $provider == null ? $this->void : $provider;
+        $this->selected = $provider == null ? $this->vacuum : $provider;
 
         return $this->selected;
 

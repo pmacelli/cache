@@ -8,6 +8,8 @@ use \Comodojo\Cache\Traits\NamespaceTrait;
 use \Comodojo\Cache\Traits\GenericManagerTrait;
 use \Comodojo\SimpleCache\Components\StackManager;
 use \Comodojo\Foundation\Validation\DataFilter;
+use \Comodojo\SimpleCache\Components\ConfigurationParser;
+use \Comodojo\Foundation\Base\Configuration;
 use \Psr\Log\LoggerInterface;
 use \ArrayObject;
 
@@ -170,6 +172,24 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
     public function has($key) {
 
         return $this->selectFrom('HAS', $key);
+
+    }
+
+    public static function createFromConfiguration(Configuration $configuration, LoggerInterface $logger) {
+
+        list($manager_configuration, $providers) = ConfigurationParser::parse($configuration, $logger);
+
+        $manager = new Manager(...$manager_configuration);
+
+        foreach ($providers as $name => $provider) {
+            $instance = $provider->instance;
+            $weight = $provider->weight;
+            $id = $instance->getId();
+            $logger->debug("Adding provider $name ($id) to cache manager (w $weight)");
+            $manager->addProvider($instance, $weight);
+        }
+
+        return $manager;
 
     }
 
