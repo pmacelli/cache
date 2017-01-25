@@ -1,14 +1,14 @@
 <?php namespace Comodojo\Cache\Tests\Providers;
 
-use \Comodojo\Cache\Providers\Void;
+use \Comodojo\Cache\Providers\Vacuum;
 use \Comodojo\Cache\Item;
 use \DateTime;
 
-class VoidTest extends \PHPUnit_Framework_TestCase {
+class VacuumTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
 
-        $this->pool = new Void();
+        $this->pool = new Vacuum();
 
     }
 

@@ -2,7 +2,7 @@
 
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Providers\AbstractProvider;
-use \Comodojo\Cache\Providers\Void;
+use \Comodojo\Cache\Providers\Vacuum;
 use \Comodojo\Cache\Interfaces\CacheItemPoolManagerInterface;
 use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
 use \Comodojo\Cache\Traits\NamespaceTrait;
@@ -46,7 +46,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
     protected $align_cache;
 
-    protected $void;
+    protected $vacuum;
 
     protected $selected;
 
@@ -68,7 +68,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         parent::__construct($logger);
 
-        $this->void = new Void($this->logger);
+        $this->vacuum = new Vacuum($this->logger);
 
         $this->logger->info("Cache manager online; pick mode ".$this->pick_mode);
 
@@ -223,7 +223,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
             }
 
             // selected provider has no sense in this case
-            $this->selected = $this->void;
+            $this->selected = $this->vacuum;
 
             return new Item($key);
 
@@ -245,7 +245,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
             }
 
             // selected provider has no sense in this case
-            $this->selected = $this->void;
+            $this->selected = $this->vacuum;
 
             return false;
 

@@ -27,7 +27,7 @@ class Apc extends AbstractDriver {
 
     public function __construct(array $configuration = []) {
 
-        if ( extension_loaded('apc') === false ) throw new Exception("ext-apcu not available");
+        if ( extension_loaded('apc') === false ) throw new Exception("ext-apc not available");
 
         // In cli, apcu SHOULD NOT use the request time for cache retrieve/invalidation.
         // This is because in cli the request time is allways the same.

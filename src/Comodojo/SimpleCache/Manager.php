@@ -1,14 +1,13 @@
 <?php namespace Comodojo\SimpleCache;
 
 use \Comodojo\SimpleCache\Providers\AbstractProvider;
-use \Comodojo\SimpleCache\Providers\Void;
+use \Comodojo\SimpleCache\Providers\Vacuum;
 use \Comodojo\SimpleCache\Interfaces\SimpleCacheManagerInterface;
 use \Comodojo\SimpleCache\Interfaces\EnhancedSimpleCacheInterface;
 use \Comodojo\Cache\Traits\NamespaceTrait;
 use \Comodojo\Cache\Traits\GenericManagerTrait;
 use \Comodojo\SimpleCache\Components\StackManager;
 use \Comodojo\Foundation\Validation\DataFilter;
-// use \Psr\Cache\CacheItemInterface; ???
 use \Psr\Log\LoggerInterface;
 use \ArrayObject;
 
@@ -43,7 +42,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     protected $align_cache;
 
-    protected $void;
+    protected $vacuum;
 
     protected $selected;
 
@@ -65,7 +64,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         parent::__construct($logger);
 
-        $this->void = new Void($this->logger);
+        $this->vacuum = new Vacuum($this->logger);
 
         $this->logger->info("SimpleCache Manager online; pick mode ".$this->pick_mode);
 
@@ -250,9 +249,9 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
             if ( count(array_unique($result)) == 1 ) return $result[0];
 
-            $this->selected = $this->void;
+            $this->selected = $this->vacuum;
 
-            return $this->void->getMultiple($key, $default);
+            return $this->vacuum->getMultiple($key, $default);
 
             // return array_combine($key, array_fill(0, count($key), $default));
 
@@ -295,7 +294,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
             }
 
             // selected provider has no sense in this case
-            $this->selected = $this->void;
+            $this->selected = $this->vacuum;
 
             return $default;
 
@@ -319,9 +318,9 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
             }
 
             // selected provider has no sense in this case
-            $this->selected = $this->void;
+            $this->selected = $this->vacuum;
 
-            return $this->void->getMultiple($key, $default);
+            return $this->vacuum->getMultiple($key, $default);
 
         } else {
 
@@ -341,7 +340,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
             }
 
             // selected provider has no sense in this case
-            $this->selected = $this->void;
+            $this->selected = $this->vacuum;
 
             return false;
 

@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Providers;
 
-use \Comodojo\Cache\Drivers\Void as VoidDriver;
+use \Comodojo\Cache\Drivers\Vacuum as VoidDriver;
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Components\EnhancedCacheItemPoolStats;
 use \Psr\Log\LoggerInterface;
@@ -25,7 +25,7 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class Void extends AbstractEnhancedProvider {
+class Vacuum extends AbstractEnhancedProvider {
 
     public function __construct(LoggerInterface $logger = null) {
 

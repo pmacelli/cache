@@ -1,13 +1,13 @@
 <?php namespace Comodojo\SimpleCache\Tests\Providers;
 
-use \Comodojo\SimpleCache\Providers\Void;
+use \Comodojo\SimpleCache\Providers\Vacuum;
 use \Comodojo\SimpleCache\Tests\Utils\EnhancedProviderCommonCases;
 
-class VoidTest extends \PHPUnit_Framework_TestCase {
+class VacuumTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {
 
-        $this->provider = new Void();
+        $this->provider = new Vacuum();
 
     }
 

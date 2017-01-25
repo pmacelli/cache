@@ -21,9 +21,9 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class Void extends AbstractDriver {
+class Vacuum extends AbstractDriver {
 
-    const DRIVER_NAME = "void";
+    const DRIVER_NAME = "vacuum";
 
     public function __construct(array $configuration = []) {}
 
