@@ -117,7 +117,7 @@ class AbstractStackManager extends FilterIterator {
 
         $rand = array_rand($stack);
 
-        return $stack[$rand];
+        return $rand === null ? null : $stack[$rand];
 
     }
 
@@ -127,7 +127,7 @@ class AbstractStackManager extends FilterIterator {
 
         $current = $this->current();
 
-        return $current[0];
+        return $current === null ? null : $current[0];
 
         // $providers = $this->getAll();
 
@@ -150,6 +150,8 @@ class AbstractStackManager extends FilterIterator {
     public function getHeavyProvider() {
 
         $providers = $this->getAll(true);
+
+        if ( count($providers) === 0 ) return null;
 
         $weights = $this->getWeights();
 

@@ -42,9 +42,13 @@ class ConfigurationParser {
 
     public static function parse(Configuration $configuration, LoggerInterface $logger) {
 
+        list($enable, $manager) =  self::parseManagerConfiguration($configuration, $logger);
+        $providers = self::buildProviders($configuration, $logger);
+
         return [
-            self::parseManagerConfiguration($configuration, $logger),
-            self::buildProviders($configuration, $logger)
+            $enable,
+            $manager,
+            $providers
         ];
 
     }
@@ -102,15 +106,18 @@ class ConfigurationParser {
             'flap_interval' => null
         ];
 
+        $enable = true;
+
         if ( $cache !== null && is_array($cache) ) {
             $lower_cache = array_change_key_case($cache, CASE_LOWER);
             if ( isset($lower_cache['logger']) ) unset($lower_cache['logger']);
             $stdConfig = array_merge($stdConfig, array_intersect_key($lower_cache, $stdConfig));
+            if ( isset($lower_cache['enable']) && $lower_cache['enable'] === false ) $enable = false;
         }
 
         if ($stdConfig['pick_mode'] !== null) $stdConfig['pick_mode'] = self::getPickMode($stdConfig['pick_mode']);
 
-        return array_values($stdConfig);
+        return [$enable, array_values($stdConfig)];
 
     }
 

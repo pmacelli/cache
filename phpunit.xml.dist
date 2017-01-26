@@ -19,6 +19,7 @@
             <file>tests/Comodojo/Cache/Manager/ManagerPickAllTest.php</file>
             <file>tests/Comodojo/Cache/Manager/ManagerBuildFromConfigurationTest.php</file>
             <file>tests/Comodojo/Cache/Manager/EmptyManagerTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerAddRemoveProviderTest.php</file>
         </testsuite>
         <testsuite name="comodojo-simplecache-manager">
             <file>tests/Comodojo/SimpleCache/Manager/ManagerAsProviderTest.php</file>
@@ -29,6 +30,7 @@
             <file>tests/Comodojo/SimpleCache/Manager/ManagerPickAllTest.php</file>
             <file>tests/Comodojo/SimpleCache/Manager/ManagerBuildFromConfigurationTest.php</file>
             <file>tests/Comodojo/SimpleCache/Manager/EmptyManagerTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerAddRemoveProviderTest.php</file>
         </testsuite>
         <testsuite name="comodojo-cache-providers">
             <file>tests/Comodojo/Cache/ItemTest.php</file>

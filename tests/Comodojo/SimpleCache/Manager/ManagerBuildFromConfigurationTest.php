@@ -8,6 +8,7 @@ class ManagerBuildFromConfigurationTest extends \PHPUnit_Framework_TestCase {
 
     protected static $local_config = [
         "cache" => [
+            "enable" => true,
             "pick_mode" => "PICK_RANDOM",
             "providers" => [
                 "test_a" => [
