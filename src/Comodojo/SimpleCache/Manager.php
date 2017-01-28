@@ -68,7 +68,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         $this->vacuum = new Vacuum($this->logger);
 
-        $this->logger->info("SimpleCache Manager online; pick mode ".$this->pick_mode);
+        $this->logger->debug("SimpleCache Manager online; pick mode ".$this->pick_mode);
 
     }
 

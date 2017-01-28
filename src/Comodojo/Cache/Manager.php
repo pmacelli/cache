@@ -72,7 +72,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         $this->vacuum = new Vacuum($this->logger);
 
-        $this->logger->info("Cache manager online; pick mode ".$this->pick_mode);
+        $this->logger->debug("Cache manager online; pick mode ".$this->pick_mode);
 
     }
 
