@@ -42,7 +42,7 @@ trait NamespaceTrait {
     /**
      * {@inheritdoc}
      */
-    public function setNamespace($namespace=null) {
+    public function setNamespace($namespace = null) {
 
         if ( empty($namespace) ) {
 

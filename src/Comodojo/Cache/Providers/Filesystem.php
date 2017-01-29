@@ -36,7 +36,7 @@ class Filesystem extends AbstractEnhancedProvider {
                 throw new InvalidCacheArgumentException("Invalid or unspecified cache folder");
             }
 
-            if ( $cache_folder[strlen($cache_folder)-1] != "/" ) $cache_folder = "$cache_folder/";
+            if ( $cache_folder[strlen($cache_folder) - 1] != "/" ) $cache_folder = "$cache_folder/";
 
             if ( self::isXattrSupported($cache_folder) ) {
                 $this->driver = new FilesystemXattrDriver(['cache-folder'=>$cache_folder]);

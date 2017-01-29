@@ -84,11 +84,11 @@ class AbstractStackManager extends FilterIterator {
 
         if ( $enabled === true ) {
 
-            foreach($this as $id => $provider) $result[$id] = $provider[0];
+            foreach ( $this as $id => $provider ) $result[$id] = $provider[0];
 
         } else {
 
-            foreach($this->getInnerIterator() as $id => $provider) $result[$id] = $provider[0];
+            foreach ( $this->getInnerIterator() as $id => $provider ) $result[$id] = $provider[0];
 
         }
 
@@ -167,7 +167,7 @@ class AbstractStackManager extends FilterIterator {
 
         $result = [];
 
-        foreach($this as $id => $provider) $result[$id] = $provider[1];
+        foreach ( $this as $id => $provider ) $result[$id] = $provider[1];
 
         return $result;
 

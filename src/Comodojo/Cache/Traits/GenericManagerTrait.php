@@ -54,13 +54,13 @@ trait GenericManagerTrait {
 
     public function clear() {
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->clear();
         }
 
         $result = [];
 
-        foreach ($this->stack as $provider) {
+        foreach ( $this->stack as $provider ) {
 
             $result[] = $provider[0]->clear();
 
@@ -72,7 +72,7 @@ trait GenericManagerTrait {
 
     public function setNamespace($namespace = null) {
 
-        foreach ($this->stack->getAll(false) as $provider) {
+        foreach ( $this->stack->getAll(false) as $provider ) {
             $provider->setNamespace($namespace);
         }
 
@@ -84,13 +84,13 @@ trait GenericManagerTrait {
 
     public function clearNamespace() {
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->clearNamespace();
         }
 
         $result = [];
 
-        foreach ($this->stack->getAll() as $provider) {
+        foreach ( $this->stack->getAll() as $provider ) {
             $result[] = $provider->clearNamespace();
         }
 
@@ -102,7 +102,7 @@ trait GenericManagerTrait {
 
         $stats = [];
 
-        foreach ($this->stack->getAll(false) as $provider) {
+        foreach ( $this->stack->getAll(false) as $provider ) {
             $stats[] = $provider->getStats();
         }
 
@@ -112,7 +112,7 @@ trait GenericManagerTrait {
 
     protected function selectProvider() {
 
-        switch ($this->pick_mode) {
+        switch ( $this->pick_mode ) {
 
             case 1:
                 $provider = $this->stack->getFirstProvider();

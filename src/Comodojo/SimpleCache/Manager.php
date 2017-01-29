@@ -86,15 +86,15 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     public function set($key, $value, $ttl = null) {
 
-        if (iterator_count($this->stack) == 0) return $this->vacuum->set($key, $value, $ttl);
+        if ( iterator_count($this->stack) == 0 ) return $this->vacuum->set($key, $value, $ttl);
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->set($key, $value, $ttl);
         }
 
         $result = [];
 
-        foreach ($this->stack as $provider) {
+        foreach ( $this->stack as $provider ) {
 
             $pro = $provider[0];
 
@@ -113,15 +113,15 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     public function delete($key) {
 
-        if (iterator_count($this->stack) == 0) return $this->vacuum->delete($key);
+        if ( iterator_count($this->stack) == 0 ) return $this->vacuum->delete($key);
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->delete($key);
         }
 
         $result = [];
 
-        foreach ($this->stack as $provider) {
+        foreach ( $this->stack as $provider ) {
 
             $result[] = $provider[0]->delete($key);
 
@@ -139,15 +139,15 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     public function setMultiple($values, $ttl = null) {
 
-        if (iterator_count($this->stack) == 0) return $this->vacuum->setMultiple($values, $ttl);
+        if ( iterator_count($this->stack) == 0 ) return $this->vacuum->setMultiple($values, $ttl);
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->setMultiple($values, $ttl);
         }
 
         $result = [];
 
-        foreach ($this->stack as $provider) {
+        foreach ( $this->stack as $provider ) {
 
             $result[] = $provider[0]->setMultiple($values, $ttl);
 
@@ -159,15 +159,15 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     public function deleteMultiple($keys) {
 
-        if (iterator_count($this->stack) == 0) return $this->vacuum->deleteMultiple($keys);
+        if ( iterator_count($this->stack) == 0 ) return $this->vacuum->deleteMultiple($keys);
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->deleteMultiple($keys);
         }
 
         $result = [];
 
-        foreach ($this->stack as $provider) {
+        foreach ( $this->stack as $provider ) {
 
             $result[] = $provider[0]->deleteMultiple($keys);
 
@@ -190,7 +190,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
         $manager = new Manager(...$manager_configuration);
 
         if ( $enable ) {
-            foreach ($providers as $name => $provider) {
+            foreach ( $providers as $name => $provider ) {
                 $instance = $provider->instance;
                 $weight = $provider->weight;
                 $id = $instance->getId();
@@ -203,7 +203,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     }
 
-    protected function selectFrom($mode, $key, $default=null) {
+    protected function selectFrom($mode, $key, $default = null) {
 
         if ( $this->pick_mode < 5 ) {
 
@@ -227,7 +227,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         $provider = $this->selectProvider();
 
-        switch ($mode) {
+        switch ( $mode ) {
 
             case 'GET':
                 $data = $provider->get($key, $default);
@@ -253,7 +253,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         if ( $mode == 'GET' ) {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $result[] = $provider[0]->get($key, $default);
 
@@ -268,7 +268,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         } else if ( $mode == 'GETMULTIPLE' ) {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $result[] = $provider[0]->getMultiple($key, $default);
 
@@ -287,7 +287,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         } else {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $result[] = $provider[0]->has($key);
 
@@ -308,7 +308,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         if ( $mode == 'GET' ) {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $item = $provider[0]->get($key);
 
@@ -330,7 +330,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         } else if ( $mode == 'GETMULTIPLE' ) {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $items = $provider[0]->getMultiple($key);
 
@@ -354,7 +354,7 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
         } else {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $item = $provider[0]->has($key);
 

@@ -66,7 +66,7 @@ class FilesystemGhost extends FilesystemXattr {
         if ( $ttl == null || $ttl == 0 ) {
             $ttl = 0;
         } else {
-            $ttl = time()+intval($ttl);
+            $ttl = time() + intval($ttl);
         }
 
         $cached = @file_put_contents($cacheFile, $value, LOCK_EX);

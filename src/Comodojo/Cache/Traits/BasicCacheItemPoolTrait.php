@@ -29,7 +29,7 @@ trait BasicCacheItemPoolTrait {
 
         $items = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
 
             $items[$key] = $this->getItem($key);
         }
@@ -42,7 +42,7 @@ trait BasicCacheItemPoolTrait {
 
         $result = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
 
             $result[] = $this->deleteItem($key);
 
@@ -70,11 +70,11 @@ trait BasicCacheItemPoolTrait {
 
         $active_namespace = $this->getNamespace();
 
-        foreach ($this->queue as $namespace => $queue) {
+        foreach ( $this->queue as $namespace => $queue ) {
 
             $this->setNamespace($namespace);
 
-            foreach ($queue as $key => $item) {
+            foreach ( $queue as $key => $item ) {
 
                 $result[] = $this->save($item);
 

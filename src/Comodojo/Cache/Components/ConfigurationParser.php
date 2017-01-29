@@ -42,7 +42,7 @@ class ConfigurationParser {
 
     public static function parse(Configuration $configuration, LoggerInterface $logger) {
 
-        list($enable, $manager) =  self::parseManagerConfiguration($configuration, $logger);
+        list($enable, $manager) = self::parseManagerConfiguration($configuration, $logger);
         $providers = self::buildProviders($configuration, $logger);
 
         return [
@@ -115,7 +115,7 @@ class ConfigurationParser {
             if ( isset($lower_cache['enable']) && $lower_cache['enable'] === false ) $enable = false;
         }
 
-        if ($stdConfig['pick_mode'] !== null) $stdConfig['pick_mode'] = self::getPickMode($stdConfig['pick_mode']);
+        if ( $stdConfig['pick_mode'] !== null ) $stdConfig['pick_mode'] = self::getPickMode($stdConfig['pick_mode']);
 
         return [$enable, array_values($stdConfig)];
 
@@ -134,7 +134,7 @@ class ConfigurationParser {
 
         $providers = $lower_cache['providers'];
 
-        foreach ($providers as $name => $specs) {
+        foreach ( $providers as $name => $specs ) {
 
             if ( !is_array($specs) ) {
                 $logger->error("Invalid specs for cache provider: $name");
@@ -150,7 +150,7 @@ class ConfigurationParser {
 
             $type = strtoupper($spec['type']);
 
-            switch ($type) {
+            switch ( $type ) {
 
                 case 'APC':
                     $provider = static::BuildApcProvider($logger);
