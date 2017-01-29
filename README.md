@@ -2,6 +2,8 @@
 
 [![Build Status](https://api.travis-ci.org/comodojo/cache.png)](http://travis-ci.org/comodojo/cache) [![Latest Stable Version](https://poser.pugx.org/comodojo/cache/v/stable)](https://packagist.org/packages/comodojo/cache) [![Total Downloads](https://poser.pugx.org/comodojo/cache/downloads)](https://packagist.org/packages/comodojo/cache) [![Latest Unstable Version](https://poser.pugx.org/comodojo/cache/v/unstable)](https://packagist.org/packages/comodojo/cache) [![License](https://poser.pugx.org/comodojo/cache/license)](https://packagist.org/packages/comodojo/cache) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/comodojo/cache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/comodojo/cache/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/comodojo/cache/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/comodojo/cache/?branch=master)
 
+** WARNING: Version 1.0 is not PSR-6/PSR-16 compatible **
+
 Very fast PHP data caching across multiple storage engines.
 
 ## Introduction
@@ -127,13 +129,13 @@ Additionally, in case of error:
     ```php
     // define time
     $time = time();
-    
+
     // set provider (relative) time
     $cache->setTime($time);
-    
+
     // get provider (relative) time
     $time = $cache->getTime();
-    
+
     ```
 
 - Set/get time to live
@@ -141,13 +143,13 @@ Additionally, in case of error:
     ```php
     // define ttl
     $ttl = 60;
-    
+
     // set provider ttl
     $cache->setTtl($ttl);
-    
+
     // get provider ttl
     $ttl = $cache->getTtl();
-    
+
     ```
 
 - Administratively enable/disable provider
@@ -155,13 +157,13 @@ Additionally, in case of error:
     ```php
     // disable provider
     $cache->disable();
-    
+
     // enable provider
     $cache->enable();
-    
+
     // get provider status
     $enabled = $cache->isEnabled();
-    
+
     ```
 
 - Manage error state
@@ -169,13 +171,13 @@ Additionally, in case of error:
     ```php
     // put provider in error state
     $cache->setErrorState();
-    
+
     // get current error state
     $state = $cache->getErrorState();
-    
+
     // reset error flag
     $cache->resetErrorState();
-    
+
     ```
 
 ## Cache providers
@@ -303,7 +305,7 @@ $apc_providers = $manager->getProviders('ApcCache');
 foreach ( $apc_providers as $id => $type ) {
 
     $manager->removeProvider($id);
-    
+
 }
 
 ```
