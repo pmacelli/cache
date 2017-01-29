@@ -39,8 +39,7 @@ class Memory extends AbstractDriver {
     public function get($key, $namespace) {
 
         return $this->checkMemory($key, $namespace) ?
-            $this->data[$namespace][$key]['data'] :
-            null;
+            $this->data[$namespace][$key]['data'] : null;
 
     }
 
@@ -94,7 +93,7 @@ class Memory extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             $result[$key] = $this->get($key, $namespace);
         }
 
@@ -106,7 +105,7 @@ class Memory extends AbstractDriver {
 
         $result = [];
 
-        foreach ($key_values as $key => $value) {
+        foreach ( $key_values as $key => $value ) {
             $result[$key] = $this->set($key, $namespace, $value, $ttl);
         }
 
@@ -118,7 +117,7 @@ class Memory extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             $result[] = $this->delete($key, $namespace);
         }
 
@@ -156,12 +155,10 @@ class Memory extends AbstractDriver {
         $time = new DateTime('now');
 
         if ( !array_key_exists($namespace, $this->data)
-            || !array_key_exists($key, $this->data[$namespace]) )
-        {
+            || !array_key_exists($key, $this->data[$namespace]) ) {
             return false;
         } else if ( $this->data[$namespace][$key]['expire'] === 0
-            || $this->data[$namespace][$key]['expire'] > $time )
-        {
+            || $this->data[$namespace][$key]['expire'] > $time ) {
             return true;
         } else {
             unset($this->data[$namespace][$key]);

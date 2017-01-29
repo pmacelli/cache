@@ -121,7 +121,7 @@ class Memcached extends AbstractDriver {
             return "$scope-$key";
         }, $keys);
 
-        if (version_compare(phpversion(), '7.0.0', '<')) {
+        if ( version_compare(phpversion(), '7.0.0', '<') ) {
             $data = $this->getInstance()->getMulti($keyscope, $null = null, MemcachedInstance::GET_PRESERVE_ORDER);
         } else {
             $data = $this->getInstance()->getMulti($keyscope, MemcachedInstance::GET_PRESERVE_ORDER);
@@ -129,7 +129,7 @@ class Memcached extends AbstractDriver {
 
         $return = [];
 
-        foreach ($data as $scoped_key => $value) {
+        foreach ( $data as $scoped_key => $value ) {
             $key = substr($scoped_key, strlen("$scope-"));
             $return[$key] = $value;
         }
@@ -150,7 +150,7 @@ class Memcached extends AbstractDriver {
 
         $shadowNames = [];
 
-        foreach ($key_values as $key => $value) {
+        foreach ( $key_values as $key => $value ) {
             $shadowNames["$scope-$key"] = $value;
         }
 

@@ -119,7 +119,7 @@ class Apcu extends AbstractDriver {
 
         $return = [];
 
-        foreach ($data as $scoped_key => $value) {
+        foreach ( $data as $scoped_key => $value ) {
             $key = substr($scoped_key, strlen("$scope-"));
             $return[$key] = $value;
         }
@@ -140,7 +140,7 @@ class Apcu extends AbstractDriver {
 
         $shadowNames = [];
 
-        foreach ($key_values as $key => $value) {
+        foreach ( $key_values as $key => $value ) {
             $shadowNames["$scope-$key"] = $value;
         }
 

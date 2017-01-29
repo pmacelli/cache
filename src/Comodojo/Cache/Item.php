@@ -89,9 +89,9 @@ class Item implements CacheItemInterface {
     /**
      * {@inheritdoc}
      */
-    public function expiresAt($expiration=null) {
+    public function expiresAt($expiration = null) {
 
-        if (is_null($expiration)) {
+        if ( is_null($expiration) ) {
             $this->expiration = 0;
         }
 
@@ -113,7 +113,7 @@ class Item implements CacheItemInterface {
         }
 
         if ( is_numeric($time) ) {
-            $this->expiration = new DateTime('now +' . $time . ' seconds');
+            $this->expiration = new DateTime('now +'.$time.' seconds');
         }
 
         if ( $time instanceof DateInterval ) {
@@ -153,9 +153,9 @@ class Item implements CacheItemInterface {
      */
     public function getTtl() {
 
-        if (is_null($this->expiration)) return null;
+        if ( is_null($this->expiration) ) return null;
 
-        if ($this->expiration === 0) return 0;
+        if ( $this->expiration === 0 ) return 0;
 
         $now = new DateTime("now");
 

@@ -144,11 +144,11 @@ abstract class AbstractEnhancedProvider
 
     public function getMultiple($keys, $default = null) {
 
-        if ( !is_array($keys) && !($keys instanceof Traversable ) ) {
+        if ( !is_array($keys) && !($keys instanceof Traversable) ) {
             throw new InvalidSimpleCacheArgumentException('Invalid keys provided');
         }
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             if ( KeyValidator::validateKey($key) === false ) {
                 throw new InvalidSimpleCacheArgumentException('Invalid key provided');
             }
@@ -174,13 +174,13 @@ abstract class AbstractEnhancedProvider
 
     public function setMultiple($values, $ttl = null) {
 
-        if ( !is_array($values) && !($values instanceof Traversable ) ) {
+        if ( !is_array($values) && !($values instanceof Traversable) ) {
             throw new InvalidSimpleCacheArgumentException('Invalid keys provided');
         }
 
         $real_values = [];
 
-        foreach ($values as $key => $value) {
+        foreach ( $values as $key => $value ) {
             if ( KeyValidator::validateKey($key) === false ) {
                 throw new InvalidSimpleCacheArgumentException('Invalid key provided');
             }
@@ -213,11 +213,11 @@ abstract class AbstractEnhancedProvider
 
     public function deleteMultiple($keys) {
 
-        if ( !is_array($keys) && !($keys instanceof Traversable ) ) {
+        if ( !is_array($keys) && !($keys instanceof Traversable) ) {
             throw new InvalidSimpleCacheArgumentException('Invalid keys provided');
         }
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             if ( KeyValidator::validateKey($key) === false ) {
                 throw new InvalidSimpleCacheArgumentException('Invalid key provided');
             }

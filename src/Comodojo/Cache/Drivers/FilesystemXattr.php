@@ -65,7 +65,7 @@ class FilesystemXattr extends AbstractDriver {
         if ( $ttl == null || $ttl == 0 ) {
             $ttl = 0;
         } else {
-            $ttl = time()+intval($ttl);
+            $ttl = time() + intval($ttl);
         }
 
         $cached = @file_put_contents($cacheFile, $value, LOCK_EX);
@@ -122,7 +122,7 @@ class FilesystemXattr extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             $result[$key] = $this->get($key, $namespace);
         }
 
@@ -134,7 +134,7 @@ class FilesystemXattr extends AbstractDriver {
 
         $result = [];
 
-        foreach ($key_values as $key => $value) {
+        foreach ( $key_values as $key => $value ) {
             $result[] = $this->set($key, $namespace, $value, $ttl);
         }
 
@@ -146,7 +146,7 @@ class FilesystemXattr extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             $result[] = $this->delete($key, $namespace);
         }
 

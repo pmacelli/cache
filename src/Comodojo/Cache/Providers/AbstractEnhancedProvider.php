@@ -261,11 +261,11 @@ abstract class AbstractEnhancedProvider
 
         $active_namespace = $this->getNamespace();
 
-        foreach ($this->queue as $namespace => $queue) {
+        foreach ( $this->queue as $namespace => $queue ) {
 
             $this->setNamespace($namespace);
 
-            foreach ($queue as $key => $item) {
+            foreach ( $queue as $key => $item ) {
 
                 $result[] = $this->save($item);
 

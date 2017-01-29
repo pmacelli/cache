@@ -96,15 +96,15 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
     public function deleteItem($key) {
 
-        if (iterator_count($this->stack) == 0) return $this->vacuum->deleteItem($key);
+        if ( iterator_count($this->stack) == 0 ) return $this->vacuum->deleteItem($key);
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->deleteItem($key);
         }
 
         $result = [];
 
-        foreach ($this->stack as $provider) {
+        foreach ( $this->stack as $provider ) {
 
             $result[] = $provider[0]->deleteItem($key);
 
@@ -116,15 +116,15 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
     public function save(CacheItemInterface $item) {
 
-        if (iterator_count($this->stack) == 0) return $this->vacuum->save($item);
+        if ( iterator_count($this->stack) == 0 ) return $this->vacuum->save($item);
 
-        if ( $this->align_cache === false && $this->pick_mode < 5) {
+        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
             return $this->selectProvider()->save($item);
         }
 
         $result = [];
 
-        foreach ($this->stack as $provider) {
+        foreach ( $this->stack as $provider ) {
 
             $pro = $provider[0];
 
@@ -148,7 +148,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
         $manager = new Manager(...$manager_configuration);
 
         if ( $enable ) {
-            foreach ($providers as $name => $provider) {
+            foreach ( $providers as $name => $provider ) {
                 $instance = $provider->instance;
                 $weight = $provider->weight;
                 $id = $instance->getId();
@@ -197,7 +197,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         if ( $mode == 'GET' ) {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $result[] = $provider[0]->getItem($key);
 
@@ -212,7 +212,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         } else {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $result[] = $provider[0]->hasItem($key);
 
@@ -233,7 +233,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         if ( $mode == 'GET' ) {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $item = $provider[0]->getItem($key);
 
@@ -255,7 +255,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         } else {
 
-            foreach ($this->stack as $provider) {
+            foreach ( $this->stack as $provider ) {
 
                 $item = $provider[0]->hasItem($key);
 

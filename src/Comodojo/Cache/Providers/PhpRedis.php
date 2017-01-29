@@ -31,9 +31,9 @@ class PhpRedis extends AbstractEnhancedProvider {
 
     public function __construct(
         $server = '127.0.0.1',
-        $port=6379,
-        $timeout=0,
-        LoggerInterface $logger=null
+        $port = 6379,
+        $timeout = 0,
+        LoggerInterface $logger = null
     ) {
 
         if ( empty($server) ) {

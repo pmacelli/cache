@@ -58,7 +58,7 @@ abstract class AbstractProvider implements CacheInterface {
      */
     public function setLogger(LoggerInterface $logger = null) {
 
-        $this->logger = is_null($logger) ? LogManager::create('cache',false)->getLogger() : $logger;
+        $this->logger = is_null($logger) ? LogManager::create('cache', false)->getLogger() : $logger;
 
         return $this;
 

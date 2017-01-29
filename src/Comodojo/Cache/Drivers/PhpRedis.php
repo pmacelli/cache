@@ -175,7 +175,7 @@ class PhpRedis extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             $result[$key] = $this->get($key, $namespace);
         }
 
@@ -188,7 +188,7 @@ class PhpRedis extends AbstractDriver {
 
         $result = [];
 
-        foreach ($key_values as $key => $value) {
+        foreach ( $key_values as $key => $value ) {
             $result[] = $this->set($key, $namespace, $value, $ttl);
         }
 
@@ -201,7 +201,7 @@ class PhpRedis extends AbstractDriver {
 
         $result = [];
 
-        foreach ($keys as $key) {
+        foreach ( $keys as $key ) {
             $result[] = $this->delete($key, $namespace);
         }
 
@@ -240,7 +240,7 @@ class PhpRedis extends AbstractDriver {
             $objects = $instance->dbSize();
             $stats = $instance->info();
 
-        } catch (RedisException $re ) {
+        } catch (RedisException $re) {
 
             throw $re;
 

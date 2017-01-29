@@ -31,10 +31,10 @@ class Memcached extends AbstractEnhancedProvider {
 
     public function __construct(
         $server = '127.0.0.1',
-        $port=11211,
-        $weight=0,
-        $persistent_id=null,
-        LoggerInterface $logger=null
+        $port = 11211,
+        $weight = 0,
+        $persistent_id = null,
+        LoggerInterface $logger = null
     ) {
 
         if ( empty($server) ) {
@@ -77,7 +77,7 @@ class Memcached extends AbstractEnhancedProvider {
 
         $objects = 0;
 
-        foreach ($info as $key => $value) {
+        foreach ( $info as $key => $value ) {
 
             $objects = max($objects, $value['curr_items']);
 
