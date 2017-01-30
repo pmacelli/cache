@@ -1,6 +1,6 @@
 {
     "name": "comodojo/cache",
-    "description": "Very fast PHP data caching across multiple storage engines",
+    "description": "PSR-6 and PSR-16 compliant enhanced cache manager across multiple storage engines",
     "license": "MIT",
     "type": "library",
     "keywords": [
@@ -11,7 +11,8 @@
         "memcached",
         "apc",
         "apcu",
-        "xcache"
+        "namespace",
+        "manger"
     ],
     "homepage": "https://comodojo.org",
      "support": {
@@ -26,25 +27,27 @@
     ],
     "autoload": {
         "psr-4": {
-            "Comodojo\\Cache\\": "src"
+            "Comodojo\\Cache\\": "src/Comodojo/Cache",
+            "Comodojo\\SimpleCache\\": "src/Comodojo/SimpleCache"
         }
     },
+    "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.9",
-        "comodojo/database": "1.*",
-        "comodojo/exceptions": "@stable"
+        "php": ">=5.6.0",
+        "comodojo/foundation": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "scrutinizer/ocular": "~1.1",
-        "monolog/monolog": "~1.0"
+        "phpunit/phpunit": "^4.0|^5.0",
+        "scrutinizer/ocular": "^1.0"
+    },
+    "provide": {
+        "psr/cache-implementation": "~1.0",
+        "psr/simple-cache-implementation": "~1.0"
     },
     "suggest": {
-        "monolog/monolog": "Enable error logging",
         "ext-xattr": "Fastest cache files handling via extended attributes",
         "ext-redis": "Enable redis provider",
         "ext-memcached": "Enable Memcached provider",
-        "ext-xcache": "Enable XCache provider",
         "ext-apc": "Enable Apc provider",
         "ext-apcu": "Enable Apcu provider"
     }

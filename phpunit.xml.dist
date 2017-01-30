@@ -10,37 +10,51 @@
     processIsolation="false"
     stopOnFailure="false">
     <testsuites>
-        <testsuite name="comodojo-cache-travis">
-            <file>tests/Cache/ApcCacheTest.php</file>
-            <file>tests/Cache/DatabaseCacheTest.php</file>
-            <file>tests/Cache/FileCacheTest.php</file>
-            <file>tests/Cache/MemcachedCacheTest.php</file>
-            <file>tests/Cache/PhpRedisCacheTest.php</file>
-            <file>tests/Cache/CacheManagerPickFirstTest.php</file>
-            <file>tests/Cache/CacheManagerPickLastTest.php</file>
-            <file>tests/Cache/CacheManagerPickRandomTest.php</file>
-            <file>tests/Cache/CacheManagerPickAllTest.php</file>
-            <file>tests/Cache/CacheManagerPickByWeightTest.php</file>
+        <testsuite name="comodojo-cache-manager">
+            <file>tests/Comodojo/Cache/Manager/ManagerAsProviderTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickFirstTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickLastTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickTraverseTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickRandomTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerPickAllTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerBuildFromConfigurationTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/EmptyManagerTest.php</file>
+            <file>tests/Comodojo/Cache/Manager/ManagerAddRemoveProviderTest.php</file>
         </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="comodojo-cache-xcache">
-            <file>tests/Cache/XCacheCacheTest.php</file>
+        <testsuite name="comodojo-simplecache-manager">
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerAsProviderTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickFirstTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickLastTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickTraverseTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickRandomTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerPickAllTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerBuildFromConfigurationTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/EmptyManagerTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Manager/ManagerAddRemoveProviderTest.php</file>
         </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="comodojo-cache-apc">
-            <file>tests/Cache/ApcCacheTest.php</file>
+        <testsuite name="comodojo-cache-providers">
+            <file>tests/Comodojo/Cache/ItemTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/MemoryTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/VoidTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/ApcuTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/ApcTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/FilesystemTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/MemcachedTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/PhpRedisTest.php</file>
         </testsuite>
-    </testsuites>
-    <testsuites>
-        <testsuite name="comodojo-cache-all">
-            <directory>tests/Cache/</directory>
+        <testsuite name="comodojo-simplecache-providers">
+            <file>tests/Comodojo/SimpleCache/Providers/MemoryTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/VoidTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/ApcuTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/ApcTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/FilesystemTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/MemcachedTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/PhpRedisTest.php</file>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/</directory>
+            <directory suffix=".php">src/Comodojo/</directory>
         </whitelist>
     </filter>
     <logging>
@@ -51,4 +65,3 @@
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 </phpunit>
-

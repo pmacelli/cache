@@ -1,9 +1,6 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
-  - 5.5
   - 5.6
   - 7.0
   - 7.1
@@ -11,14 +8,7 @@ php:
 
 matrix:
   allow_failures:
-    - php: 5.5
-    - php: 5.6
-    - php: 7.0
-    - php: 7.1
     - php: hhvm
-
-env:
-  - SUITE=comodojo-cache-travis
 
 services:
   - memcached
@@ -27,7 +17,6 @@ services:
 before_install:
   - sudo apt-get update -qq
   - if [[ $TRAVIS_PHP_VERSION != 'hhvm' ]] ; then pecl channel-update pecl.php.net; fi;
-  - if [[ $TRAVIS_PHP_VERSION = "5.4" ]]; then echo yes | pecl install apcu-4.0.11; fi
   - if [[ $TRAVIS_PHP_VERSION = "5.6" ]]; then echo yes | pecl install apcu-4.0.11; fi
   - if [[ $TRAVIS_PHP_VERSION = "7.0" ]]; then echo yes | pecl install apcu-5.1.7; fi
   - if [[ $TRAVIS_PHP_VERSION = "7.0" ]]; then echo yes | pecl install apcu_bc-beta; fi
@@ -35,14 +24,13 @@ before_install:
   - if [[ $TRAVIS_PHP_VERSION = "7.1" ]]; then echo yes | pecl install apcu_bc-beta; fi
   - if [[ $TRAVIS_PHP_VERSION != "hhvm" ]]; then phpenv config-add $TRAVIS_BUILD_DIR/tests/resources/travis-$TRAVIS_PHP_VERSION.ini; fi
   - travis_retry composer self-update
-  - mysql -u root < $TRAVIS_BUILD_DIR/tests/resources/DatabaseCacheCreateSchema.sql
 
 install:
-  - if [[ "$TRAVIS_PHP_VERSION" == 5.3* ]] ; then travis_retry composer update --no-interaction --prefer-source ; else travis_retry composer install --no-interaction --prefer-source ; fi
+  - travis_retry composer install --no-interaction --prefer-source
 
 script:
-  - if [ "$TRAVIS_PHP_VERSION" == "hhvm" ]; then vendor/bin/phpunit --testsuite $SUITE; fi
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then vendor/bin/phpunit --testsuite $SUITE --coverage-text --coverage-clover=coverage.clover; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "hhvm" ]; then vendor/bin/phpunit; fi
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover; fi
 
 after_script:
   - bash -c 'if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover; fi;'
