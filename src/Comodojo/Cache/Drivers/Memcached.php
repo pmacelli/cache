@@ -41,8 +41,21 @@ class Memcached extends AbstractDriver {
 
     public function test() {
 
-        return sizeof($this->getInstance()->getServerList()) > 0;
+        return sizeof($this->getInstance()->getServerList()) > 0 && $this->ping();
 
+    }
+
+    public function ping() {
+
+        // try to read a fake value from cache and check it's return code
+        $instance = $this->getInstance();
+        $instance->get('cache-internals');
+        $code = $instance->getResultCode();
+
+        // check if code represents a failure
+        // $code != [MEMCACHED_SUCCESS, MEMCACHED_NOTFOUND]
+        return in_array($code, [0, 16]);
+        
     }
 
     public function get($key, $namespace) {
