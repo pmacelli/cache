@@ -61,7 +61,7 @@ class Manager extends AbstractProvider implements CacheItemPoolManagerInterface 
 
         $this->pick_mode = DataFilter::filterInteger($pick_mode, 1, 6, self::DEFAULT_PICK_MODE);
 
-        $this->align_cache = DataFilter::filterBoolean($align_cache, true);
+        $this->align_cache = DataFilter::filterBoolean($align_cache, false);
 
         $stack = new ArrayObject([]);
 
