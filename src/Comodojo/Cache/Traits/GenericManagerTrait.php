@@ -54,15 +54,11 @@ trait GenericManagerTrait {
 
     public function clear() {
 
-        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
-            return $this->selectProvider()->clear();
-        }
-
         $result = [];
 
-        foreach ( $this->stack as $provider ) {
+        foreach ( $this->stack->getAll() as $provider ) {
 
-            $result[] = $provider[0]->clear();
+            $result[] = $provider->clear();
 
         }
 
@@ -83,10 +79,6 @@ trait GenericManagerTrait {
     }
 
     public function clearNamespace() {
-
-        if ( $this->align_cache === false && $this->pick_mode < 5 ) {
-            return $this->selectProvider()->clearNamespace();
-        }
 
         $result = [];
 
