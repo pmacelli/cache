@@ -2,6 +2,7 @@
 
 use \Comodojo\Foundation\Base\Configuration;
 use \Comodojo\Foundation\Validation\DataFilter;
+use \Comodojo\Foundation\Utils\ArrayOps;
 use \Psr\Log\LoggerInterface;
 use \Comodojo\Cache\Providers\Apc as CacheApc;
 use \Comodojo\Cache\Providers\Apcu as CacheApcu;
@@ -29,8 +30,6 @@ use \Comodojo\Cache\Providers\Vacuum as CacheVacuum;
 
 class ConfigurationParser {
 
-    const DEFAULT_CACHE_FOLDER = 'cache';
-
     protected static $algorithms = array(
         'PICK_FIRST' => 1,
         'PICK_LAST' => 2,
@@ -55,43 +54,43 @@ class ConfigurationParser {
 
     protected static function BuildApcProvider(LoggerInterface $logger) {
 
-        return new CacheApc($logger);
+        return new CacheApc([], $logger);
 
     }
 
     protected static function BuildApcuProvider(LoggerInterface $logger) {
 
-        return new CacheApcu($logger);
+        return new CacheApcu([], $logger);
 
     }
 
-    protected static function BuildFilesystemProvider($cache_folder, LoggerInterface $logger) {
+    protected static function BuildFilesystemProvider(array $properties, LoggerInterface $logger) {
 
-        return new CacheFilesystem($cache_folder, $logger);
+        return new CacheFilesystem($properties, $logger);
 
     }
 
-    protected static function BuildMemcachedProvider($server, $port, $weight, $persistentid, LoggerInterface $logger) {
+    protected static function BuildMemcachedProvider(array $properties, LoggerInterface $logger) {
 
-        return new CacheMemcached($server, $port, $weight, $persistentid, $logger);
+        return new CacheMemcached($properties, $logger);
 
     }
 
     protected static function BuildMemoryProvider(LoggerInterface $logger) {
 
-        return new CacheMemory($logger);
+        return new CacheMemory([], $logger);
 
     }
 
-    protected static function BuildPhpRedisProvider($server, $port, $timeout, LoggerInterface $logger) {
+    protected static function BuildPhpRedisProvider(array $properties, LoggerInterface $logger) {
 
-        return new CachePhpRedis($server, $port, $timeout, $logger);
+        return new CachePhpRedis($properties, $logger);
 
     }
 
     protected static function BuildVacuumProvider(LoggerInterface $logger) {
 
-        return new CacheVacuum($logger);
+        return new CacheVacuum([], $logger);
 
     }
 
@@ -163,8 +162,7 @@ class ConfigurationParser {
                 case 'FILESYSTEM':
 
                     $stdConfig = [
-                        'cache_folder' => static::DEFAULT_CACHE_FOLDER,
-                        'logger' => $logger
+                        'cache_folder' => null
                     ];
 
                     if ( isset($spec['cache_folder']) ) {
@@ -175,24 +173,24 @@ class ConfigurationParser {
                         }
                     }
 
-                    $provider = static::BuildFilesystemProvider(...array_values($stdConfig));
+                    $provider = static::BuildFilesystemProvider($stdConfig, $logger);
 
                     break;
 
                 case 'MEMCACHED':
 
-                    $stdConfig = [
-                        'server' => '127.0.0.1',
-                        'port' => 11211,
-                        'weight' => 0,
-                        'persistent_id' => null,
-                        'logger' => $logger
+                    $valid_values = [
+                        'server',
+                        'port',
+                        'weight',
+                        'persistent_id',
+                        'username',
+                        'password'
                     ];
 
-                    if ( isset($spec['logger']) ) unset($spec['logger']);
-                    $stdConfig = array_merge($stdConfig, array_intersect_key($spec, $stdConfig));
+                    $stdConfig = ArrayOps::filterByKeys($valid_values, $spec);
 
-                    $provider = static::BuildMemcachedProvider(...array_values($stdConfig));
+                    $provider = static::BuildMemcachedProvider($stdConfig, $logger);
                     break;
 
                 case 'MEMORY':
@@ -201,17 +199,17 @@ class ConfigurationParser {
 
                 case 'PHPREDIS':
 
-                    $stdConfig = [
-                        'server' => '127.0.0.1',
-                        'port' => 6379,
-                        'timeout' => 0,
-                        'logger' => $logger
+                    $valid_values = [
+                        'server',
+                        'port',
+                        'timeout',
+                        'logger',
+                        'password'
                     ];
 
-                    if ( isset($spec['logger']) ) unset($spec['logger']);
-                    $stdConfig = array_merge($stdConfig, array_intersect_key($spec, $stdConfig));
+                    $stdConfig = ArrayOps::filterByKeys($valid_values, $spec);
 
-                    $provider = static::BuildPhpRedisProvider(...array_values($stdConfig));
+                    $provider = static::BuildPhpRedisProvider($stdConfig, $logger);
                     break;
 
                 case 'VACUUM':

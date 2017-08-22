@@ -20,8 +20,8 @@ class ManagerAddRemoveProviderTest extends \PHPUnit_Framework_TestCase {
 
     public function testAddRemoveProvider() {
 
-        $memory_a = new Memory($this->logger);
-        $memory_b = new Memory($this->logger);
+        $memory_a = new Memory([], $this->logger);
+        $memory_b = new Memory([], $this->logger);
 
         $this->assertCount(0, $this->manager->getProviders());
 

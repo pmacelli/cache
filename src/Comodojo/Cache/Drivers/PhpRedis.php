@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cache\Drivers;
 
 use \Comodojo\Cache\Traits\InstanceTrait;
-use \Comodojo\Cache\Components\UniqueId;
+use \Comodojo\Foundation\Utils\UniqueId;
 use \RedisException;
 use \Redis;
 use \Exception;
@@ -41,6 +41,10 @@ class PhpRedis extends AbstractDriver {
         $this->connection_parameters = [$configuration['server'], $configuration['port'], $configuration['timeout']];
 
         $instance->connect(...$this->connection_parameters);
+
+        if ( !empty($configuration['password']) ) {
+            $instance->auth($configuration['password']);
+        }
 
         $this->setInstance($instance);
 
@@ -257,7 +261,7 @@ class PhpRedis extends AbstractDriver {
      */
     private function setNamespaceKey($namespace) {
 
-        $uId = UniqueId::get();
+        $uId = UniqueId::generate(64);
 
         $return = $this->getInstance()->set($namespace, $uId);
 

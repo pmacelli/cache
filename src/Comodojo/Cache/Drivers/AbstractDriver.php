@@ -1,7 +1,6 @@
 <?php namespace Comodojo\Cache\Drivers;
 
 use \Comodojo\Cache\Interfaces\CacheDriverInterface;
-use \Comodojo\Cache\Components\UniqueId;
 use \Exception;
 
 /**

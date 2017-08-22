@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cache\Drivers;
 
 use \Comodojo\Cache\Traits\InstanceTrait;
-use \Comodojo\Cache\Components\UniqueId;
+use \Comodojo\Foundation\Utils\UniqueId;
 use \Memcached as MemcachedInstance;
 use \Exception;
 
@@ -29,13 +29,24 @@ class Memcached extends AbstractDriver {
 
     const DRIVER_NAME = "memcached";
 
-    public function __construct(array $configuration = []) {
+    public function __construct(array $configuration) {
 
         if ( class_exists('Memcached') === false ) throw new Exception("ext-memcached not available");
 
-        $this->setInstance(new MemcachedInstance($configuration['persistent_id']));
-        $this->getInstance()
-            ->addServer($configuration['server'], $configuration['port'], $configuration['weight']);
+        $instance = new MemcachedInstance($configuration['persistent_id']);
+
+        $instance->addServer(
+            $configuration['server'],
+            $configuration['port'],
+            $configuration['weight']
+        );
+
+        if ( !empty($configuration['username']) && !empty($configuration['password']) ) {
+            $instance->setOption(MemcachedInstance::OPT_BINARY_PROTOCOL, true);
+            $instance->setSaslAuthData($configuration['username'], $configuration['password']);
+        }
+
+        $this->setInstance($instance);
 
     }
 
@@ -55,7 +66,7 @@ class Memcached extends AbstractDriver {
         // check if code represents a failure
         // $code != [MEMCACHED_SUCCESS, MEMCACHED_NOTFOUND]
         return in_array($code, [0, 16]);
-        
+
     }
 
     public function get($key, $namespace) {
@@ -206,7 +217,7 @@ class Memcached extends AbstractDriver {
      */
     private function setNamespaceKey($namespace) {
 
-        $uId = UniqueId::get();
+        $uId = UniqueId::generate(64);
 
         return $this->getInstance()->set($namespace, $uId, 0) === false ? false : $uId;
 

@@ -27,11 +27,21 @@ use \Exception;
 
 class Vacuum extends AbstractEnhancedProvider {
 
-    public function __construct(LoggerInterface $logger = null) {
+    public function __construct(array $properties = [], LoggerInterface $logger = null) {
 
-        $this->driver = new VoidDriver();
+        try {
 
-        parent::__construct($logger);
+            parent::__construct($properties, $logger);
+
+            $this->driver = new VoidDriver();
+
+            $this->test();
+
+        } catch (Exception $e) {
+
+            throw new SimpleCacheException($e->getMessage());
+
+        }
 
     }
 

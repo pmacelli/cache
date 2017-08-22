@@ -10,7 +10,7 @@ class ManagerAsProviderTest extends SimpleCacheCommonCases {
     protected function setUp() {
 
         $apc = new Apc();
-        $memcached = new Memcached('127.0.0.1');
+        $memcached = new Memcached();
 
         $this->provider = new Manager();
         $this->provider

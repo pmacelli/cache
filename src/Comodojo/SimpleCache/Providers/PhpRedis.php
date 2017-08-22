@@ -29,29 +29,36 @@ use \Exception;
 
 class PhpRedis extends AbstractEnhancedProvider {
 
-    public function __construct(
-        $server = '127.0.0.1',
-        $port = 6379,
-        $timeout = 0,
-        LoggerInterface $logger = null
-    ) {
+    protected $default_properties = [
+        "server" => '127.0.0.1',
+        "port" => 6379,
+        "timeout" => 0,
+        "password" => null
+    ];
 
-        if ( empty($server) ) {
+    public function __construct(array $properties = [], LoggerInterface $logger = null) {
+
+        parent::__construct($properties, $logger);
+
+        $properties = $this->getProperties();
+
+        if ( empty($properties->server) ) {
             throw new InvalidSimpleCacheArgumentException("Invalid or unspecified memcached server");
         }
 
-        $port = DataFilter::filterPort($port, 6379);
-        $timeout = DataFilter::filterInteger($timeout, 0, PHP_INT_MAX, 0);
+        $port = DataFilter::filterPort($properties->port, 6379);
+        $timeout = DataFilter::filterInteger($properties->timeout, 0, PHP_INT_MAX, 0);
 
         try {
 
             $this->driver = new PhpRedisDriver([
-                'server' => $server,
+                'server' => $properties->server,
                 'port' => $port,
-                'timeout' => $timeout
+                'timeout' => $timeout,
+                'password' => $properties->password
             ]);
 
-            parent::__construct($logger);
+            $this->test();
 
         } catch (Exception $e) {
 

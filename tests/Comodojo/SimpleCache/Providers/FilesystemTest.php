@@ -9,7 +9,7 @@ class FilesystemTest extends EnhancedProviderCommonCases {
 
         $cache_folder = realpath(__DIR__ . "/../../../")."/localcache";
 
-        $this->provider = new Filesystem($cache_folder);
+        $this->provider = new Filesystem(['cache_folder' => $cache_folder]);
 
     }
 

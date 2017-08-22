@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cache\Drivers;
 
-use \Comodojo\Cache\Components\UniqueId;
+use \Comodojo\Foundation\Utils\UniqueId;
 use \Exception;
 
 /**
@@ -189,7 +189,7 @@ class Apcu extends AbstractDriver {
      */
     private function setNamespaceKey($namespace) {
 
-        $uId = UniqueId::get();
+        $uId = UniqueId::generate(64);
 
         return apcu_store($namespace, $uId, 0) === false ? false : $uId;
 

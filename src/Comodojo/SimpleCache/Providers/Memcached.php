@@ -28,35 +28,44 @@ use \Exception;
 
 class Memcached extends AbstractEnhancedProvider {
 
-    public function __construct(
-        $server = '127.0.0.1',
-        $port = 11211,
-        $weight = 0,
-        $persistent_id = null,
-        LoggerInterface $logger = null
-    ) {
+    protected $default_properties = [
+        "server" => '127.0.0.1',
+        "port" => 11211,
+        "weight" => 0,
+        "persistent_id" => null,
+        "username" => null,
+        "password" => null
+    ];
 
-        if ( empty($server) ) {
+    public function __construct(array $properties = [], LoggerInterface $logger = null) {
+
+        parent::__construct($properties, $logger);
+
+        $properties = $this->getProperties();
+
+        if ( empty($properties->server) ) {
             throw new InvalidSimpleCacheArgumentException("Invalid or unspecified memcached server");
         }
 
-        if ( $persistent_id !== null && DataValidation::validateString($persistent_id) === false ) {
+        if ( $properties->persistent_id !== null && DataValidation::validateString($properties->persistent_id) === false ) {
             throw new InvalidSimpleCacheArgumentException("Invalid persistent id");
         }
 
-        $port = DataFilter::filterPort($port, 11211);
-        $weight = DataFilter::filterInteger($weight);
+        $port = DataFilter::filterPort($properties->port, 11211);
+        $weight = DataFilter::filterInteger($properties->weight);
 
         try {
 
             $this->driver = new MemcachedDriver([
-                'persistent_id' => $persistent_id,
-                'server' => $server,
+                'persistent_id' => $properties->persistent_id,
+                'server' => $properties->server,
                 'port' => $port,
-                'weight' => $weight
+                'weight' => $weight,
+                "username" => $properties->username,
+                "password" => $properties->password
             ]);
 
-            parent::__construct($logger);
+            $this->test();
 
         } catch (Exception $e) {
 

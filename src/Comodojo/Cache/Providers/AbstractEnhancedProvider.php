@@ -3,10 +3,11 @@
 use \Comodojo\Cache\Traits\StatefulTrait;
 use \Comodojo\Cache\Traits\NamespaceTrait;
 use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
-use \Comodojo\Cache\Components\UniqueId;
-use \Psr\Log\LoggerInterface;
 use \Comodojo\Cache\Item;
 use \Comodojo\Cache\Components\KeyValidator;
+use \Comodojo\Foundation\Utils\UniqueId;
+use \Comodojo\Foundation\Utils\ClassProperties;
+use \Psr\Log\LoggerInterface;
 use \Psr\Cache\CacheItemInterface;
 use \DateTime;
 use \Comodojo\Exception\CacheException;
@@ -40,17 +41,29 @@ abstract class AbstractEnhancedProvider
 
     protected $driver;
 
+    protected $default_properties = [];
+
+    protected $properties;
+
     private $queue = [];
 
-    public function __construct(LoggerInterface $logger = null) {
+    public function __construct(array $properties = [], LoggerInterface $logger = null) {
 
         parent::__construct($logger);
 
-        $this->setId(UniqueId::get())->test();
+        $this->properties = ClassProperties::create($this->default_properties)->merge($properties);
+
+        $this->setId(UniqueId::generate(64));
 
     }
 
     abstract public function getStats();
+
+    public function getProperties() {
+
+        return $this->properties;
+
+    }
 
     public function getItem($key) {
 

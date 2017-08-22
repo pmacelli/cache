@@ -16,9 +16,9 @@ class ManagerPickTraverseTest extends ManagerCommonCases {
 
         $logger = LogManager::create('cache', false)->getLogger();
 
-        $this->memory_a = new Memory($logger);
-        $this->memory_b = new Memory($logger);
-        $this->memory_c = new Memory($logger);
+        $this->memory_a = new Memory([], $logger);
+        $this->memory_b = new Memory([], $logger);
+        $this->memory_c = new Memory([], $logger);
 
         $this->manager = new Manager(Manager::PICK_TRAVERSE, $logger, true, 5);
 

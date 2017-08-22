@@ -21,8 +21,8 @@ class AlignCacheTest extends \PHPUnit_Framework_TestCase {
     public function testAlign() {
 
         $manager = new Manager(Manager::PICK_FIRST, $this->logger, true);
-        $mem_a = new Memory($this->logger);
-        $mem_b = new Memory($this->logger);
+        $mem_a = new Memory([], $this->logger);
+        $mem_b = new Memory([], $this->logger);
 
         $manager->addProvider($mem_a)->addProvider($mem_b);
 
@@ -36,8 +36,8 @@ class AlignCacheTest extends \PHPUnit_Framework_TestCase {
     public function testNotAlign() {
 
         $manager = new Manager(Manager::PICK_FIRST, $this->logger, false);
-        $mem_a = new Memory($this->logger);
-        $mem_b = new Memory($this->logger);
+        $mem_a = new Memory([], $this->logger);
+        $mem_b = new Memory([], $this->logger);
 
         $manager->addProvider($mem_a)->addProvider($mem_b);
 

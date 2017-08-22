@@ -30,43 +30,43 @@ class ConfigurationParser extends CacheConfigurationParser {
 
     protected static function BuildApcProvider(LoggerInterface $logger) {
 
-        return new SimpleCacheApc($logger);
+        return new SimpleCacheApc([], $logger);
 
     }
 
     protected static function BuildApcuProvider(LoggerInterface $logger) {
 
-        return new SimpleCacheApcu($logger);
+        return new SimpleCacheApcu([], $logger);
 
     }
 
-    protected static function BuildFilesystemProvider($cache_folder, LoggerInterface $logger) {
+    protected static function BuildFilesystemProvider(array $properties, LoggerInterface $logger) {
 
-        return new SimpleCacheFilesystem($cache_folder, $logger);
+        return new SimpleCacheFilesystem($properties, $logger);
 
     }
 
-    protected static function BuildMemcachedProvider($server, $port, $weight, $persistentid, LoggerInterface $logger) {
+    protected static function BuildMemcachedProvider(array $properties, LoggerInterface $logger) {
 
-        return new SimpleCacheMemcached($server, $port, $weight, $persistentid, $logger);
+        return new SimpleCacheMemcached($properties, $logger);
 
     }
 
     protected static function BuildMemoryProvider(LoggerInterface $logger) {
 
-        return new SimpleCacheMemory($logger);
+        return new SimpleCacheMemory([], $logger);
 
     }
 
-    protected static function BuildPhpRedisProvider($server, $port, $timeout, LoggerInterface $logger) {
+    protected static function BuildPhpRedisProvider(array $properties, LoggerInterface $logger) {
 
-        return new SimpleCachePhpRedis($server, $port, $timeout, $logger);
+        return new SimpleCachePhpRedis($properties, $logger);
 
     }
 
     protected static function BuildVacuumProvider(LoggerInterface $logger) {
 
-        return new SimpleCacheVacuum($logger);
+        return new SimpleCacheVacuum([], $logger);
 
     }
 

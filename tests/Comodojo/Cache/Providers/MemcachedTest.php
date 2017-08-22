@@ -7,7 +7,7 @@ class MemcachedTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {
 
-        $this->pool = new Memcached('127.0.0.1');
+        $this->pool = new Memcached();
 
     }
 

@@ -28,9 +28,17 @@ use \Exception;
 
 class Filesystem extends AbstractEnhancedProvider {
 
-    public function __construct($cache_folder, LoggerInterface $logger = null) {
+    protected $default_properties = [
+        "cache_folder" => null
+    ];
+
+    public function __construct(array $properties = [], LoggerInterface $logger = null) {
 
         try {
+
+            parent::__construct($properties, $logger);
+
+            $cache_folder = $this->getProperties()->cache_folder;
 
             if ( empty($cache_folder) ) {
                 throw new InvalidSimpleCacheArgumentException("Invalid or unspecified cache folder");
@@ -44,7 +52,7 @@ class Filesystem extends AbstractEnhancedProvider {
                 $this->driver = new FilesystemGhostDriver(['cache-folder'=>$cache_folder]);
             }
 
-            parent::__construct($logger);
+            $this->test();
 
         } catch (Exception $e) {
 

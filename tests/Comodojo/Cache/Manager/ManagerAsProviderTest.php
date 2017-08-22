@@ -10,7 +10,7 @@ class ManagerAsProviderTest extends ProviderCommonCases {
     protected function setUp() {
 
         $apc = new Apc();
-        $memcached = new Memcached('127.0.0.1');
+        $memcached = new Memcached();
 
         $this->pool = new Manager();
         $this->pool

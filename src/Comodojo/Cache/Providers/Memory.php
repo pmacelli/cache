@@ -27,13 +27,15 @@ use \Exception;
 
 class Memory extends AbstractEnhancedProvider {
 
-    public function __construct(LoggerInterface $logger = null) {
+    public function __construct(array $properties = [], LoggerInterface $logger = null) {
 
         try {
 
+            parent::__construct($properties, $logger);
+
             $this->driver = new MemoryDriver();
 
-            parent::__construct($logger);
+            $this->test();
 
         } catch (Exception $e) {
 
