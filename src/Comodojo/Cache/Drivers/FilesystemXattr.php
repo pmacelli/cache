@@ -3,9 +3,7 @@
 use \Exception;
 
 /**
- * Apcu provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -24,8 +22,16 @@ class FilesystemXattr extends AbstractDriver {
 
     const DRIVER_NAME = "filesystem-xattr";
 
+    /**
+     * Cache (files) repository
+     *
+     * @param string
+     */
     protected $cache_folder;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(array $configuration) {
 
         $this->cache_folder = $configuration['cache-folder'];
@@ -34,12 +40,18 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function test() {
 
         return file_exists($this->cache_folder) && is_writable($this->cache_folder);
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($key, $namespace) {
 
         if ( $this->has($key, $namespace) ) {
@@ -58,6 +70,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $namespace, $value, $ttl = null) {
 
         $cacheFile = $this->cache_folder."$key-$namespace.cache";
@@ -80,6 +95,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key, $namespace) {
 
         $cacheFile = $this->cache_folder."$key-$namespace.cache";
@@ -96,6 +114,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear($namespace = null) {
 
         $result = [];
@@ -118,6 +139,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMultiple(array $keys, $namespace) {
 
         $result = [];
@@ -130,6 +154,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setMultiple(array $key_values, $namespace, $ttl = null) {
 
         $result = [];
@@ -142,6 +169,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function deleteMultiple(array $keys, $namespace) {
 
         $result = [];
@@ -154,6 +184,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has($key, $namespace) {
 
         $time = time();
@@ -179,6 +212,9 @@ class FilesystemXattr extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function stats() {
 
         return ['objects' => count(glob($this->cache_folder."*.cache"))];

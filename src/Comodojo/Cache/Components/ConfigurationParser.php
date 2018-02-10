@@ -13,7 +13,7 @@ use \Comodojo\Cache\Providers\PhpRedis as CachePhpRedis;
 use \Comodojo\Cache\Providers\Vacuum as CacheVacuum;
 
 /**
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

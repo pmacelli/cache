@@ -37,7 +37,7 @@
         <testsuite name="comodojo-cache-providers">
             <file>tests/Comodojo/Cache/ItemTest.php</file>
             <file>tests/Comodojo/Cache/Providers/MemoryTest.php</file>
-            <file>tests/Comodojo/Cache/Providers/VoidTest.php</file>
+            <file>tests/Comodojo/Cache/Providers/VacuumTest.php</file>
             <file>tests/Comodojo/Cache/Providers/ApcuTest.php</file>
             <file>tests/Comodojo/Cache/Providers/ApcTest.php</file>
             <file>tests/Comodojo/Cache/Providers/FilesystemTest.php</file>
@@ -46,7 +46,7 @@
         </testsuite>
         <testsuite name="comodojo-simplecache-providers">
             <file>tests/Comodojo/SimpleCache/Providers/MemoryTest.php</file>
-            <file>tests/Comodojo/SimpleCache/Providers/VoidTest.php</file>
+            <file>tests/Comodojo/SimpleCache/Providers/VacuumTest.php</file>
             <file>tests/Comodojo/SimpleCache/Providers/ApcuTest.php</file>
             <file>tests/Comodojo/SimpleCache/Providers/ApcTest.php</file>
             <file>tests/Comodojo/SimpleCache/Providers/FilesystemTest.php</file>

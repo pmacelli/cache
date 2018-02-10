@@ -4,9 +4,7 @@ use \Psr\Cache\CacheItemPoolInterface;
 use \Comodojo\Cache\Interfaces\EnhancedCacheItemPoolInterface;
 
 /**
- * CacheItemPoolInterface extension to handle it's state
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -54,28 +52,67 @@ interface CacheItemPoolManagerInterface extends CacheItemPoolInterface {
      */
     const PICK_TRAVERSE = 6;
 
+    /**
+     * Get current namespace
+     *
+     * @return string
+     */
     public function getNamespace();
 
+    /**
+     * Set current namespace
+     *
+     * @param string $namespace Namespace where $key resides
+     * @return string|null
+     */
     public function setNamespace($namespace);
 
+    /**
+     * Chear the whole (current) namespace
+     *
+     * @return string|null
+     */
     public function clearNamespace();
 
+    /**
+     * Add a new provider to the manager's stack
+     *
+     * @param EnhancedCacheItemPoolInterface $provider
+     * @param int $weight
+     * @return int
+     */
     public function addProvider(EnhancedCacheItemPoolInterface $provider, $weight);
 
+    /**
+     * Remove provider from the manager's stack
+     *
+     * @param int $id
+     * @return bool
+     */
     public function removeProvider($id);
 
+    /**
+     * Get a registered provider
+     *
+     * @param int $id
+     * @return EnhancedCacheItemPoolInterface
+     */
     public function getProvider($id);
 
+    /**
+     * Get registered providers
+     *
+     * @param int $enabled If true, only enabled providers will be returned
+     * @return array
+     */
     public function getProviders($enabled);
 
     /**
-     * get the last selected provider
+     * Get the last selected provider
      *
-     * @return
-     *
+     * @return EnhancedCacheItemPoolInterface
      */
     public function getSelectedProvider();
-
 
     /**
      * Get stats from all providers

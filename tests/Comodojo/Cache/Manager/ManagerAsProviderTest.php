@@ -2,15 +2,20 @@
 
 use \Comodojo\Cache\Tests\Utils\ProviderCommonCases;
 use \Comodojo\Cache\Manager;
-use \Comodojo\Cache\Providers\Apc;
-use \Comodojo\Cache\Providers\Memcached;
+use \Comodojo\Cache\Providers\Memory;
+// use \Comodojo\Cache\Providers\Apc;
+// use \Comodojo\Cache\Providers\Memcached;
 
+/**
+ * @group manager
+ * @group cache
+ */
 class ManagerAsProviderTest extends ProviderCommonCases {
 
     protected function setUp() {
 
-        $apc = new Apc();
-        $memcached = new Memcached();
+        $apc = new Memory();
+        $memcached = new Memory();
 
         $this->pool = new Manager();
         $this->pool

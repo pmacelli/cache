@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cache\Interfaces;
 
 /**
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -18,8 +18,6 @@
 
 interface CacheDriverInterface {
 
-    public function __construct(array $configuration);
-
     /**
      * Get the driver name
      *
@@ -30,6 +28,9 @@ interface CacheDriverInterface {
     /**
      * Test the driver
      *
+     * The behaiour of this method may differ fro one driver to another.
+     * It could forward, for example, a dependency test, a in-cache test or both.
+     *
      * @return bool
      */
     public function test();
@@ -37,6 +38,8 @@ interface CacheDriverInterface {
     /**
      * Get item from cache
      *
+     * @param string $key The key
+     * @param string $namespace Namespace where $key resides
      * @return string|null
      */
     public function get($key, $namespace);
@@ -44,6 +47,10 @@ interface CacheDriverInterface {
     /**
      * Save item into cache
      *
+     * @param string $key The key
+     * @param string $namespace Namespace where $key resides
+     * @param mixed $value Value
+     * @param int $ttl Time to live of cache object (in seconds)
      * @return bool
      */
     public function set($key, $namespace, $value, $ttl = null);
@@ -51,6 +58,8 @@ interface CacheDriverInterface {
     /**
      * Delete item from cache
      *
+     * @param string $key The key
+     * @param string $namespace Namespace where $key resides
      * @return bool
      */
     public function delete($key, $namespace);
@@ -58,6 +67,7 @@ interface CacheDriverInterface {
     /**
      * Clear namespace or whole cache
      *
+     * @param string $namespace Namespace to clean or null to purge whole cache.
      * @return bool
      */
     public function clear($namespace = null);
@@ -65,6 +75,8 @@ interface CacheDriverInterface {
     /**
      * Get multiple items from cache
      *
+     * @param array $keys Array of keys
+     * @param string $namespace Namespace where $keys reside
      * @return array
      */
     public function getMultiple(array $keys, $namespace);
@@ -72,6 +84,9 @@ interface CacheDriverInterface {
     /**
      * Save multiple items into cache
      *
+     * @param array $values Associative array of keys and values
+     * @param string $namespace Namespace where $keys reside
+     * @param int $ttl Time to live of cache objects (in seconds)
      * @return bool
      */
     public function setMultiple(array $values, $namespace, $ttl = null);
@@ -79,6 +94,8 @@ interface CacheDriverInterface {
     /**
      * Delete multiple items from cache
      *
+     * @param array $keys Array of keys
+     * @param string $namespace Namespace where $keys reside
      * @return bool
      */
     public function deleteMultiple(array $keys, $namespace);
@@ -86,12 +103,17 @@ interface CacheDriverInterface {
     /**
      * Check if item is in cache
      *
+     * @param array $key The key
+     * @param string $namespace Namespace where $key resides
      * @return bool
      */
     public function has($key, $namespace);
 
     /**
      * Get cache driver statistics
+     *
+     * The behaiour of this method may differ fro one driver to another.
+     * Providers will transform data in a EnhancedCacheItemPoolStats object.
      *
      * @return array
      */

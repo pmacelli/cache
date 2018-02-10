@@ -10,9 +10,7 @@ use \Comodojo\Exception\InvalidSimpleCacheArgumentException;
 use \Exception;
 
 /**
- * Memcached provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

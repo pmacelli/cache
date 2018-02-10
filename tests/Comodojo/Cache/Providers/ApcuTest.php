@@ -3,6 +3,11 @@
 use \Comodojo\Cache\Tests\Utils\EnhancedProviderCommonCases;
 use \Comodojo\Cache\Providers\Apcu;
 
+/**
+ * @group provider
+ * @group cache
+ * @group apcu
+ */
 class ApcuTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {

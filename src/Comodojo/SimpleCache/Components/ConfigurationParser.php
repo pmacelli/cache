@@ -11,7 +11,7 @@ use \Comodojo\SimpleCache\Providers\PhpRedis as SimpleCachePhpRedis;
 use \Comodojo\SimpleCache\Providers\Vacuum as SimpleCacheVacuum;
 
 /**
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

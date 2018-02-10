@@ -4,9 +4,7 @@ use \Comodojo\Cache\Components\KeyValidator;
 use \Comodojo\Exception\InvalidCacheArgumentException;
 
 /**
- * Cache provider interface
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

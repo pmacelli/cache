@@ -3,9 +3,7 @@
 use \Exception;
 
 /**
- * Apcu provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -24,40 +22,9 @@ class FilesystemGhost extends FilesystemXattr {
 
     const DRIVER_NAME = "filesystem-ghost";
 
-    // protected $cache_folder;
-
-    // public function __construct(array $configuration) {
-    //
-    //     $this->cache_folder = $configuration['cache-folder'];
-    //
-    //     if ( $this->test() === false ) throw new Exception("Folder ".$this->cache_folder." not writable");
-    //
-    // }
-
-    // public function test() {
-    //
-    //     return file_exists($this->cache_folder) && is_writable($this->cache_folder);
-    //
-    // }
-
-    // public function get($key, $namespace) {
-    //
-    //     if ( $this->has($key, $namespace) ) {
-    //
-    //         $cacheFile = $this->cache_folder."$key-$namespace.cache";
-    //
-    //         $data = @file_get_contents($cacheFile);
-    //
-    //         if ( $data === false ) throw new Exception("Error reading cache content $cacheFile");
-    //
-    //         return $data;
-    //
-    //     }
-    //
-    //     return null;
-    //
-    // }
-
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $namespace, $value, $ttl = null) {
 
         $cacheFile = $this->cache_folder."$key-$namespace.cache";
@@ -81,6 +48,9 @@ class FilesystemGhost extends FilesystemXattr {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key, $namespace) {
 
         $result = [];
@@ -95,6 +65,9 @@ class FilesystemGhost extends FilesystemXattr {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear($namespace = null) {
 
         $result = [];
@@ -153,6 +126,9 @@ class FilesystemGhost extends FilesystemXattr {
     //
     // }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has($key, $namespace) {
 
         $time = time();

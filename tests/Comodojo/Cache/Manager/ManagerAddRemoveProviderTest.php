@@ -4,6 +4,10 @@ use \Comodojo\Cache\Manager;
 use \Comodojo\Foundation\Logging\Manager as LogManager;
 use \Comodojo\Cache\Providers\Memory;
 
+/**
+ * @group manager
+ * @group cache
+ */
 class ManagerAddRemoveProviderTest extends \PHPUnit_Framework_TestCase {
 
     protected $manager;

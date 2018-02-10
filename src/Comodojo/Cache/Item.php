@@ -8,9 +8,7 @@ use \DateInterval;
 use \Comodojo\Exception\InvalidCacheArgumentException;
 
 /**
- * Item class for everything a poll will return.
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

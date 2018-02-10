@@ -6,8 +6,6 @@ use \Memcached as MemcachedInstance;
 use \Exception;
 
 /**
- * memcached provider
- *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
@@ -29,7 +27,10 @@ class Memcached extends AbstractDriver {
 
     const DRIVER_NAME = "memcached";
 
-    public function __construct(array $configuration) {
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(array $configuration = []) {
 
         if ( class_exists('Memcached') === false ) throw new Exception("ext-memcached not available");
 
@@ -50,6 +51,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function test() {
 
         return sizeof($this->getInstance()->getServerList()) > 0 && $this->ping();
@@ -69,6 +73,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($key, $namespace) {
 
         $scope = $this->getNamespaceKey($namespace);
@@ -85,6 +92,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $namespace, $value, $ttl = null) {
 
         if ( $ttl == null ) $ttl = 0;
@@ -101,6 +111,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key, $namespace) {
 
         $scope = $this->getNamespaceKey($namespace);
@@ -113,6 +126,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear($namespace = null) {
 
         if ( $namespace == null ) {
@@ -131,6 +147,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMultiple(array $keys, $namespace) {
 
         if ( empty($keys) ) return [];
@@ -162,6 +181,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setMultiple(array $key_values, $namespace, $ttl = null) {
 
         if ( $ttl == null ) $ttl = 0;
@@ -182,6 +204,9 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function deleteMultiple(array $keys, $namespace) {
 
         $scope = $this->getNamespaceKey($namespace);
@@ -198,12 +223,18 @@ class Memcached extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has($key, $namespace) {
 
         return $this->get($key, $namespace) === null ? false : true;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function stats() {
 
         return $this->getInstance()->getStats();

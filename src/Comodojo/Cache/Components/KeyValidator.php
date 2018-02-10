@@ -3,9 +3,7 @@
 use \Comodojo\Foundation\Validation\DataValidation;
 
 /**
- *
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -23,7 +21,7 @@ use \Comodojo\Foundation\Validation\DataValidation;
 class KeyValidator {
 
     /**
-     * Determines if the specified key is legal under PSR-6.
+     * This method ensure that the key is valid under PSR-6.
      *
      * @param string $key
      *   The key to validate.

@@ -7,9 +7,7 @@ use \Redis;
 use \Exception;
 
 /**
- * memcached provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -30,8 +28,16 @@ class PhpRedis extends AbstractDriver {
 
     const DRIVER_NAME = "php-redis";
 
+    /**
+     * Connection parameters
+     *
+     * @param array
+     */
     private $connection_parameters;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(array $configuration) {
 
         if ( class_exists('Redis') === false ) throw new Exception("ext-redis not available");
@@ -50,6 +56,9 @@ class PhpRedis extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function test() {
 
         $instance = $this->getInstance();
@@ -72,6 +81,9 @@ class PhpRedis extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($key, $namespace) {
 
         try {
@@ -96,6 +108,9 @@ class PhpRedis extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $namespace, $value, $ttl = null) {
 
         try {
@@ -128,6 +143,9 @@ class PhpRedis extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key, $namespace) {
 
         try {
@@ -148,6 +166,9 @@ class PhpRedis extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear($namespace = null) {
 
         try {
@@ -175,6 +196,9 @@ class PhpRedis extends AbstractDriver {
     }
 
     // TODO: write a better getMultiple using mGet
+    /**
+     * {@inheritdoc}
+     */
     public function getMultiple(array $keys, $namespace) {
 
         $result = [];
@@ -188,6 +212,9 @@ class PhpRedis extends AbstractDriver {
     }
 
     // TODO: write a better setMultiple using mSet
+    /**
+     * {@inheritdoc}
+     */
     public function setMultiple(array $key_values, $namespace, $ttl = null) {
 
         $result = [];
@@ -201,6 +228,9 @@ class PhpRedis extends AbstractDriver {
     }
 
     // TODO: write a better deleteMultiple using delete([])
+    /**
+     * {@inheritdoc}
+     */
     public function deleteMultiple(array $keys, $namespace) {
 
         $result = [];
@@ -213,6 +243,9 @@ class PhpRedis extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has($key, $namespace) {
 
         try {
@@ -235,6 +268,9 @@ class PhpRedis extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function stats() {
 
         $instance = $this->getInstance();

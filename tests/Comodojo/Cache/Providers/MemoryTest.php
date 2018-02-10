@@ -3,6 +3,11 @@
 use \Comodojo\Cache\Tests\Utils\EnhancedProviderCommonCases;
 use \Comodojo\Cache\Providers\Memory;
 
+/**
+ * @group provider
+ * @group cache
+ * @group memory
+ */
 class MemoryTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {

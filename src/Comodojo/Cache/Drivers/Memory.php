@@ -1,13 +1,9 @@
 <?php namespace Comodojo\Cache\Drivers;
 
-use \Comodojo\Foundation\Utils\UniqueId;
 use \DateTime;
-use \Exception;
 
 /**
- * Apcu provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -26,16 +22,30 @@ class Memory extends AbstractDriver {
 
     const DRIVER_NAME = "memory";
 
+    /**
+     * Cache repository
+     *
+     * @param array
+     */
     private $data = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(array $configuration = []) {}
 
-    public function test() {
+        /**
+         * {@inheritdoc}
+         */
+        public function test() {
 
         return true;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($key, $namespace) {
 
         return $this->checkMemory($key, $namespace) ?
@@ -43,6 +53,9 @@ class Memory extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $namespace, $value, $ttl = null) {
 
         $this->checkNamespace($namespace, true);
@@ -58,6 +71,9 @@ class Memory extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key, $namespace) {
 
         if ( !$this->checkMemory($key, $namespace) ) return false;
@@ -68,6 +84,9 @@ class Memory extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear($namespace = null) {
 
         if ( $namespace == null ) {
@@ -89,6 +108,9 @@ class Memory extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMultiple(array $keys, $namespace) {
 
         $result = [];
@@ -101,6 +123,9 @@ class Memory extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setMultiple(array $key_values, $namespace, $ttl = null) {
 
         $result = [];
@@ -113,6 +138,9 @@ class Memory extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function deleteMultiple(array $keys, $namespace) {
 
         $result = [];
@@ -125,12 +153,18 @@ class Memory extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has($key, $namespace) {
 
         return $this->checkMemory($key, $namespace);
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function stats() {
 
         return ['objects' => count($this->data)];

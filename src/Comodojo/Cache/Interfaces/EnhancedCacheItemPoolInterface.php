@@ -3,9 +3,7 @@
 use \Psr\Cache\CacheItemPoolInterface;
 
 /**
- * CacheItemPoolInterface extension to handle it's state
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -36,38 +34,30 @@ interface EnhancedCacheItemPoolInterface extends CacheItemPoolInterface {
     /**
      * Returns the current state
      *
-     * @return bool
-     *   True if no error.
+     * @return bool True if no error.
      */
     public function getState();
 
     /**
      * Returns the current state
      *
-     * @return string|null
-     *   Last error message (if any).
+     * @return string|null Last error message (if any).
      */
     public function getStateMessage();
 
     /**
-     * Returns the time when the state was fixed
+     * Returns the time when the state was determined
      *
      * @return DateTimeInterface|null
-     *
      */
     public function getStateTime();
 
     /**
-     * Set provider in error state
+     * Put provider in error state
      *
-     * @param bool $status
-     *   Current status
-     *
-     * @param string $message
-     *   Relative error message (if any)
-     *
-     * @return static
-     *   The invoked object.
+     * @param bool $status Current status
+     * @param string $message Relative error message (if any)
+     * @return static The invoked object.
      */
     public function setState($state, $message = null);
 
@@ -75,22 +65,37 @@ interface EnhancedCacheItemPoolInterface extends CacheItemPoolInterface {
      * Test the pool
      *
      * Test should be used to ensure the status flag is setted correctly.
-     * If test is passed, the status should be == CACHE_SUCCESS, otherwise it
+     * If test passes, then status should be CACHE_SUCCESS, otherwise it
      * should correspond to CACHE_ERROR
      *
      * @return bool
-     *
      */
     public function test();
 
+    /**
+     * Get current namespace
+     *
+     * @return string
+     */
     public function getNamespace();
 
+    /**
+     * Set current namespace
+     *
+     * @param string $namespace Namespace where $key resides
+     * @return string|null
+     */
     public function setNamespace($namespace);
 
+    /**
+     * Chear the whole (current) namespace
+     *
+     * @return string|null
+     */
     public function clearNamespace();
 
     /**
-     * Disable provider
+     * Get provider statistics
      *
      * @return EnhancedCacheItemPoolStats
      */

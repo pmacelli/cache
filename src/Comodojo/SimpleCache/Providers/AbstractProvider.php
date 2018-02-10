@@ -5,9 +5,7 @@ use \Psr\SimpleCache\CacheInterface;
 use \Psr\Log\LoggerInterface;
 
 /**
- * Abstract provider implementation
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

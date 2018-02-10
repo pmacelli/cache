@@ -2,15 +2,19 @@
 
 use \Comodojo\SimpleCache\Tests\Utils\SimpleCacheCommonCases;
 use \Comodojo\SimpleCache\Manager;
-use \Comodojo\SimpleCache\Providers\Apc;
-use \Comodojo\SimpleCache\Providers\Memcached;
+use \Comodojo\SimpleCache\Providers\Memory;
+// use \Comodojo\SimpleCache\Providers\Memcached;
 
+/**
+ * @group manager
+ * @group simplecache
+ */
 class ManagerAsProviderTest extends SimpleCacheCommonCases {
 
     protected function setUp() {
 
-        $apc = new Apc();
-        $memcached = new Memcached();
+        $apc = new Memory();
+        $memcached = new Memory();
 
         $this->provider = new Manager();
         $this->provider

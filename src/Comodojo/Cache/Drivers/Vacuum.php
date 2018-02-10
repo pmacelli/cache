@@ -1,12 +1,7 @@
 <?php namespace Comodojo\Cache\Drivers;
 
-use \Comodojo\Foundation\Utils\UniqueId;
-use \Exception;
-
 /**
- * Apcu provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -25,62 +20,95 @@ class Vacuum extends AbstractDriver {
 
     const DRIVER_NAME = "vacuum";
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(array $configuration = []) {}
 
-    public function test() {
+        /**
+         * {@inheritdoc}
+         */
+        public function test() {
 
         return true;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($key, $namespace) {
 
         return null;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $namespace, $value, $ttl = null) {
 
         return true;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key, $namespace) {
 
         return false;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear($namespace = null) {
 
         return true;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMultiple(array $keys, $namespace) {
 
         return array_combine($keys, array_fill(0, count($keys), null));
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setMultiple(array $key_values, $namespace, $ttl = null) {
 
         return true;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function deleteMultiple(array $keys, $namespace) {
 
         return false;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has($key, $namespace) {
 
         return false;
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function stats() {
 
         return [];

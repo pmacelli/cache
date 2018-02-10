@@ -7,9 +7,7 @@ use \Comodojo\Exception\SimpleCacheException;
 use \Exception;
 
 /**
- * Apcu provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

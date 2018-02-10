@@ -4,6 +4,10 @@ use \Comodojo\SimpleCache\Manager;
 use \Comodojo\SimpleCache\Providers\Memory;
 use \Comodojo\Foundation\Logging\Manager as LogManager;
 
+/**
+ * @group manager
+ * @group simplecache
+ */
 class AlignCacheTest extends \PHPUnit_Framework_TestCase {
 
     protected $logger;

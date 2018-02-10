@@ -6,6 +6,10 @@ use \Comodojo\Cache\Providers\Memory;
 use \Comodojo\Cache\Item;
 use \Comodojo\Foundation\Logging\Manager as LogManager;
 
+/**
+ * @group manager
+ * @group cache
+ */
 class ManagerPickRandomTest extends ManagerCommonCases {
 
     protected $manager;

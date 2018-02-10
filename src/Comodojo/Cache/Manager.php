@@ -17,8 +17,7 @@ use \Psr\Log\LoggerInterface;
 use \ArrayObject;
 
 /**
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

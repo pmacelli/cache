@@ -3,9 +3,7 @@
 use \Psr\SimpleCache\CacheInterface;
 
 /**
- * CacheItemPoolInterface extension to handle it's state
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

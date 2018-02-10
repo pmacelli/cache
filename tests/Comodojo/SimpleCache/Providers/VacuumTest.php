@@ -3,6 +3,11 @@
 use \Comodojo\SimpleCache\Providers\Vacuum;
 use \Comodojo\SimpleCache\Tests\Utils\EnhancedProviderCommonCases;
 
+/**
+ * @group provider
+ * @group simplecache
+ * @group vacuum
+ */
 class VacuumTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {

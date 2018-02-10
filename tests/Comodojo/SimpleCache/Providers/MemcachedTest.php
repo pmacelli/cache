@@ -3,6 +3,11 @@
 use \Comodojo\SimpleCache\Providers\Memcached;
 use \Comodojo\SimpleCache\Tests\Utils\EnhancedProviderCommonCases;
 
+/**
+ * @group provider
+ * @group simplecache
+ * @group memcached
+ */
 class MemcachedTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {

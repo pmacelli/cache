@@ -3,6 +3,11 @@
 use \Comodojo\Cache\Tests\Utils\EnhancedProviderCommonCases;
 use \Comodojo\Cache\Providers\PhpRedis;
 
+/**
+ * @group provider
+ * @group cache
+ * @group phpredis
+ */
 class PhpRedisTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {

@@ -3,9 +3,7 @@
 use \Comodojo\Foundation\Validation\DataFilter;
 
 /**
- *
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

@@ -8,9 +8,7 @@ use \Comodojo\Exception\CacheException;
 use \Exception;
 
 /**
- * Apcu provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *

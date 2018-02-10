@@ -3,6 +3,10 @@
 use \Comodojo\Cache\Manager;
 use \Comodojo\Foundation\Logging\Manager as LogManager;
 
+/**
+ * @group manager
+ * @group cache
+ */
 class EmptyManagerTest extends \PHPUnit_Framework_TestCase {
 
     protected $manager;

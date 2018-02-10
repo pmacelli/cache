@@ -3,6 +3,9 @@
 use \Comodojo\Cache\Item;
 use \DateTime;
 
+/**
+ * @group item
+ */
 class ItemTest extends \PHPUnit_Framework_TestCase {
 
     public function testNewItem() {

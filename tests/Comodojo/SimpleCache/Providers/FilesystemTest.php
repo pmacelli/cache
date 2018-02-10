@@ -3,6 +3,11 @@
 use \Comodojo\SimpleCache\Providers\Filesystem;
 use \Comodojo\SimpleCache\Tests\Utils\EnhancedProviderCommonCases;
 
+/**
+ * @group provider
+ * @group simplecache
+ * @group filesystem
+ */
 class FilesystemTest extends EnhancedProviderCommonCases {
 
     protected function setUp() {

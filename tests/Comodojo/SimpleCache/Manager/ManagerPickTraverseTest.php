@@ -5,6 +5,10 @@ use \Comodojo\SimpleCache\Manager;
 use \Comodojo\SimpleCache\Providers\Memory;
 use \Comodojo\Foundation\Logging\Manager as LogManager;
 
+/**
+ * @group manager
+ * @group simplecache
+ */
 class ManagerPickTraverseTest extends ManagerCommonCases {
 
     protected $manager;

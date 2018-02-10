@@ -4,6 +4,10 @@ use \Comodojo\Foundation\Base\Configuration;
 use \Comodojo\Cache\Manager;
 use \Comodojo\Foundation\Logging\Manager as LogManager;
 
+/**
+ * @group manager
+ * @group cache
+ */
 class ManagerBuildFromConfigurationTest extends \PHPUnit_Framework_TestCase {
 
     protected static $local_config = [

@@ -4,6 +4,11 @@ use \Comodojo\Cache\Providers\Vacuum;
 use \Comodojo\Cache\Item;
 use \DateTime;
 
+/**
+ * @group provider
+ * @group cache
+ * @group vacuum
+ */
 class VacuumTest extends \PHPUnit_Framework_TestCase {
 
     protected function setUp() {

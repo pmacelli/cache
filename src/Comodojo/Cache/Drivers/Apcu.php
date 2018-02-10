@@ -4,9 +4,7 @@ use \Comodojo\Foundation\Utils\UniqueId;
 use \Exception;
 
 /**
- * Apcu provider
- *
- * @package     Comodojo Spare Parts
+ * @package     Comodojo Cache
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
@@ -25,6 +23,9 @@ class Apcu extends AbstractDriver {
 
     const DRIVER_NAME = "apcu";
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(array $configuration = []) {
 
         if ( extension_loaded('apcu') === false ) throw new Exception("ext-apcu not available");
@@ -37,12 +38,18 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function test() {
 
         return (bool) ini_get('apc.enabled');
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($key, $namespace) {
 
         $scope = $this->getNamespaceKey($namespace);
@@ -57,6 +64,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $namespace, $value, $ttl = null) {
 
         if ( $ttl == null ) $ttl = 0;
@@ -73,6 +83,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key, $namespace) {
 
         $scope = $this->getNamespaceKey($namespace);
@@ -85,6 +98,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear($namespace = null) {
 
         if ( $namespace == null ) {
@@ -103,6 +119,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getMultiple(array $keys, $namespace) {
 
         $keypad = array_combine($keys, array_fill(0, count($keys), null));
@@ -128,6 +147,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setMultiple(array $key_values, $namespace, $ttl = null) {
 
         if ( $ttl == null ) $ttl = 0;
@@ -150,6 +172,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function deleteMultiple(array $keys, $namespace) {
 
         $scope = $this->getNamespaceKey($namespace);
@@ -166,6 +191,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function has($key, $namespace) {
 
         $scope = $this->getNamespaceKey($namespace);
@@ -176,6 +204,9 @@ class Apcu extends AbstractDriver {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function stats() {
 
         return apcu_cache_info(true);
