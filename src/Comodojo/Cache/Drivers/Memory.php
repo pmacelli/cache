@@ -34,10 +34,10 @@ class Memory extends AbstractDriver {
      */
     public function __construct(array $configuration = []) {}
 
-        /**
-         * {@inheritdoc}
-         */
-        public function test() {
+    /**
+     * {@inheritdoc}
+     */
+    public function test() {
 
         return true;
 

@@ -70,6 +70,9 @@ class PhpRedis extends AbstractEnhancedProvider {
         return $this->driver->getInstance();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getStats() {
 
         $info = $this->driver->stats();
