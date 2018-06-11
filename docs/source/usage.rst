@@ -21,7 +21,8 @@ Following a list of common methods offered by each provider. For a detailed desc
 CRUD operations
 ...............
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -55,7 +56,8 @@ CRUD operations
 Write-deferred
 ..............
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -83,7 +85,8 @@ Write-deferred
 Batch operations
 ................
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -119,7 +122,8 @@ Following a list of common methods offered by each provider. For a detailed desc
 CRUD operations
 ...............
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -145,7 +149,8 @@ CRUD operations
 Managing multiple items
 .......................
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -177,7 +182,8 @@ To handle failure of underlying cache engines, each provider offer a set of meth
 
 Status updates are managed seamlessly by provider itself.
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -200,7 +206,8 @@ Each item in cache is placed into a namespace ('GLOBAL' is the default one) and 
 
 In other words, the entire cache space is partitioned by default, and different items can belong to a single partition at a time.
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -236,7 +243,8 @@ Cache statistics
 
 Stats about current provider can be accessed using the `$provider::getStats` method. It returns a `EnhancedCacheItemPoolStats` object.
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
