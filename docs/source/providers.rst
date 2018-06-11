@@ -1,8 +1,10 @@
-.. _xattr: http://man7.org/linux/man-pages/man5/attr.5.html
-.. _Extended Attributes: http://man7.org/linux/man-pages/man5/attr.5.html
+.. _cache-providers:
 
 Cache providers
 ===============
+
+.. _xattr: http://man7.org/linux/man-pages/man5/attr.5.html
+.. _Extended Attributes: http://man7.org/linux/man-pages/man5/attr.5.html
 
 Actually this library supports cache over:
 

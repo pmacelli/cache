@@ -27,15 +27,15 @@ interface EnhancedSimpleCacheInterface extends CacheInterface {
     /**
      * Returns the internal pool's id
      *
-     * @return bool
+     * @return string
      */
     public function getId();
 
     /**
      * Returns the current state
      *
-     * @return bool
-     *   True if no error.
+     * @return int
+     *   0 if no error.
      */
     public function getState();
 
