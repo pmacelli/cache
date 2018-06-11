@@ -4,8 +4,6 @@
 
 PSR-6 and PSR-16 compliant enhanced cache manager across multiple storage engines.
 
-***This is the development branch, please do not use it in production***
-
 ## Installation
 
 Install [composer](https://getcomposer.org/), then:
