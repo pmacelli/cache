@@ -50,7 +50,7 @@ class EnhancedCacheItemPoolStats {
 
     }
 
-    public function getStats() {
+    public function getState() {
 
         return $this->status;
 

@@ -39,7 +39,7 @@ class ConfigurationParser {
         'PICK_TRAVERSE' => 6
     );
 
-    public static function parse(Configuration $configuration, LoggerInterface $logger) {
+    public static function parse(Configuration $configuration, LoggerInterface $logger, $stanza = null) {
 
         list($enable, $manager) = self::parseManagerConfiguration($configuration, $logger);
         $providers = self::buildProviders($configuration, $logger);
@@ -94,9 +94,17 @@ class ConfigurationParser {
 
     }
 
-    protected static function parseManagerConfiguration(Configuration $configuration, LoggerInterface $logger) {
+    protected static function parseManagerConfiguration(Configuration $configuration, LoggerInterface $logger, $stanza = null) {
 
-        $cache = $configuration->get('cache');
+        $cache = null;
+
+        if ( $stanza !== null ) {
+            $cache = $configuration->get($stanza);
+        }
+
+        if ( $cache === null ) {
+            $cache = $configuration->get('cache');
+        }
 
         $stdConfig = [
             'pick_mode' => null,

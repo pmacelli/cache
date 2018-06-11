@@ -182,9 +182,9 @@ class Manager extends AbstractProvider implements SimpleCacheManagerInterface {
 
     }
 
-    public static function createFromConfiguration(Configuration $configuration, LoggerInterface $logger) {
+    public static function createFromConfiguration(Configuration $configuration, LoggerInterface $logger, $stanza = null) {
 
-        list($enable, $manager_configuration, $providers) = ConfigurationParser::parse($configuration, $logger);
+        list($enable, $manager_configuration, $providers) = ConfigurationParser::parse($configuration, $logger, $stanza);
 
         $manager = new Manager(...$manager_configuration);
 

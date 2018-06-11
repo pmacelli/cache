@@ -62,22 +62,49 @@ abstract class AbstractProvider implements CacheItemPoolInterface {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function getItem($key);
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function getItems(array $keys = array());
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function hasItem($key);
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function clear();
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function deleteItem($key);
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function deleteItems(array $keys);
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function save(CacheItemInterface $item);
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function saveDeferred(CacheItemInterface $item);
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function commit();
 
 }

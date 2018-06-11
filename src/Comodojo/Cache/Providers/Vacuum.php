@@ -35,6 +35,9 @@ class Vacuum extends AbstractEnhancedProvider {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getStats() {
 
         return new EnhancedCacheItemPoolStats(

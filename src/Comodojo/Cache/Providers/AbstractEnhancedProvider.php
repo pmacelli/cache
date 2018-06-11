@@ -55,6 +55,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     abstract public function getStats();
 
     public function getProperties() {
@@ -63,6 +66,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getItem($key) {
 
         if ( KeyValidator::validateKey($key) === false ) {
@@ -88,6 +94,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasItem($key) {
 
         if ( KeyValidator::validateKey($key) === false ) {
@@ -109,6 +118,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clear() {
 
         try {
@@ -126,6 +138,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function clearNamespace() {
 
         try {
@@ -143,6 +158,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function deleteItem($key) {
 
         if ( KeyValidator::validateKey($key) === false ) {
@@ -164,6 +182,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function save(CacheItemInterface $item) {
 
         $ttl = $item->getTtl();
@@ -185,6 +206,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function test() {
 
         if ( $this->driver->test() ) {
@@ -205,6 +229,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getItems(array $keys = []) {
 
         if ( empty($keys) ) return [];
@@ -237,6 +264,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function deleteItems(array $keys) {
 
         try {
@@ -254,6 +284,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function saveDeferred(CacheItemInterface $item) {
 
         $this->checkQueueNamespace(true);
@@ -266,6 +299,9 @@ abstract class AbstractEnhancedProvider
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function commit() {
 
         $result = [];

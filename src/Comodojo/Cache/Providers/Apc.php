@@ -43,6 +43,9 @@ class Apc extends AbstractEnhancedProvider {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getStats() {
 
         $info = $this->driver->stats();

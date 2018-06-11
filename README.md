@@ -4,13 +4,18 @@
 
 PSR-6 and PSR-16 compliant enhanced cache manager across multiple storage engines.
 
-*** Version 2.0 is under active development; code is stable enough for a beta but not ready to use in production. ***
+***This is the development branch, please do not use it in production***
 
 ## Installation
 
 Install [composer](https://getcomposer.org/), then:
 
-`` composer require comodojo/cache ^2.0 ``
+`` composer require comodojo/cache ``
+
+## Documentation
+
+- Docs (wip): [docs.comodojo.org/projects/cache](https://docs.comodojo.org/projects/cache/en/latest)
+- API: [api.comodojo.org/libs/cache](https://api.comodojo.org/libs/cache)
 
 ## Contributing
 
@@ -19,3 +24,7 @@ Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](
 ## License
 
 `` comodojo/cache `` is released under the MIT License (MIT). Please see [License File](LICENSE) for more information.
+
+> Copyright (c) 2018 Marco Giovinazzi
+>
+> For more information, visit [comodojo.org](https://comodojo.org).

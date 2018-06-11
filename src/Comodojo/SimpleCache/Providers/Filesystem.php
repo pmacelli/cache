@@ -68,7 +68,7 @@ class Filesystem extends AbstractEnhancedProvider {
             $this->getId(),
             $this->driver->getName(),
             $this->getState(),
-            $info,
+            $info['objects'],
             []
         );
 

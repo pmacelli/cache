@@ -60,6 +60,9 @@ class Filesystem extends AbstractEnhancedProvider {
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getStats() {
 
         $info = $this->driver->stats();
@@ -68,7 +71,7 @@ class Filesystem extends AbstractEnhancedProvider {
             $this->getId(),
             $this->driver->getName(),
             $this->getState(),
-            $info,
+            $info['objects'],
             []
         );
 
