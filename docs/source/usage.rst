@@ -170,8 +170,10 @@ Managing multiple items
 
 .. note:: `tests/Comodojo/SimpleCache` folder contains several practical examples to learn from.
 
-Extended cache functions
-------------------------
+.. _extended-features:
+
+Extended cache features
+-----------------------
 
 In both flavours providers offer some extended functions that may be handy in some cases, mantaining compatibility with standards.
 
