@@ -10,10 +10,10 @@ The Cache Manager component is a state-aware container that can use one or more 
 
 In other words, Cache Manager can be configured to use one or more cache providers with a flexible selection strategy (pick algorithm).
 
-.. note:: This library provides two different implementation of manager:
+.. note:: This library provides two different implementation of cache manager:
 
-    - `Comodojo\Cache\Manager` (`PSR-6`_)
-    - `Comodojo\SimpleCache\Manager` (`PSR-16`_)
+    - `Comodojo\\Cache\\Manager` (`PSR-6`_)
+    - `Comodojo\\SimpleCache\\Manager` (`PSR-16`_)
 
 Let's consider this example:
 
