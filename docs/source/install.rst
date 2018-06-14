@@ -11,14 +11,14 @@ First `install composer`_, then:
 
 .. code:: bash
 
-    composer require comodojo/cache ^2.0
+    composer require comodojo/cache
 
 Requirements
 ************
 
 To work properly, comodojo/cache requires PHP >=5.6.0.
 
-Some package is optional but reccomended:
+Some packages are optional but reccomended:
 
 - ext-xattr: Fastest cache files handling via extended attributes
 - ext-redis: Enable redis provider

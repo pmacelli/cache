@@ -6,7 +6,7 @@ Using cache providers
 
 Cache providers can be used as a standalone cache interface to most common cache engine.
 
-.. info:: For an updated list of supported engines, please refer to :ref:`cache-providers`.
+.. note:: For an updated list of supported engines, please refer to :ref:`cache-providers`.
 
 Each provider is available in two different namespace:
 
