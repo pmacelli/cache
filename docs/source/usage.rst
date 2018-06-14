@@ -10,8 +10,8 @@ Cache providers can be used as a standalone cache interface to most common cache
 
 Each provider is available in two different namespace:
 
-- `Comodojo\Cache\Providers` provides `PSR-6`_-compatible classes
-- `Comodojo\SimpleCache\Providers` provides `PSR-16`_-compatible classes
+- `Comodojo\\Cache\\Providers` provides `PSR-6`_-compatible classes
+- `Comodojo\\SimpleCache\\Providers` provides `PSR-16`_-compatible classes
 
 PSR-6 (Caching Interface) usage
 -------------------------------
