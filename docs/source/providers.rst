@@ -35,7 +35,8 @@ These providers do not accept parameters.
 
 Code example:
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -56,7 +57,8 @@ Following parameters are expected:
 
 Code example:
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -133,7 +135,8 @@ This provider accepts following parameters:
 
 Code example:
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -151,7 +154,8 @@ This provider will hold an array containing cached key value pairs; it does not 
 
 Code example:
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -175,7 +179,8 @@ This provider accepts following parameters:
 
 Code example:
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
@@ -195,7 +200,8 @@ This provider does not accept parameters.
 
 Code example:
 
-.. code:: php
+.. code-block:: php
+   :linenos:
 
     <?php
 
