@@ -58,7 +58,7 @@ interface EnhancedSimpleCacheInterface extends CacheInterface {
     /**
      * Set provider in error state
      *
-     * @param bool $status
+     * @param bool $state
      *   Current status
      *
      * @param string $message

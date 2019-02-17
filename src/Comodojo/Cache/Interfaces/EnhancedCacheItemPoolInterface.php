@@ -55,9 +55,14 @@ interface EnhancedCacheItemPoolInterface extends CacheItemPoolInterface {
     /**
      * Put provider in error state
      *
-     * @param bool $status Current status
-     * @param string $message Relative error message (if any)
-     * @return static The invoked object.
+     * @param bool $state
+     *  Current status
+     *
+     * @param string $message
+     *  Relative error message (if any)
+     *
+     * @return static
+     *  The invoked object.
      */
     public function setState($state, $message = null);
 

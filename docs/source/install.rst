@@ -18,7 +18,7 @@ Requirements
 
 To work properly, comodojo/cache requires PHP >=5.6.0.
 
-Some packages are optional but reccomended:
+Some packages are optional but recommended:
 
 - ext-xattr: Fastest cache files handling via extended attributes
 - ext-redis: Enable redis provider
