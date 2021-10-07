@@ -1,5 +1,5 @@
 {
-    "name": "comodojo/cache",
+    "name": "pmarcelli/cache",
     "description": "PSR-6 and PSR-16 compliant enhanced cache manager across multiple storage engines",
     "license": "MIT",
     "type": "library",
