@@ -32,7 +32,7 @@
         }
     },
     "require": {
-        "php": ">=^7.3",
+        "php": "^7.3",
         "pmarcelli/foundation": "dev-foundation_u7320"
     },
     "require-dev": {
