@@ -31,6 +31,7 @@
             "Comodojo\\SimpleCache\\": "src/Comodojo/SimpleCache"
         }
     },
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.6.0",
         "comodojo/foundation": "dev-master"
