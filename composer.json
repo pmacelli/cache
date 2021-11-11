@@ -1,5 +1,5 @@
 {
-    "name": "pmarcelli/cache",
+    "name": "comodojo/cache",
     "description": "PSR-6 and PSR-16 compliant enhanced cache manager across multiple storage engines",
     "license": "MIT",
     "type": "library",
@@ -33,7 +33,7 @@
     },
     "require": {
         "php": ">=5.6.0",
-        "pmarcelli/foundation": "dev-foundation_u7320"
+        "comodojo/foundation": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0|^5.0",
